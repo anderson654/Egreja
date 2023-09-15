@@ -13,4 +13,13 @@ class NeedRequest extends Model
     {
         return $this->hasOne(User::class, 'id', 'user_id');
     }
+    public function getStatusIdAttribute()
+    {
+        $statusId = $this->attributes['status_id'];
+        $statusRequest = RequestStatuse::where('id', $statusId)->first();
+        if ($statusRequest) {
+            return $statusRequest->title;
+        }
+        return $statusId;
+    }
 }

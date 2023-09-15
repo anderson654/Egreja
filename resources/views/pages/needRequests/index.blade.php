@@ -18,6 +18,9 @@
                                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                         Telefone
                                     </th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                        Status
+                                    </th>
                                     <th
                                         class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                         Create Date</th>
@@ -65,6 +68,9 @@
                                         </td>
                                         <td>
                                             <p class="text-sm font-weight-bold mb-0">{{$needRequest->user->phone ?? 'N/A'}}</p>
+                                        </td>
+                                        <td>
+                                            <p class="text-sm font-weight-bold mb-0">{{$needRequest->status_id ?? 'N/A'}}</p>
                                         </td>
                                         <td class="align-middle text-center text-sm">
                                             <p class="text-sm font-weight-bold mb-0">{{$needRequest->user->created_at}}</p>
