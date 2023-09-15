@@ -10,7 +10,7 @@
                 aria-hidden="true" id="iconSidenav"></i>
             <a class="navbar-brand m-0" href=" https://demos.creative-tim.com/argon-dashboard/pages/dashboard.html "
                 target="_blank">
-                <img src="/img/LogoE-greja.png" class="navbar-brand-img h-100" alt="main_logo">
+                <img src="/img/egreja.png" class="navbar-brand-img h-100" alt="main_logo">
                 <span class="me-1 font-weight-bold">Argon Dashboard 2</span>
             </a>
         </div>

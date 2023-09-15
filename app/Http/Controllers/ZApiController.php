@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\ZApiClient;
 
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Log;
 
 class ZApiController extends Controller
 {
@@ -13,7 +14,9 @@ class ZApiController extends Controller
 
     public function __construct()
     {
-        $this->zapiClient = new Client(); // Crie um cliente Guzzle para as solicitações HTTP
+        $this->zapiClient = new Client([
+            'verify' => false, // Desativa a verificação do certificado temporariamente
+        ]); // Crie um cliente Guzzle para as solicitações HTTP
     }
 
     public function sendMessage($phone, $message)
@@ -47,6 +50,7 @@ class ZApiController extends Controller
                 'id' => $data->id,
             ]);
         } catch (\Exception $e) {
+            Log::info($e->getMessage());
             // Lidar com erros, por exemplo, retornar um JSON de erro
             return response()->json(['error' => $e->getMessage()], 500);
         }
