@@ -24,6 +24,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\ResetPassword;
 use App\Http\Controllers\ChangePassword;
+use App\Http\Controllers\NeedRequests\NeedRequestController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Voluntary\VoluntaryController;
 use App\Http\Controllers\WhatsAppController;
@@ -35,7 +36,7 @@ Route::get('/enviarMensagem', [WhatsAppController::class, 'enviarMensagemPersona
 
 
 Route::get('/', function () {
-	return redirect('/dashboard');
+	return redirect('/admin/user');
 })->middleware('auth');
 Route::get('/register', [RegisterController::class, 'create'])->middleware('guest')->name('register');
 Route::post('/register', [RegisterController::class, 'store'])->middleware('guest')->name('register.perform');
@@ -60,6 +61,7 @@ Route::group(['middleware' => 'auth'], function () {
 Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
 	Route::resources([
 		'voluntary' => VoluntaryController::class,
-		'user' => UserController::class
+		'user' => UserController::class,
+		'needRequests' => NeedRequestController::class
 	]);
 });
