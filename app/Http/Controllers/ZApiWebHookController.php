@@ -10,9 +10,7 @@ class ZApiWebHookController extends Controller
 {
     public function getStatusMessage(Request $request)
     {
-        return;
         Log::info("-------WebhoockLaravel---------");
-        // Obtenha os dados recebidos do webhook
         $dados = $request->all();
 
         //se não existir criar um usuario
