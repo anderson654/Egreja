@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\NeedRequest;
 
 class HomeController extends Controller
 {
@@ -23,6 +25,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('pages.dashboard');
+        $users = User::all();
+        $need_requests = NeedRequest::all();
+
+        return view('pages.dashboard', compact('users', 'need_requests'));
     }
 }
