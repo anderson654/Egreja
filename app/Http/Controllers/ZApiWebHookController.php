@@ -11,6 +11,7 @@ class ZApiWebHookController extends Controller
 {
     public function getStatusMessage(Request $request)
     {
+        return;
         Log::info("-------WebhoockLaravel---------");
         $dados = $request->all();
 
@@ -51,11 +52,17 @@ class ZApiWebHookController extends Controller
             $zApiController->sendMessage($dados['phone'], "Ok enviamos o seu pedido para os nossos voluntarios logo vc recebera um contato.");
         }
 
-        
+
         //se existir um pedido
         if ($nextNedRequest) {
             switch ($nextNedRequest->current_dialog_id) {
                 case 1:
+                    if ($dados['text']['message'] === '1') {
+                        $zApiController->sendMessage($dados['phone'], "Pedido de ajuda cancelado.");
+                        $nextNedRequest->status_id = 3;
+                        $nextNedRequest->save();
+                        return;
+                    }
                     $zApiController->sendMessage($dados['phone'], "Verificamos que vc possui um peido de ajuda em aberto\n1-Cancelar pedido de ajuda.");
                     # code...
                     break;
