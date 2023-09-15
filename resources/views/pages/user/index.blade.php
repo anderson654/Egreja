@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    @include('layouts.navbars.auth.topnav', ['title' => 'User Management'])
+    @include('layouts.navbars.auth.topnav', ['title' => 'Gestão de usuários'])
     <div class="row mt-4 mx-4">
         <div class="col-12">
 
@@ -59,7 +59,7 @@
                                                     <img src="/img/team-2.jpg" class="avatar me-3" alt="image">
                                                 </div>
                                                 <div class="d-flex flex-column justify-content-center">
-                                                    <h6 class="mb-0 text-sm">Menbro</h6>
+                                                    <h6 class="mb-0 text-sm">{{$user->username}}</h6>
                                                 </div>
                                             </div>
                                         </td>
@@ -67,7 +67,7 @@
                                             <p class="text-sm font-weight-bold mb-0">{{$user->phone ?? 'N/A'}}</p>
                                         </td>
                                         <td class="align-middle text-center text-sm">
-                                            <p class="text-sm font-weight-bold mb-0">22/03/2022</p>
+                                            <p class="text-sm font-weight-bold mb-0">{{$user->created_at}}</p>
                                         </td>
                                         <td class="align-middle text-end">
                                             <div class="d-flex px-3 py-1 justify-content-center align-items-center">

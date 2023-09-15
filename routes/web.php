@@ -35,7 +35,7 @@ Route::get('/enviarMensagem', [WhatsAppController::class, 'enviarMensagemPersona
 
 
 Route::get('/', function () {
-	return redirect('/dashboard');
+	return redirect('/admin/user');
 })->middleware('auth');
 Route::get('/register', [RegisterController::class, 'create'])->middleware('guest')->name('register');
 Route::post('/register', [RegisterController::class, 'store'])->middleware('guest')->name('register.perform');
