@@ -25,7 +25,7 @@ use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\ResetPassword;
 use App\Http\Controllers\ChangePassword;
 use App\Http\Controllers\User\UserController;
-use App\Http\Controllers\voluntary\VoluntaryController;
+use App\Http\Controllers\Voluntary\VoluntaryController;
 use App\Http\Controllers\WhatsAppController;
 use App\Http\Controllers\ZApiWebHookController;
 
