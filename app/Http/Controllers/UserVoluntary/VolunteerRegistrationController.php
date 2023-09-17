@@ -34,13 +34,13 @@ class VolunteerRegistrationController extends Controller
             'age' => 'required',
             'sex' => 'required',
             'marital_status' => 'required|nullable|in:solteiro,casado,divorciado,viuvo',
-            'phone' => 'required',
             'email' => 'required|email|max:255|unique:volunteer_registrations,email',
             'igreja' => 'required',
             'time_convertion' => 'required',
             'batizado' => 'required',
             'alredy_voluntary' => 'required',
-            'time' => 'nullable'
+            'time' => 'nullable',
+            'phone' => 'required|string',
         ]);
         VolunteerRegistration::create($attributes);
         return view('pages.userVoluntary.congrations');

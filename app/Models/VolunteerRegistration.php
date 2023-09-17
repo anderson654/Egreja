@@ -23,4 +23,12 @@ class VolunteerRegistration extends Model
         'batizado',
         'alredy_voluntary'
     ];
+
+
+    public function setPhoneAttribute($value)
+    {
+        $limpaString = preg_replace("/[^0-9]/", "", $value);
+        $limpaString = str_replace(" ", "", $limpaString);
+        $this->attributes['phone'] = $limpaString;
+    }
 }
