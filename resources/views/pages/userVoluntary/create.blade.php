@@ -101,7 +101,7 @@
 
                                     <div class="flex flex-col mb-3 col-md-6">
                                         <label for="phone" class="form-control-label">Telefone</label>
-                                        <input type="text" id="phone" name="phone" class="form-control"
+                                        <input type="text" id="phone" name="phone" class="form-control phone_with_ddd"
                                             placeholder="Telefone" aria-label="Name" value="{{ old('phone') }}">
                                         @error('phone')
                                             <p class='text-danger text-xs pt-1'> {{ $message }} </p>
