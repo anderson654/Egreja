@@ -9,6 +9,8 @@
     <title>
         Argon Dashboard 2 by Creative Tim
     </title>
+    <!-- jquery -->
+    <script src="/assets/js/core/code.jquery.com_jquery-3.7.1.min.js" crossorigin="anonymous"></script>
     <!--     Fonts and icons     -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
     <!-- Nucleo Icons -->

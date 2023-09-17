@@ -26,6 +26,7 @@ use App\Http\Controllers\ResetPassword;
 use App\Http\Controllers\ChangePassword;
 use App\Http\Controllers\NeedRequests\NeedRequestController;
 use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\UserVoluntary\VolunteerRegistrationController;
 use App\Http\Controllers\Voluntary\VoluntaryController;
 use App\Http\Controllers\WhatsAppController;
 use App\Http\Controllers\ZApiWebHookController;
@@ -39,6 +40,8 @@ Route::get('/', function () {
 	return redirect('/admin/user');
 })->middleware('auth');
 Route::get('/register', [RegisterController::class, 'create'])->middleware('guest')->name('register');
+Route::get('/register-voluntary', [VolunteerRegistrationController::class, 'create'])->middleware('guest');
+Route::post('/register-voluntary-store', [VolunteerRegistrationController::class, 'store'])->middleware('guest')->name('register.voluntary.store');
 Route::post('/register', [RegisterController::class, 'store'])->middleware('guest')->name('register.perform');
 Route::get('/login', [LoginController::class, 'show'])->middleware('guest')->name('login');
 Route::post('/login', [LoginController::class, 'login'])->middleware('guest')->name('login.perform');
