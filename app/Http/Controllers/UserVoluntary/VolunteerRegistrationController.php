@@ -35,7 +35,7 @@ class VolunteerRegistrationController extends Controller
             'sex' => 'required',
             'marital_status' => 'required|nullable|in:solteiro,casado,divorciado,viuvo',
             'phone' => 'required',
-            'email' => 'required|email|max:255|unique:users,email',
+            'email' => 'required|email|max:255|unique:volunteer_registrations,email',
             'igreja' => 'required',
             'time_convertion' => 'required',
             'batizado' => 'required',
