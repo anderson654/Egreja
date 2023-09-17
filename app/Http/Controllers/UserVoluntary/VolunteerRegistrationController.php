@@ -27,6 +27,7 @@ class VolunteerRegistrationController extends Controller
      */
     public function store(Request $request)
     {
+
         $attributes = request()->validate([
             'name' => 'required|max:255|min:2',
             'surname' => 'required|max:255|min:2',
@@ -39,6 +40,7 @@ class VolunteerRegistrationController extends Controller
             'time_convertion' => 'required',
             'batizado' => 'required',
             'alredy_voluntary' => 'required',
+            'time' => 'nullable'
         ]);
         VolunteerRegistration::create($attributes);
         return view('pages.userVoluntary.congrations');
