@@ -72,7 +72,7 @@
                                             <div class="form-check col-6">
                                                 <input type="radio" id="f" name="sex" class="form-check-input"
                                                     value="F" {{ old('sex') === 'F' ? 'checked' : '' }} />
-                                                <label class="custom-control-label" for="f">Femenino</label>
+                                                <label class="custom-control-label" for="f">Feminino</label>
                                             </div>
                                         </div>
                                     </div>
@@ -130,9 +130,9 @@
                                 <div class="row">
                                     <div class="flex flex-col mb-3 col-md-6">
                                         <label for="timeConverteition" class="form-control-label">Tempo de
-                                            converção</label>
+                                            conversão</label>
                                         <input type="text" id="timeConverteition" name="time_convertion"
-                                            class="form-control" placeholder="Tempo de converção" aria-label="Name"
+                                            class="form-control" placeholder="Tempo de conversão" aria-label="Name"
                                             value="{{ old('time_convertion') }}">
                                         @error('time_convertion')
                                             <p class='text-danger text-xs pt-1'> {{ $message }} </p>
