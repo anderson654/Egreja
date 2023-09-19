@@ -55,7 +55,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'https://localhost'),
+    'url' => env('APP_URL', 'https://www.egreja.online'),
 
     'asset_url' => env('ASSET_URL'),
 
