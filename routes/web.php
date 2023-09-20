@@ -67,4 +67,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
 		'user' => UserController::class,
 		'needRequests' => NeedRequestController::class
 	]);
+	Route::get('aprove-voluntary-index', [VolunteerRegistrationController::class, 'index'])->name('register.voluntary.index');
+	Route::get('aprove-voluntary-show/{id}', [VolunteerRegistrationController::class, 'show'])->name('register.voluntary.show');
+	Route::post('voluntary/{id}/aprove', [VoluntaryController::class, 'aprove'])->name('voluntary.aprove');
 });

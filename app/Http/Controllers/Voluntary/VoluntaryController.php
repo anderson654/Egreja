@@ -65,4 +65,8 @@ class VoluntaryController extends Controller
     {
         //
     }
+
+    public function aprove(){
+        //
+    }
 }

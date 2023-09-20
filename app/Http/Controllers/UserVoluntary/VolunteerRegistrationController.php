@@ -11,6 +11,8 @@ class VolunteerRegistrationController extends Controller
     public function index()
     {
         //
+        $voluntaryes = VolunteerRegistration::get();
+        return view('pages.volunteerRegistration.index', compact('voluntaryes'));
     }
 
     /**
@@ -51,7 +53,9 @@ class VolunteerRegistrationController extends Controller
      */
     public function show(string $id)
     {
-        //
+        //pega um voluntario
+        $voluntary = VolunteerRegistration::find($id);
+        return view('pages.volunteerRegistration.show',compact('voluntary'));
     }
 
     /**

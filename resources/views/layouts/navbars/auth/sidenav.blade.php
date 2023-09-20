@@ -46,7 +46,7 @@
                 </a>
             </li> --}}
             <li class="nav-item mt-3">
-                <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Gestão de pedidos</h6>
+                <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Gestão</h6>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ str_contains(request()->url(), 'tables') == true ? 'active' : '' }}"
@@ -59,6 +59,8 @@
                     </div>
                     <span class="nav-link-text ms-1">Pedido de ajuda</span>
                 </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link {{ str_contains(request()->url(), 'tables') == true ? 'active' : '' }}"
                     href="{{ route('voluntary.index') }}">
                     <div
@@ -70,19 +72,33 @@
                     <span class="nav-link-text ms-1">Voluntários</span>
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link {{ str_contains(request()->url(), 'tables') == true ? 'active' : '' }}"
+                    href="{{ route('register.voluntary.index') }}">
+                    <div
+                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                        <span class="material-icons">
+                            how_to_reg
+                        </span>
+                    </div>
+                    <span class="nav-link-text ms-1">Aprovar voluntário</span>
+                </a>
+            </li>
             <li class="nav-item mt-3">
                 <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Usuários</h6>
             </li>
-            <a class="nav-link {{ str_contains(request()->url(), 'tables') == true ? 'active' : '' }}"
-                href="{{ route('user.index') }}">
-                <div
-                    class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                    <span class="material-icons">
-                        people
-                    </span>
-                </div>
-                <span class="nav-link-text ms-1">Usuário/Ajuda</span>
-            </a>
+            <li class="nav-item">
+                <a class="nav-link {{ str_contains(request()->url(), 'tables') == true ? 'active' : '' }}"
+                    href="{{ route('user.index') }}">
+                    <div
+                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                        <span class="material-icons">
+                            people
+                        </span>
+                    </div>
+                    <span class="nav-link-text ms-1">Usuário/Ajuda</span>
+                </a>
+            </li>
             {{-- <li class="nav-item">
                 <a class="nav-link {{ str_contains(request()->url(), 'tables') == true ? 'active' : '' }}" href="{{ route('page', ['page' => 'tables']) }}">
                     <div
