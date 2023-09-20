@@ -24,6 +24,36 @@
     <link href="/assets/css/nucleo-svg.css" rel="stylesheet" />
     <!-- CSS Files -->
     <link id="pagestyle" href="/assets/css/argon-dashboard.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+    <style>
+        .material-icons {
+            font-family: 'Material Icons';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 20px;
+            /* Preferred icon size */
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+
+            /* Support for all WebKit browsers. */
+            -webkit-font-smoothing: antialiased;
+            /* Support for Safari and Chrome. */
+            text-rendering: optimizeLegibility;
+
+            /* Support for Firefox. */
+            -moz-osx-font-smoothing: grayscale;
+
+            /* Support for IE. */
+            font-feature-settings: 'liga';
+            color: #344767;
+        }
+    </style>
 </head>
 
 <body class="{{ $class ?? '' }}">
@@ -33,22 +63,28 @@
     @endguest
 
     @auth
-        @if (in_array(request()->route()->getName(), ['sign-in-static', 'sign-up-static', 'login', 'register', 'recover-password', 'rtl', 'virtual-reality']))
+        @if (in_array(request()->route()->getName(),
+                ['sign-in-static', 'sign-up-static', 'login', 'register', 'recover-password', 'rtl', 'virtual-reality']))
             @yield('content')
         @else
-            @if (!in_array(request()->route()->getName(), ['profile', 'profile-static']))
-                <div class="min-height-300  position-absolute w-100" style="background-image: url('/img/bakground.png'); background-position-y: 50%;">
+            @if (
+                !in_array(request()->route()->getName(),
+                    ['profile', 'profile-static']))
+                <div class="min-height-300  position-absolute w-100"
+                    style="background-image: url('/img/bakground.png'); background-position-y: 50%;">
                     <span class="mask bg-primary opacity-7"></span>
                 </div>
-            @elseif (in_array(request()->route()->getName(), ['profile-static', 'profile']))
-                <div class="position-absolute w-100 min-height-300 top-0" style="background-image: url('https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro/assets/img/profile-layout-header.jpg'); background-position-y: 50%;">
+            @elseif (in_array(request()->route()->getName(),
+                    ['profile-static', 'profile']))
+                <div class="position-absolute w-100 min-height-300 top-0"
+                    style="background-image: url('https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro/assets/img/profile-layout-header.jpg'); background-position-y: 50%;">
                     <span class="mask bg-primary opacity-6"></span>
                 </div>
             @endif
             @include('layouts.navbars.auth.sidenav')
-                <main class="main-content border-radius-lg">
-                    @yield('content')
-                </main>
+            <main class="main-content border-radius-lg">
+                @yield('content')
+            </main>
             @include('components.fixed-plugin')
         @endif
     @endauth
