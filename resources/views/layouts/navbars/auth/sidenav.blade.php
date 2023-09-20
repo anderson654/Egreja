@@ -46,7 +46,7 @@
                 </a>
             </li> --}}
             <li class="nav-item mt-3">
-                <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Páginas</h6>
+                <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Gestão de pedidos</h6>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ str_contains(request()->url(), 'tables') == true ? 'active' : '' }}"
@@ -60,16 +60,6 @@
                     <span class="nav-link-text ms-1">Pedido de ajuda</span>
                 </a>
                 <a class="nav-link {{ str_contains(request()->url(), 'tables') == true ? 'active' : '' }}"
-                    href="{{ route('user.index') }}">
-                    <div
-                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <span class="material-icons">
-                            people
-                        </span>
-                    </div>
-                    <span class="nav-link-text ms-1">Usuarios</span>
-                </a>
-                <a class="nav-link {{ str_contains(request()->url(), 'tables') == true ? 'active' : '' }}"
                     href="{{ route('voluntary.index') }}">
                     <div
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
@@ -77,9 +67,22 @@
                             badge
                         </span>
                     </div>
-                    <span class="nav-link-text ms-1">Voluntarios</span>
+                    <span class="nav-link-text ms-1">Voluntários</span>
                 </a>
             </li>
+            <li class="nav-item mt-3">
+                <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Usuários</h6>
+            </li>
+            <a class="nav-link {{ str_contains(request()->url(), 'tables') == true ? 'active' : '' }}"
+                href="{{ route('user.index') }}">
+                <div
+                    class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                    <span class="material-icons">
+                        people
+                    </span>
+                </div>
+                <span class="nav-link-text ms-1">Usuário/Ajuda</span>
+            </a>
             {{-- <li class="nav-item">
                 <a class="nav-link {{ str_contains(request()->url(), 'tables') == true ? 'active' : '' }}" href="{{ route('page', ['page' => 'tables']) }}">
                     <div
