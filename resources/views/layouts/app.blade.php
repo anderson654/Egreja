@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-icon.png">
-    <link rel="icon" type="image/png" href="/img/egreja.png">
+    <link rel="icon" type="image/png" href="/img/logo.png">
     <title>
         Argon Dashboard 2 by Creative Tim
     </title>
@@ -37,7 +37,9 @@
             @yield('content')
         @else
             @if (!in_array(request()->route()->getName(), ['profile', 'profile-static']))
-                <div class="min-height-300 bg-primary position-absolute w-100"></div>
+                <div class="min-height-300  position-absolute w-100" style="background-image: url('/img/bakground.png'); background-position-y: 50%;">
+                    <span class="mask bg-primary opacity-7"></span>
+                </div>
             @elseif (in_array(request()->route()->getName(), ['profile-static', 'profile']))
                 <div class="position-absolute w-100 min-height-300 top-0" style="background-image: url('https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro/assets/img/profile-layout-header.jpg'); background-position-y: 50%;">
                     <span class="mask bg-primary opacity-6"></span>

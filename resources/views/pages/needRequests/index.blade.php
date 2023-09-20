@@ -2,9 +2,9 @@
 
 @section('content')
     @include('layouts.navbars.auth.topnav', ['title' => 'Gestão de pedidos de ajuda'])
-    <div id="alert">
+    {{-- <div id="alert">
         @include('components.alert')
-    </div>
+    </div> --}}
     <div class="container-fluid py-4">
         <div class="row">
             <div class="col-12">
