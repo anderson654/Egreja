@@ -22,7 +22,8 @@ class VolunteerRegistration extends Model
         'time',
         'time_convertion',
         'batizado',
-        'alredy_voluntary'
+        'alredy_voluntary',
+        'is_aproved'
     ];
 
 

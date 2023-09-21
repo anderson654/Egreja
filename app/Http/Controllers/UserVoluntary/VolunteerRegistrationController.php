@@ -11,7 +11,7 @@ class VolunteerRegistrationController extends Controller
     public function index()
     {
         //
-        $voluntaryes = VolunteerRegistration::get();
+        $voluntaryes = VolunteerRegistration::whereNull('is_aproved')->orWhere('is_aproved', 0)->get();
         return view('pages.volunteerRegistration.index', compact('voluntaryes'));
     }
 
@@ -55,7 +55,7 @@ class VolunteerRegistrationController extends Controller
     {
         //pega um voluntario
         $voluntary = VolunteerRegistration::find($id);
-        return view('pages.volunteerRegistration.show',compact('voluntary'));
+        return view('pages.volunteerRegistration.show', compact('voluntary'));
     }
 
     /**
@@ -72,6 +72,18 @@ class VolunteerRegistrationController extends Controller
     public function update(Request $request, string $id)
     {
         //
+        if($request->ajax()){
+            $voluntary = VolunteerRegistration::find($id);
+            $voluntary->is_aproved = 1;
+            $voluntary->save();
+            return response()->json(['sucess' => 'sucesso ao salvar']);
+        }
+        $voluntary = VolunteerRegistration::find($id)->update($request->all());
+        if(!$voluntary){
+            dd('Erro');
+        }
+
+        dd($voluntary);
     }
 
     /**

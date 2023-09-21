@@ -37,7 +37,7 @@ Route::get('/enviarMensagem', [WhatsAppController::class, 'enviarMensagemPersona
 
 
 Route::get('/', function () {
-	return redirect('/admin/user');
+	return redirect('/admin/needRequests');
 })->middleware('auth');
 Route::get('/register', [RegisterController::class, 'create'])->middleware('guest')->name('register');
 Route::get('/register-voluntary', [VolunteerRegistrationController::class, 'create'])->middleware('guest');
@@ -69,5 +69,6 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
 	]);
 	Route::get('aprove-voluntary-index', [VolunteerRegistrationController::class, 'index'])->name('register.voluntary.index');
 	Route::get('aprove-voluntary-show/{id}', [VolunteerRegistrationController::class, 'show'])->name('register.voluntary.show');
+	Route::put('aprove-voluntary-update/{id}', [VolunteerRegistrationController::class, 'update'])->name('register.voluntary.update');
 	Route::post('voluntary/{id}/aprove', [VoluntaryController::class, 'aprove'])->name('voluntary.aprove');
 });

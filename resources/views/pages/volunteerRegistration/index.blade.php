@@ -5,6 +5,7 @@
     {{-- <div id="alert">
         @include('components.alert')
     </div> --}}
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <div class="container-fluid py-4">
         <div class="row">
             <div class="col-12">
@@ -45,23 +46,23 @@
                                                             alt="user1">
                                                     </div>
                                                     <div class="d-flex flex-column justify-content-center">
-                                                        <h6 class="mb-0 text-sm">{{$voluntary->name}}</h6>
-                                                        <p class="text-xs text-secondary mb-0">{{$voluntary->email}}
+                                                        <h6 class="mb-0 text-sm">{{ $voluntary->name }}</h6>
+                                                        <p class="text-xs text-secondary mb-0">{{ $voluntary->email }}
                                                         </p>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td>
-                                                <p class="text-sm font-weight-bold mb-0">{{$voluntary->created_at}}</p>
+                                                <p class="text-sm font-weight-bold mb-0">{{ $voluntary->created_at }}</p>
                                             </td>
                                             <td class="align-middle">
-                                                <a href="javascript:;"
+                                                <a href="" data-update="{{ $voluntary->id }}"
                                                     class="text-secondary font-weight-bold text-xs text-uppercase"
                                                     data-toggle="tooltip" data-original-title="Edit user">
                                                     aprovar
                                                 </a>
                                                 |
-                                                <a href="{{route('register.voluntary.show',['id' => $voluntary->id])}}"
+                                                <a href="{{ route('register.voluntary.show', ['id' => $voluntary->id]) }}"
                                                     class="text-secondary font-weight-bold text-xs text-uppercase"
                                                     data-toggle="tooltip" data-original-title="Edit user">
                                                     visualizar
@@ -77,5 +78,39 @@
             </div>
         </div>
         @include('layouts.footers.auth.footer')
+        <script>
+            $(document).ready(function() {
+                const elements = $('[data-update]');
+                elements.click(function(e) {
+                    e.preventDefault();
+                    const lineTable = $(this).closest('tr');
+                    const idUser = $(this).attr('data-update');
+                    $("#exampleModalToggle").modal("show");
+                    $.ajax({
+                        url: `aprove-voluntary-update/${idUser}`,
+                        type: 'PUT',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                                'content') // Define o cabeçalho CSRF-Token
+                        },
+                        success: function(response) {
+                            // Lida com a resposta do servidor, se necessário
+                            lineTable.fadeOut(500);
+                        },
+                        error: function(error) {
+                            // Lida com erros, se houver
+                            console.error(error);
+                        },
+                        complete: function() {
+                            // Esta função será executada independentemente de sucesso ou erro
+                            console.log('Solicitação concluída.');
+                            $("#exampleModalToggle").modal("hide");
+
+                            // Execute outras ações aqui
+                        }
+                    });
+                })
+            })
+        </script>
     </div>
 @endsection

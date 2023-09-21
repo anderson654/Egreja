@@ -57,7 +57,18 @@
 </head>
 
 <body class="{{ $class ?? '' }}">
-
+    {{-- criar um component modal --}}
+    <div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel"
+        tabindex="-1" style="z-index: 100000">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content d-flex justify-content-center align-items-center"
+                style="background: transparent;border: none">
+                <div class="spinner-border text-light" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        </div>
+    </div>
     @guest
         @yield('content')
     @endguest
@@ -88,6 +99,9 @@
             @include('components.fixed-plugin')
         @endif
     @endauth
+
+    <!---->
+
 
     <!--   Core JS Files   -->
     <script src="/assets/js/core/popper.min.js"></script>
