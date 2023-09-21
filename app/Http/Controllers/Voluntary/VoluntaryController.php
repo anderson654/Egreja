@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Voluntary;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\VolunteerRegistration;
 use Illuminate\Http\Request;
 
 class VoluntaryController extends Controller
@@ -13,8 +14,9 @@ class VoluntaryController extends Controller
      */
     public function index()
     {
-        $users = User::where('role_id',3)->get();
-        return view('pages.voluntary.index',compact('users'));
+        $users = VolunteerRegistration::where('is_aproved', true)->get();
+        // $users = User::where('role_id', 3)->get();
+        return view('pages.voluntary.index', compact('users'));
     }
 
     /**
@@ -66,7 +68,8 @@ class VoluntaryController extends Controller
         //
     }
 
-    public function aprove(){
+    public function aprove()
+    {
         //
     }
 }
