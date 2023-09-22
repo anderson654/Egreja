@@ -28,6 +28,7 @@ use App\Http\Controllers\NeedRequests\NeedRequestController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\UserVoluntary\VolunteerRegistrationController;
 use App\Http\Controllers\Voluntary\VoluntaryController;
+use App\Http\Controllers\WhatsApp\DialogsTemplatesController;
 use App\Http\Controllers\WhatsAppController;
 use App\Http\Controllers\ZApiWebHookController;
 
@@ -65,7 +66,8 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
 	Route::resources([
 		'voluntary' => VoluntaryController::class,
 		'user' => UserController::class,
-		'needRequests' => NeedRequestController::class
+		'needRequests' => NeedRequestController::class,
+		'dialog-whatsapp' => DialogsTemplatesController::class,
 	]);
 	Route::get('aprove-voluntary-index', [VolunteerRegistrationController::class, 'index'])->name('register.voluntary.index');
 	Route::get('aprove-voluntary-show/{id}', [VolunteerRegistrationController::class, 'show'])->name('register.voluntary.show');

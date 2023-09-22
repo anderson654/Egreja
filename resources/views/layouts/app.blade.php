@@ -25,6 +25,8 @@
     <!-- CSS Files -->
     <link id="pagestyle" href="{{mix('/assets/css/argon-dashboard.css')}}" rel="stylesheet" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <!--drag and drop-->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 
     <style>
         .material-icons {

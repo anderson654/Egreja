@@ -99,6 +99,22 @@
                     <span class="nav-link-text ms-1">Usuário/Ajuda</span>
                 </a>
             </li>
+
+            <li class="nav-item mt-3">
+                <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Gestão de mensagens</h6>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ str_contains(request()->url(), 'tables') == true ? 'active' : '' }}"
+                    href="{{ route('dialog-whatsapp.index') }}">
+                    <div
+                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                        <span class="material-icons">
+                            chat
+                        </span>
+                    </div>
+                    <span class="nav-link-text ms-1">WhatsApp</span>
+                </a>
+            </li>
             {{-- <li class="nav-item">
                 <a class="nav-link {{ str_contains(request()->url(), 'tables') == true ? 'active' : '' }}" href="{{ route('page', ['page' => 'tables']) }}">
                     <div

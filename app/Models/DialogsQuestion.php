@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class DialogsQuestion extends Model
 {
     use HasFactory;
+    
+    public function group_questions_responses(){
+        return $this->hasMany(GroupQuestionsResponse::class,'dialog_question_id','id');
+    }
 }
