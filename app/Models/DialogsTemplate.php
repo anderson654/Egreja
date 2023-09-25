@@ -14,6 +14,6 @@ class DialogsTemplate extends Model
     ];
 
     public function dialog_questions(){
-        return $this->hasMany(DialogsQuestion::class,'dialog_template_id','id');
+        return $this->hasMany(DialogsQuestion::class,'dialog_template_id','id')->orderBy('priority','asc');
     }
 }

@@ -29,22 +29,22 @@ class DialogsQuestionsController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {   
-        $ultimateQuestion = DialogsQuestion::where('dialog_template_id',$request->dialog_template_id)->orderBy('priority', 'desc');
+    {
+        $ultimateQuestion = DialogsQuestion::where('dialog_template_id', $request->dialog_template_id)->orderBy('priority', 'desc');
         $priority = 1;
-        if($ultimateQuestion->exists()){
+        if ($ultimateQuestion->exists()) {
             $priority = (int)$ultimateQuestion->first()['priority'];
             $priority += 1;
         }
-        
+
         $request->merge(["priority" => $priority]);
-        $validator = Validator::make($request->all(),[
+        $validator = Validator::make($request->all(), [
             'question' => 'required|max:255|min:2',
             'dialog_template_id' => 'required',
             'priority' => 'required',
         ]);
-        
-        if($validator->fails()){
+
+        if ($validator->fails()) {
             return back()->with('error', 'Erro ao salvar.')->withErrors($validator)->withInput();
         }
 
@@ -83,5 +83,13 @@ class DialogsQuestionsController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function updateOrder(Request $request, $id)
+    {
+        foreach ($request->updates as $obj) {
+            DialogsQuestion::where('id', $obj['id'])->update(['priority' => $obj['index']]);
+        }
+        return response()->json(['message' => 'dados atualizados.']);
     }
 }

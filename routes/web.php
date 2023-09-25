@@ -75,4 +75,5 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
 	Route::get('aprove-voluntary-show/{id}', [VolunteerRegistrationController::class, 'show'])->name('register.voluntary.show');
 	Route::put('aprove-voluntary-update/{id}', [VolunteerRegistrationController::class, 'update'])->name('register.voluntary.update');
 	Route::post('voluntary/{id}/aprove', [VoluntaryController::class, 'aprove'])->name('voluntary.aprove');
+	Route::put('dialog-questions-watsapp/{id}/updateorder', [DialogsQuestionsController::class, 'updateOrder'])->name('dialog-questions-watsapp.updateorder');
 });

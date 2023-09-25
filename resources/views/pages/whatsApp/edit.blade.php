@@ -2,6 +2,8 @@
 
 @section('content')
     @include('layouts.navbars.auth.topnav', ['title' => 'Voluntarios'])
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <input type="text" id="template-id" value="{{ $dialogsTemplate->id }}" style="display: none">
     <div class="card shadow-lg mx-4 card-profile-bottom mt-5">
         <div class="card-body p-3">
             <div class="row gx-4">
@@ -30,11 +32,20 @@
                     <div class="card-header pb-0">
                         <div class="d-flex justify-content-between">
                             <h6>Mensagens</h6>
-                            <button type="button" class="btn btn-primary btn-sm ms-auto" data-bs-toggle="modal"
-                                data-bs-target="#exampleModalSignUp">
-                                <i class="ni ni-fat-add text-ligth text-sm opacity-10"></i>
-                                Adicionar mensagem
-                            </button>
+                            <div class="d-flex">
+                                <div class="dropdown">
+                                    <button class="btn bg-gradient-secondary dropdown-toggle me-2" type="button"
+                                        id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                                data-bs-target="#exampleModalSignUp">Nova mensagem</a></li>
+                                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                    </ul>
+                                </div>
+                                <button type="button" class="btn btn-success" id="saveOrder" disabled>Salvar</button>
+                            </div>
                             @include('components.Modals.create-message-whats')
                         </div>
                     </div>
@@ -130,13 +141,12 @@
         @include('layouts.footers.auth.footer')
         <script>
             $(document).ready(function() {
-
                 //javascript
                 const tableOptions = document.getElementById("table-options");
                 let initialStateTable = null;
                 let finalStateTable = null;
                 let finalArrayUpdates = null;
-
+                //se der problema ajustar a ordem
                 var sortableList = new Sortable(tableOptions, {
                     handle: '.move',
                     animation: 150,
@@ -157,8 +167,8 @@
                     onEnd: function(evt) {
                         finalStateTable = finalStateTable.map((obj, index) => {
                             return {
-                                id:$(evt.to).children().eq(index).data('questionid'),
-                                index: index +1
+                                id: $(evt.to).children().eq(index).data('questionid'),
+                                index: index + 1
                             }
                         });
 
@@ -174,9 +184,51 @@
                         }
                         return false;
                     })
-                    console.log(finalArrayUpdates);
+                    if (finalArrayUpdates.length === 0) {
+                        $('#saveOrder').prop('disabled', true);
+                        return;
+                    }
+                    $('#saveOrder').prop('disabled', false);
                 }
+                $('#saveOrder').click(function() {
+                    saveOrder(finalArrayUpdates);
+                })
             });
+
+            function saveOrder(array) {
+
+                const templateId = $('#template-id').val();
+                const data = {
+                    updates: array
+                }
+
+                $.ajax({
+                    url: `/admin/dialog-questions-watsapp/${templateId}/updateorder`,
+                    type: 'PUT',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                            'content') // Define o cabeçalho CSRF-Token
+                    },
+                    data: JSON.stringify(data),
+                    contentType: 'application/json',
+                    success: function(response) {
+                        $('#saveOrder').prop('disabled', true);
+                        // Lida com a resposta do servidor, se necessário
+                        // lineTable.fadeOut(500);
+                    },
+                    error: function(error) {
+                        // Lida com erros, se houver
+                        console.error(error);
+                    },
+                    complete: function() {
+                        // Esta função será executada independentemente de sucesso ou erro
+                        console.log('Solicitação concluída.');
+                        $("#exampleModalToggle").modal("hide");
+
+                        // Execute outras ações aqui
+                    }
+                });
+            }
         </script>
     </div>
 @endsection
