@@ -13,7 +13,7 @@
                 <div class="col-auto my-auto">
                     <div class="h-100">
                         <h5 class="mb-1">
-                            {{$dialogsTemplate->title}}
+                            {{ $dialogsTemplate->title }}
                         </h5>
                         <p class="mb-0 font-weight-bold text-sm">
                             Template de mensagens WhatsApp
@@ -30,12 +30,12 @@
                     <div class="card-header pb-0">
                         <div class="d-flex justify-content-between">
                             <h6>Mensagens</h6>
-                            <a href="{{ route('voluntary.create') }}">
-                                <button type="submit" class="btn btn-primary btn-sm ms-auto">
-                                    <i class="ni ni-fat-add text-ligth text-sm opacity-10"></i>
-                                    Adicionar template
-                                </button>
-                            </a>
+                            <button type="button" class="btn btn-primary btn-sm ms-auto" data-bs-toggle="modal"
+                                data-bs-target="#exampleModalSignUp">
+                                <i class="ni ni-fat-add text-ligth text-sm opacity-10"></i>
+                                Adicionar mensagem
+                            </button>
+                            @include('components.Modals.create-message-whats')
                         </div>
                     </div>
                     <div class="card-body px-0 pt-0 pb-2">
@@ -64,6 +64,17 @@
                                     </tr>
                                 </thead>
                                 <tbody id="table-options">
+                                    @if ($dialogsTemplate->dialog_questions->count() === 0)
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex px-2 py-1">
+                                                    <div class="d-flex flex-column justify-content-center">
+                                                        <h6>Nenhum registro</h6>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endif
                                     @foreach ($dialogsTemplate->dialog_questions as $questions)
                                         <tr data-questionid="{{ $questions->id }}">
                                             <td class="move">
@@ -86,22 +97,26 @@
                                             <td>
                                                 @foreach ($questions->group_questions_responses as $group_questions_response)
                                                     @if ($group_questions_response->group_response->responses_role_id === 1)
-                                                        <p class="text-xs font-weight-bold mb-0">{{$group_questions_response->group_response->title}}</p>
-                                                        <p class="text-xs text-secondary mb-0">Organization</p>
+                                                        <span class="badge"
+                                                            style="font-size: 10px;background: #b0eed3;color: #1aae6f">{{ $group_questions_response->group_response->title }}</span>
                                                     @endif
                                                 @endforeach
                                             </td>
                                             <td class="align-middle">
-                                                <a href="javascript:;" class="text-secondary font-weight-bold text-xs"
-                                                    data-toggle="tooltip" data-original-title="Edit user">
-                                                    Edit
-                                                </a>
+                                                @foreach ($questions->group_questions_responses as $group_questions_response)
+                                                    @if ($group_questions_response->group_response->responses_role_id === 3)
+                                                        <span class="badge"
+                                                            style="font-size: 10px;background: #fee6e0;color: #ff3709">{{ $group_questions_response->group_response->title }}</span>
+                                                    @endif
+                                                @endforeach
                                             </td>
                                             <td class="align-middle">
-                                                <a href="javascript:;" class="text-secondary font-weight-bold text-xs"
-                                                    data-toggle="tooltip" data-original-title="Edit user">
-                                                    Edit
-                                                </a>
+                                                @foreach ($questions->group_questions_responses as $group_questions_response)
+                                                    @if ($group_questions_response->group_response->responses_role_id === 2)
+                                                        <span class="badge"
+                                                            style="font-size: 10px;background: #fdd1da;color: #f80031">{{ $group_questions_response->group_response->title }}</span>
+                                                    @endif
+                                                @endforeach
                                             </td>
                                         </tr>
                                     @endforeach
@@ -142,10 +157,11 @@
                     onEnd: function(evt) {
                         finalStateTable = finalStateTable.map((obj, index) => {
                             return {
-                                ...obj,
-                                index: $(evt.to).children().eq(index).data('questionid')
+                                id:$(evt.to).children().eq(index).data('questionid'),
+                                index: index +1
                             }
                         });
+
                         setFinalUpdates(initialStateTable, finalStateTable);
                     }
                 });
@@ -153,11 +169,12 @@
                 function setFinalUpdates(initialArray, finalArray) {
                     //verifica se tem diferença entre os dois arrays
                     finalArrayUpdates = finalArray.filter((obj, index) => {
-                        if (obj.index !== initialArray[index].index) {
+                        if (obj.id !== initialArray[index].id) {
                             return true
                         }
                         return false;
                     })
+                    console.log(finalArrayUpdates);
                 }
             });
         </script>

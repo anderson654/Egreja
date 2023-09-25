@@ -23,7 +23,7 @@
     <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
     <link href="/assets/css/nucleo-svg.css" rel="stylesheet" />
     <!-- CSS Files -->
-    <link id="pagestyle" href="{{mix('/assets/css/argon-dashboard.css')}}" rel="stylesheet" />
+    <link id="pagestyle" href="{{ mix('/assets/css/argon-dashboard.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <!--drag and drop-->
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
@@ -56,21 +56,11 @@
             color: #344767;
         }
     </style>
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 </head>
 
 <body class="{{ $class ?? '' }}">
     {{-- criar um component modal --}}
-    <div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel"
-        tabindex="-1" style="z-index: 100000">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content d-flex justify-content-center align-items-center"
-                style="background: transparent;border: none">
-                <div class="spinner-border text-light" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-            </div>
-        </div>
-    </div>
     @guest
         @yield('content')
     @endguest
@@ -95,7 +85,10 @@
                 </div>
             @endif
             @include('layouts.navbars.auth.sidenav')
-            <main class="main-content border-radius-lg">
+            <main class="main-content border-radius-lg" style="position: relative">
+                <div style="position: absolute;right: 0;width: 100%;z-index: 101;">
+                    @include('components.alert')
+                </div>
                 @yield('content')
             </main>
             @include('components.fixed-plugin')
@@ -124,6 +117,30 @@
     <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
     <script src="/assets/js/argon-dashboard.js"></script>
     @stack('js');
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script>
+        $(document).ready(function() {
+            if ($('.alert')) {
+                setTimeout(() => {
+                    $('.alert').fadeOut();
+                }, 1000);
+            }
+        });
+
+        //ajustar para script da pagina
+        var quill = new Quill('#editor', {
+            modules: {
+                toolbar: true
+            },
+            theme: 'snow' // Specify theme in configuration
+        });
+        
+        quill.on('text-change', function(delta, oldDelta, source) {
+            $('#exampleFormControlInput1').val(quill.getText());
+            console.log($('#exampleFormControlInput1').val());
+        });
+        //ajustar para script da pagina
+    </script>
 </body>
 
 </html>

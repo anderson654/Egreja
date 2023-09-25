@@ -12,12 +12,12 @@
                     <div class="card-header pb-0">
                         <div class="d-flex justify-content-between">
                             <h6>Templates</h6>
-                            <a href="{{ route('voluntary.create') }}">
-                                <button type="submit" class="btn btn-primary btn-sm ms-auto">
-                                    <i class="ni ni-fat-add text-ligth text-sm opacity-10"></i>
-                                    Adicionar template
-                                </button>
-                            </a>
+                            <button type="button" class="btn btn-primary btn-sm ms-auto" data-bs-toggle="modal"
+                                data-bs-target="#exampleModalSignUp">
+                                <i class="ni ni-fat-add text-ligth text-sm opacity-10"></i>
+                                Adicionar template
+                            </button>
+                            @include('components.Modals.create-template-whats')
                         </div>
                     </div>
                     <div class="card-body px-0 pt-0 pb-2">
@@ -39,8 +39,8 @@
                                             <td>
                                                 <div class="d-flex px-2 py-1">
                                                     <div class="d-flex flex-column justify-content-center">
-                                                        <h6 class="mb-0 text-sm">{{$dialogsTemplate->title}}</h6>
-                                                        <p class="text-xs text-secondary mb-0">{{''}}</p>
+                                                        <h6 class="mb-0 text-sm">{{ $dialogsTemplate->title }}</h6>
+                                                        <p class="text-xs text-secondary mb-0">{{ '' }}</p>
                                                     </div>
                                                 </div>
                                             </td>
@@ -49,8 +49,9 @@
                                                 <p class="text-xs text-secondary mb-0">Organization</p>
                                             </td>
                                             <td class="align-middle">
-                                                <a href="{{route('dialog-whatsapp.edit',['dialog_whatsapp' => $dialogsTemplate->id])}}" class="text-secondary font-weight-bold text-xs"
-                                                    data-toggle="tooltip" data-original-title="Edit user">
+                                                <a href="{{ route('dialog-whatsapp.edit', ['dialog_whatsapp' => $dialogsTemplate->id]) }}"
+                                                    class="text-secondary font-weight-bold text-xs" data-toggle="tooltip"
+                                                    data-original-title="Edit user">
                                                     Edit
                                                 </a>
                                             </td>
