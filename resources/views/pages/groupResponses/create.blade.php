@@ -13,7 +13,7 @@
                         <div class="d-flex justify-content-between">
                             <h6>Grupo de respostas</h6>
                             <button type="button" class="btn btn-primary btn-sm ms-auto" data-bs-toggle="modal"
-                                data-bs-target="#exampleModalSignUp">
+                                data-bs-target="#exampleModalSignUp" disabled>
                                 <i class="ni ni-fat-add text-ligth text-sm opacity-10"></i>
                                 Adicionar template
                             </button>
