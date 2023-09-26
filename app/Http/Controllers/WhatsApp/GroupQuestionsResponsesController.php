@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\WhatsApp;
 
 use App\Http\Controllers\Controller;
+use App\Models\GroupQuestionsResponse;
 use Illuminate\Http\Request;
 
 class GroupQuestionsResponsesController extends Controller
@@ -28,7 +29,12 @@ class GroupQuestionsResponsesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        foreach ($request['ids-groups'] as $goupId) {
+            # code...
+            GroupQuestionsResponse::create(['dialog_question_id' => $request->question_id, 'groups_responses_id' => $goupId]);
+        }
+
+        return back()->with('succes', 'Salvo com sucesso.');
     }
 
     /**

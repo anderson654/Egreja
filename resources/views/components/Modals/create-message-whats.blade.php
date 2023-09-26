@@ -3,7 +3,7 @@
         <div class="card card-plain">
             <div class="card-header pb-0 text-left">
                 <h3 class="font-weight-bolder text-primary text-gradient">Criar novo mensagem</h3>
-                <p class="mb-0">Crie uma novo mendagem para ser enviada.</p>
+                <p class="mb-0">Crie uma novo mensagen para ser enviada.</p>
                 <p class="mb-0">(obs) as mensagens serão enviadas na ordem.</p>
             </div>
             <div class="card-body pb-3">

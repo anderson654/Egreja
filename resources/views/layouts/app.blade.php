@@ -27,6 +27,9 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <!--drag and drop-->
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <!--choise-->
+    {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js@9.0.1/public/assets/styles/base.min.css" /> --}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js@9.0.1/public/assets/styles/choices.min.css" />
 
     <style>
         .material-icons {
@@ -134,13 +137,14 @@
             },
             theme: 'snow' // Specify theme in configuration
         });
-        
+
         quill.on('text-change', function(delta, oldDelta, source) {
             $('#exampleFormControlInput1').val(quill.getText());
             console.log($('#exampleFormControlInput1').val());
         });
         //ajustar para script da pagina
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/choices.js@9.0.1/public/assets/scripts/choices.min.js"></script>
 </body>
 
 </html>

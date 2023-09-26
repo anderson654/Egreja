@@ -40,13 +40,13 @@
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
                                                 data-bs-target="#exampleModalSignUp">Nova mensagem</a></li>
-                                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                        <li><a class="dropdown-item" href="{{route('group-responses.create')}}">Novo grupo</a></li>
                                     </ul>
                                 </div>
                                 <button type="button" class="btn btn-success" id="saveOrder" disabled>Salvar</button>
                             </div>
                             @include('components.Modals.create-message-whats')
+                            @include('components.Modals.assigment-group-response-to-message')
                         </div>
                     </div>
                     <div class="card-body px-0 pt-0 pb-2">
@@ -65,12 +65,12 @@
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             <p class="text-xs font-weight-bold mb-0">Messages</p>
-                                            reject
+                                            finish
                                         </th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            <p class="text-xs font-weight-bold mb-0">Messages</p>
-                                            finish
+                                            <p class="text-xs font-weight-bold mb-0">Atribuir</p>
+                                            grupo de mensagens
                                         </th>
                                     </tr>
                                 </thead>
@@ -117,17 +117,14 @@
                                                 @foreach ($questions->group_questions_responses as $group_questions_response)
                                                     @if ($group_questions_response->group_response->responses_role_id === 3)
                                                         <span class="badge"
-                                                            style="font-size: 10px;background: #fee6e0;color: #ff3709">{{ $group_questions_response->group_response->title }}</span>
+                                                            style="font-size: 10px;background: #fdd1da;color: #f80031">{{ $group_questions_response->group_response->title }}</span>
                                                     @endif
                                                 @endforeach
                                             </td>
                                             <td class="align-middle">
-                                                @foreach ($questions->group_questions_responses as $group_questions_response)
-                                                    @if ($group_questions_response->group_response->responses_role_id === 2)
-                                                        <span class="badge"
-                                                            style="font-size: 10px;background: #fdd1da;color: #f80031">{{ $group_questions_response->group_response->title }}</span>
-                                                    @endif
-                                                @endforeach
+                                                <span class="material-icons modal-add-group" style="cursor: pointer" data-questionid={{$questions->id}}>
+                                                    add
+                                                </span>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -138,9 +135,20 @@
                 </div>
             </div>
         </div>
+        {{-- <select class="js-choice" multiple> --}}
         @include('layouts.footers.auth.footer')
         <script>
             $(document).ready(function() {
+                //add function open modal
+                $('.modal-add-group').click(function (){
+                    $('#modal-assingn').modal('show');
+                    $('[name="question_id"]').val($(this).data('questionid'));
+                });
+
+                //multiselect
+                const choices = new Choices($('.js-choice')[0],{
+                    removeItemButton: true,
+                });
                 //javascript
                 const tableOptions = document.getElementById("table-options");
                 let initialStateTable = null;

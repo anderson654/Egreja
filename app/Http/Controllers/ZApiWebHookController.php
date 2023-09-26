@@ -108,11 +108,12 @@ class ZApiWebHookController extends Controller
         //verifica se existe um grupo de respostas para a questão;
         $existResponsesQuestion = $this->existResponsesQuestion($idQuestion);
 
-        //se existir um grupo de respostas
+        
+        //se não existir um grupo de respostas
         if (!$existResponsesQuestion) {
             return 'next';
         }
-
+        
         //se existir um grupo de respostas;
         $responseToGroup = $this->checkExistMessageInGroups($meessage, $idQuestion);
         //resposta não encontrada
@@ -134,8 +135,10 @@ class ZApiWebHookController extends Controller
     {
         //pega todos os grupos de resposta para esta questão
         $grupsResponses = GroupQuestionsResponse::where('dialog_question_id', $idQuestion)->has('group_response')->get();
+
         //fazer um pluck so id dos grupos;
-        $idsGroups = $grupsResponses->pluck('id');
+        //este pluck esta errado
+        $idsGroups = $grupsResponses->pluck('groups_responses_id');
         //verifica se em algun grupo existe uma resposta com esse valor;
         return ResponsesToGroup::where('response', $meessage)->whereIn('group_responses_id', $idsGroups)->with('group_response')->first();
     }

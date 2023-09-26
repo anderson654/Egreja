@@ -9,6 +9,11 @@ use Illuminate\Database\Eloquent\Model;
 class GroupQuestionsResponse extends Model
 {
     use HasFactory;
+    
+    protected $fillable = [
+        'dialog_question_id',
+        'groups_responses_id'
+    ];
 
     public function group_response()
     {

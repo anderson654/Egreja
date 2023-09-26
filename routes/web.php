@@ -30,9 +30,12 @@ use App\Http\Controllers\UserVoluntary\VolunteerRegistrationController;
 use App\Http\Controllers\Voluntary\VoluntaryController;
 use App\Http\Controllers\WhatsApp\DialogsQuestionsController;
 use App\Http\Controllers\WhatsApp\DialogsTemplatesController;
+use App\Http\Controllers\WhatsApp\GroupQuestionsResponsesController;
+use App\Http\Controllers\WhatsApp\GroupsResponsesController;
+use App\Http\Controllers\WhatsApp\ResponsesToGroupsController;
 use App\Http\Controllers\WhatsAppController;
 use App\Http\Controllers\ZApiWebHookController;
-
+use App\Models\ResponsesToGroup;
 
 Route::get('/enviarMensagem', [WhatsAppController::class, 'enviarMensagemPersonalizada']);
 
@@ -70,6 +73,9 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
 		'needRequests' => NeedRequestController::class,
 		'dialog-whatsapp' => DialogsTemplatesController::class,
 		'dialog-questions-watsapp' => DialogsQuestionsController::class,
+		'group-responses' => GroupsResponsesController::class,
+		'responses' => ResponsesToGroupsController::class,
+		'group-to-questions' => GroupQuestionsResponsesController::class
 	]);
 	Route::get('aprove-voluntary-index', [VolunteerRegistrationController::class, 'index'])->name('register.voluntary.index');
 	Route::get('aprove-voluntary-show/{id}', [VolunteerRegistrationController::class, 'show'])->name('register.voluntary.show');
