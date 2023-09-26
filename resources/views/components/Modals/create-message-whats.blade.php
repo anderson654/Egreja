@@ -18,7 +18,7 @@
                     @enderror
                     <div class="text-center">
                         <button type="submit" class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0">Criar
-                            template</button>
+                            mensagen</button>
                     </div>
                     <input type="hidden" name="question" id="exampleFormControlInput1">
                     <input type="hidden" name="dialog_template_id" id="exampleFormControlInput1" value="{{$id}}">
