@@ -29,7 +29,7 @@ class ZApiWebHookController extends Controller
         $user = $this->createNewUser($dados);
 
         //deixe true para teste
-        if (true) {
+        if (false) {
             $dados['phone'] = '5541989022440';
         }
 
@@ -57,17 +57,30 @@ class ZApiWebHookController extends Controller
             //next caso a pergunta não contenha grupo de respostas
             //null caso tenho grupo de respostas mas o sistema não consigiu identificar
             $resultVerifyQuestion = $this->verifyRoleResponse($message, $currentQueestionId);
+            Log::info("Resposta é valiada." . json_encode($resultVerifyQuestion));
         }
         //devolve o id da proxima questão caso o $resultVerifyQuestion seja valido;
         $nextQuestionId = $this->nextQuestion($resultVerifyQuestion, $currentQueestionId);
-
         $ultimateQuestion = DialogsQuestion::where('dialog_template_id', $selectTemplateQuestions->id)->orderBy('priority', 'desc')->first();
-        if ($nextQuestionId === 'stop' || $nextQuestionId === $ultimateQuestion->id) {
 
+        // O usuario força a parada da mensagem
+        if ($nextQuestionId === "FORCE_STOP") {
+            $ultimateQuestion = DialogsQuestion::where('dialog_template_id', $selectTemplateQuestions->id)->orderBy('priority', 'asc')->first();
             $zApiController->sendMessage($dados['phone'], str_replace('\n', "\n", $ultimateQuestion->question));
             $this->updateNeedRequest($currentQueestionId, $nextNedRequest, 3);
             return;
+        }
 
+        if ($nextQuestionId === 'stop' || $nextQuestionId === $ultimateQuestion->id) {
+
+            $zApiController->sendMessage($dados['phone'], str_replace('\n', "\n", $ultimateQuestion->question));
+            //ajustar aqui
+            $this->updateNeedRequest(13, $nextNedRequest, 1);
+
+            //pegar todos os voluntarios aprovados e enviar uma mensagem;
+            $zApiController->sendMessage($dados['phone'], str_replace('\n', "\n", $ultimateQuestion->question));
+
+            return;
         }
 
         if ($nextQuestionId) {
@@ -95,10 +108,11 @@ class ZApiWebHookController extends Controller
 
     public function createDefaultNeedRequest($user)
     {
+        //ajustar aqui
         $needrequest = new NeedRequest();
         $needrequest->user_id = $user->id;
         $needrequest->status_id = 1;
-        $needrequest->current_dialog_question_id = 1;
+        $needrequest->current_dialog_question_id = 12;
         $needrequest->save();
     }
 
@@ -108,12 +122,12 @@ class ZApiWebHookController extends Controller
         //verifica se existe um grupo de respostas para a questão;
         $existResponsesQuestion = $this->existResponsesQuestion($idQuestion);
 
-        
+
         //se não existir um grupo de respostas
         if (!$existResponsesQuestion) {
             return 'next';
         }
-        
+
         //se existir um grupo de respostas;
         $responseToGroup = $this->checkExistMessageInGroups($meessage, $idQuestion);
         //resposta não encontrada
@@ -163,7 +177,9 @@ class ZApiWebHookController extends Controller
 
     public function nextQuestion($resultVerifyQuestion, $currentQueestionId)
     {
+        Log::info("Id da questão" . json_encode($currentQueestionId));
         $currentQuestion = DialogsQuestion::find($currentQueestionId);
+        Log::info(json_encode($currentQuestion));
         $currentPriority = $currentQuestion->priority;
         $currentTemplate = $currentQuestion->dialog_template_id;
 
@@ -178,6 +194,8 @@ class ZApiWebHookController extends Controller
             return $nextQuestion->id;
         } else if (in_array($resultVerifyQuestion, [2])) {
             return null;
+        } else if (in_array($resultVerifyQuestion, [3])) {
+            return "FORCE_STOP";
         } else {
             return null;
         }
