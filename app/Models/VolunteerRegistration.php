@@ -84,8 +84,8 @@ class VolunteerRegistration extends Model
             // Formatar o número no formato desejado
             $codigoPais = substr($phone, 0, 2);
             $ddd = substr($phone, 2, 2);
-            $prefixo = substr($phone, 4, 4);
-            $sufixo = substr($phone, 8, 4);
+            $prefixo = substr($phone, 3, 4);
+            $sufixo = substr($phone, 7, 5);
 
             return "+55 (41) 9 $prefixo-$sufixo";
         }
