@@ -18,6 +18,8 @@ class ZApiWebHookController extends Controller
 {
     public function getStatusMessage(Request $request)
     {
+        
+        Log::info("-------WebhoockLaravel---------");
         $zApiController = new ZApiController();
         Log::info("-------WebhoockLaravel---------");
         $dados = $request->all();
@@ -214,9 +216,9 @@ class ZApiWebHookController extends Controller
                     $originalPhone = preg_replace("/[^0-9]/", "", $obj['phone']);
                     $zApiController = new ZApiController();
                     sleep(1);
-                    $existPrayerRequest = VolunteerRequest::where('user_id', $obj['id'])->where('status_id' , 1)->exists();
- 
-                    if($originalPhone === "5541989022440"){
+                    $existPrayerRequest = VolunteerRequest::where('user_id', $obj['id'])->where('status_id', 1)->exists();
+
+                    if ($originalPhone === "5541989022440") {
                         if (!$existPrayerRequest) {
                             $user = User::find($obj['id']);
                             $selectTemplateQuestions =  DialogsTemplate::where('title', 'Egreja-Voluntary')->first();
@@ -227,6 +229,9 @@ class ZApiWebHookController extends Controller
                     }
                 }
 
+                break;
+            case 'acept_request_voluntary':
+                dd('Hello');
                 break;
 
             default:
