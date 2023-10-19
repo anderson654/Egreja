@@ -19,6 +19,7 @@ class ZApiWebHookController extends Controller
     public function getStatusMessage(Request $request)
     {
         Log::info($request->all());
+        return
         
         Log::info("-------WebhoockLaravel---------");
         $zApiController = new ZApiController();
