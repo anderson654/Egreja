@@ -10,7 +10,7 @@ class HistoricalConversation extends Model
     use HasFactory;
 
     protected $fillable = [
-        'need_requests_id',
+        'prayer_requests_id',
         'dialogs_questions_id',
         'response'
     ];

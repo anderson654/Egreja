@@ -10,14 +10,22 @@
                         <div class="row">
                             <div class="col-8">
                                 <div class="numbers">
-                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Total de cadastros</p>
+                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Total de cadastros usuários</p>
                                     <h5 class="font-weight-bolder">
                                         {{ $users->count() }}
                                     </h5>
-                                    <p class="mb-0">
-                                        <span class="text-success text-sm font-weight-bolder">+55%</span>
-                                        este mês
-                                    </p>
+                                    @if ($percentual_growth > 0)
+                                        <p class="mb-0">
+                                            <span class="text-success text-lg font-weight-bolder">+{{ $percentual_growth }}%</span>
+                                            este mês
+                                        </p>
+                                    @else
+                                        <p class="mb-0">
+                                            <span class="text-danger text-lg font-weight-bolder">{{ $percentual_growth }}%</span>
+                                            este mês
+                                        </p>
+                                    @endif
+
                                 </div>
                             </div>
                             <div class="col-4 text-end">
@@ -35,14 +43,22 @@
                         <div class="row">
                             <div class="col-8">
                                 <div class="numbers">
-                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Pedidos de Ajuda</p>
+                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Total de Pedidos de Ajuda</p>
                                     <h5 class="font-weight-bolder">
-                                        {{ $need_requests->count() }}
+                                        {{ $prayer_requests->count() }}
                                     </h5>
-                                    <p class="mb-0">
-                                        <span class="text-success text-sm font-weight-bolder">+3%</span>
-                                        este mês
-                                    </p>
+                                    @if ($percentual_increase > 0 )
+                                        <p class="mb-0">
+                                            <span class="text-success text-lg font-weight-bolder">+{{ $percentual_increase }}%</span>
+                                            este mês
+                                        </p>
+                                    @else
+                                        <p class="mb-0">
+                                            <span class="text-danger text-lg font-weight-bolder">{{ $percentual_increase }}%</span>
+                                            este mês
+                                        </p>
+                                    @endif
+
                                 </div>
                             </div>
                             <div class="col-4 text-end">
@@ -60,14 +76,21 @@
                         <div class="row">
                             <div class="col-8">
                                 <div class="numbers">
-                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">New Clients</p>
+                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">total cadastros Voluntários</p>
                                     <h5 class="font-weight-bolder">
-                                        +3,462
+                                       {{$volunteers->count()}}
                                     </h5>
-                                    <p class="mb-0">
-                                        <span class="text-danger text-sm font-weight-bolder">-2%</span>
-                                        since last quarter
-                                    </p>
+                                    @if ($volunteers_percentual_increase < 0)
+                                        <p class="mb-0">
+                                            <span class="text-danger text-lg font-weight-bolder">{{ $volunteers_percentual_increase }}%</span>
+                                            Este mês
+                                        </p>
+                                    @else
+                                        <p class="mb-0">
+                                            <span class="text-danger text-lg font-weight-bolder">+{{ $volunteers_percentual_increase }}%</span>
+                                            Este mês
+                                        </p>
+                                    @endif
                                 </div>
                             </div>
                             <div class="col-4 text-end">
@@ -85,13 +108,11 @@
                         <div class="row">
                             <div class="col-8">
                                 <div class="numbers">
-                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Sales</p>
+                                    <p class="text-lg mb-0 text-uppercase font-weight-bold">Voluntários ativos</p>
                                     <h5 class="font-weight-bolder">
-                                        $103,430
+                                       {{$volunteers_aproved->count()}}
                                     </h5>
-                                    <p class="mb-0">
-                                        <span class="text-success text-sm font-weight-bolder">+5%</span> than last month
-                                    </p>
+
                                 </div>
                             </div>
                             <div class="col-4 text-end">
@@ -108,7 +129,7 @@
             <div class="col-lg-7 mb-lg-0 mb-4">
                 <div class="card z-index-2 h-100">
                     <div class="card-header pb-0 pt-3 bg-transparent">
-                        <h6 class="text-capitalize">Sales overview</h6>
+                        <h6 class="text-capitalize">Visão geral de orações realizadas</h6>
                         <p class="text-sm mb-0">
                             <i class="fa fa-arrow-up text-success"></i>
                             <span class="font-weight-bold">4% more</span> in 2021
@@ -397,8 +418,11 @@
 @push('js')
     <script src="./assets/js/plugins/chartjs.min.js"></script>
     <script>
-        var ctx1 = document.getElementById("chart-line").getContext("2d");
 
+        var dataForChart = JSON.parse(@json($dataForChartJson));
+
+
+        var ctx1 = document.getElementById("chart-line").getContext("2d");
         var gradientStroke1 = ctx1.createLinearGradient(0, 230, 0, 50);
 
         gradientStroke1.addColorStop(1, 'rgba(251, 99, 64, 0.2)');
@@ -406,22 +430,7 @@
         gradientStroke1.addColorStop(0, 'rgba(251, 99, 64, 0)');
         new Chart(ctx1, {
             type: "line",
-            data: {
-                labels: ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-                datasets: [{
-                    label: "Mobile apps",
-                    tension: 0.4,
-                    borderWidth: 0,
-                    pointRadius: 0,
-                    borderColor: "#fb6340",
-                    backgroundColor: gradientStroke1,
-                    borderWidth: 3,
-                    fill: true,
-                    data: [50, 40, 300, 220, 500, 250, 400, 230, 500],
-                    maxBarThickness: 6
-
-                }],
-            },
+            data: dataForChart,
             options: {
                 responsive: true,
                 maintainAspectRatio: false,

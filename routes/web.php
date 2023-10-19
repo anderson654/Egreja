@@ -24,7 +24,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\ResetPassword;
 use App\Http\Controllers\ChangePassword;
-use App\Http\Controllers\NeedRequests\NeedRequestController;
+use App\Http\Controllers\PrayerRequests\PrayerRequestController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\UserVoluntary\VolunteerRegistrationController;
 use App\Http\Controllers\Voluntary\VoluntaryController;
@@ -42,12 +42,12 @@ Route::get('/enviarMensagem', [WhatsAppController::class, 'enviarMensagemPersona
 
 
 Route::get('/', function () {
-	return redirect('/admin/needRequests');
+	return redirect('/admin/PrayerRequests');
 })->middleware('auth');
 
 Route::get('/home', function () {
 	return view('pages/site/home/home');
-}); 
+});
 Route::get('/register', [RegisterController::class, 'create'])->middleware('guest')->name('register');
 Route::get('/register-voluntary', [VolunteerRegistrationController::class, 'create'])->middleware('guest');
 Route::post('/register-voluntary-store', [VolunteerRegistrationController::class, 'store'])->middleware('guest')->name('register.voluntary.store');
@@ -74,7 +74,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
 	Route::resources([
 		'voluntary' => VoluntaryController::class,
 		'user' => UserController::class,
-		'needRequests' => NeedRequestController::class,
+		'prayerRequests' => PrayerRequestController::class,
 		'dialog-whatsapp' => DialogsTemplatesController::class,
 		'dialog-questions-watsapp' => DialogsQuestionsController::class,
 		'group-responses' => GroupsResponsesController::class,
