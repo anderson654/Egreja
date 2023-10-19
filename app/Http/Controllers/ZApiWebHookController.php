@@ -37,9 +37,11 @@ class ZApiWebHookController extends Controller
         }
 
 
-
+        //o fist esta dando erro
         //verificar se este telefone tem um chamado em aberto
         $nextNedRequest = PrayerRequest::where('user_id', $user->id)->where('status_id', '!=', 3)->first();
+        Log::info($nextNedRequest);
+        return;
         $selectTemplateQuestions =  DialogsTemplate::where('title', 'Egreja')->first();
 
         //pegar a primeira questão;
