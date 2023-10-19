@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('need_requests', function (Blueprint $table) {
+        Schema::create('prayer_requests', function (Blueprint $table) {
             $table->id(); // Campo 'id' da tabela
             $table->unsignedBigInteger('user_id'); // Campo 'user_id' para registrar quem fez o pedido de ajuda
             $table->string('status'); // Campo 'status' para registrar o status do pedido
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('need_requests');
+        Schema::dropIfExists('prayer_requests');
     }
 };

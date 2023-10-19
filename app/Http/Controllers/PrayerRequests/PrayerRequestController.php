@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\NeedRequests;
+namespace App\Http\Controllers\PrayerRequests;
 
 use App\Http\Controllers\Controller;
-use App\Models\NeedRequest;
+use App\Models\PrayerRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 
-class NeedRequestController extends Controller
+class PrayerRequestController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,9 +15,9 @@ class NeedRequestController extends Controller
     public function index()
     {
         //
-        $needRequests = NeedRequest::with('user')->get();
+        $prayerRequests = PrayerRequest::with('user')->get();
 
-        return view('pages.needRequests.index',compact('needRequests'));
+        return view('pages.prayerRequests.index',compact('prayerRequests'));
     }
 
     /**

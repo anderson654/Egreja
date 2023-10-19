@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\DialogsQuestion;
 use App\Models\DialogsTemplate;
 use App\Models\GroupQuestionsResponse;
-use App\Models\NeedRequest;
+use App\Models\PrayerRequest;
 use App\Models\ResponsesToGroup;
 use App\Models\User;
 use App\Models\WhatsApp\HistoricalConversation;
@@ -34,13 +34,13 @@ class ZApiWebHookController extends Controller
         }
 
         //verificar se este telefone tem um chamado em aberto
-        $nextNedRequest = NeedRequest::where('user_id', $user->id)->where('status_id', '!=', 3)->first();
+        $nextNedRequest = PrayerRequest::where('user_id', $user->id)->where('status_id', '!=', 3)->first();
         $selectTemplateQuestions =  DialogsTemplate::where('title', 'Egreja')->first();
 
         //SE NÃO ESTIVER SIDO INICIADO UMA CONVERÇA FICA MANDANDO A PRIMEEIRA MENSAGEM DO TEMPLATE
         if (!$nextNedRequest) {
             $dialogQuestion = DialogsQuestion::where('dialog_template_id', $selectTemplateQuestions->id)->where('priority', 1)->first();
-            $this->createDefaultNeedRequest($user);
+            $this->createDefaultPrayerRequest($user);
             $zApiController->sendMessage($dados['phone'], str_replace('\n', "\n", $dialogQuestion->question));
             return;
         }
@@ -65,7 +65,7 @@ class ZApiWebHookController extends Controller
         if ($nextQuestionId === 'stop' || $nextQuestionId === $ultimateQuestion->id) {
 
             $zApiController->sendMessage($dados['phone'], str_replace('\n', "\n", $ultimateQuestion->question));
-            $this->updateNeedRequest($currentQueestionId, $nextNedRequest, 3);
+            $this->updatePrayerRequest($currentQueestionId, $nextNedRequest, 3);
             return;
 
         }
@@ -73,7 +73,7 @@ class ZApiWebHookController extends Controller
         if ($nextQuestionId) {
             $nextQuestion = DialogsQuestion::find($nextQuestionId);
             $zApiController->sendMessage($dados['phone'], str_replace('\n', "\n", $nextQuestion->question));
-            $this->updateNeedRequest($nextQuestionId, $nextNedRequest, 1);
+            $this->updatePrayerRequest($nextQuestionId, $nextNedRequest, 1);
         } else {
             $currentQuestion = DialogsQuestion::find($currentQueestionId);
             $zApiController->sendMessage($dados['phone'], str_replace('\n', "\n", "não conseguimos identificar a resposta"));
@@ -84,22 +84,22 @@ class ZApiWebHookController extends Controller
         return response()->json(['message' => 'Dados do webhook recebidos com sucesso'], 200);
     }
 
-    public function saveMessage($idNeedRequest, $idDialogQuestion, $message)
+    public function saveMessage($idPrayerRequest, $idDialogQuestion, $message)
     {
         HistoricalConversation::create([
-            'need_requests_id' => $idNeedRequest,
+            'prayer_requests_id' => $idPrayerRequest,
             'dialogs_questions_id' => $idDialogQuestion,
             'response' => $message
         ]);
     }
 
-    public function createDefaultNeedRequest($user)
+    public function createDefaultPrayerRequest($user)
     {
-        $needrequest = new NeedRequest();
-        $needrequest->user_id = $user->id;
-        $needrequest->status_id = 1;
-        $needrequest->current_dialog_question_id = 1;
-        $needrequest->save();
+        $PrayerRequest = new PrayerRequest();
+        $PrayerRequest->user_id = $user->id;
+        $PrayerRequest->status_id = 1;
+        $PrayerRequest->current_dialog_question_id = 1;
+        $PrayerRequest->save();
     }
 
 
@@ -108,12 +108,12 @@ class ZApiWebHookController extends Controller
         //verifica se existe um grupo de respostas para a questão;
         $existResponsesQuestion = $this->existResponsesQuestion($idQuestion);
 
-        
+
         //se não existir um grupo de respostas
         if (!$existResponsesQuestion) {
             return 'next';
         }
-        
+
         //se existir um grupo de respostas;
         $responseToGroup = $this->checkExistMessageInGroups($meessage, $idQuestion);
         //resposta não encontrada
@@ -183,7 +183,7 @@ class ZApiWebHookController extends Controller
         }
     }
 
-    public function updateNeedRequest($questionId, $nextNedRequest, $statusId)
+    public function updatePrayerRequest($questionId, $nextNedRequest, $statusId)
     {
         $nextNedRequest->current_dialog_question_id = $questionId;
         $nextNedRequest->status_id = $statusId;

@@ -14,14 +14,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('request_statuses', function (Blueprint $table) {
+        Schema::create('prayer_statuses', function (Blueprint $table) {
             $table->increments('id');
             $table->string('title')->nullable();
             $table->string('updated_at')->nullable();
             $table->timestamp('created_at')->useCurrent();
         });
 
-        DB::table('request_statuses')->insert([
+        DB::table('prayer_statuses')->insert([
             ['title' => 'aberto'],
             ['title' => 'em atendimento'],
             ['title' => 'encerrado'],
@@ -36,6 +36,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('request_statuses');
+        Schema::dropIfExists('prayer_statuses');
     }
 };
