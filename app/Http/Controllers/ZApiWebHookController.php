@@ -165,9 +165,10 @@ class ZApiWebHookController extends Controller
     public function createNewUser($dados)
     {
         $user = User::where('phone', $dados['phone'])->first();
+        $numero_formatado = substr($dados['phone'], 0, 5) . "9" . substr($dados['phone'], 5);
         if (!$user) {
             $newUser = new User();
-            $newUser->phone = $dados['phone'];
+            $newUser->phone = $numero_formatado;
             $newUser->username = $dados['senderName'] ?? 'anonimo';
             $newUser->email = 'e_greja_' . rand(1, 1000000000) . '@gmail.com';
             $newUser->password = '123456789';
