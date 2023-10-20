@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\UserVoluntary;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Models\VolunteerRegistration;
 use Illuminate\Http\Request;
 
@@ -71,12 +72,23 @@ class VolunteerRegistrationController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        // criar um novo user
+
         if($request->ajax()){
             $voluntary = VolunteerRegistration::find($id);
             $voluntary->is_aproved = 1;
             $voluntary->save();
-            return response()->json(['sucess' => 'sucesso ao salvar']);
+
+            //salvar o usuario na tabela users
+            $data = [
+                "username" => $voluntary->name . " " .  $voluntary->surname,
+                "email" => $voluntary->email,
+                "phone" => $voluntary->phone,
+                "is_active" => 1
+            ];
+            
+            $user = User::create($data);
+            return response()->json($user);
         }
         $voluntary = VolunteerRegistration::find($id)->update($request->all());
         if(!$voluntary){
