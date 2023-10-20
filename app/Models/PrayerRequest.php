@@ -14,15 +14,20 @@ class PrayerRequest extends Model
     {
         return $this->hasOne(User::class, 'id', 'user_id');
     }
-    public function getStatusIdAttribute()
+
+    public function prayer()
     {
-        $statusId = $this->attributes['status_id'];
-        $statusRequest = RequestStatuse::where('id', $statusId)->first();
-        if ($statusRequest) {
-            return $statusRequest->title;
-        }
-        return $statusId;
+        return $this->hasOne(User::class, 'id', 'user_id')->where('role_id', 4);
     }
+    // public function getStatusIdAttribute()
+    // {
+    //     $statusId = $this->attributes['status_id'];
+    //     $statusRequest = RequestStatuse::where('id', $statusId)->first();
+    //     if ($statusRequest) {
+    //         return $statusRequest->title;
+    //     }
+    //     return $statusId;
+    // }
 
     public static function getCountByMonth()
     {
