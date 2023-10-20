@@ -27,6 +27,7 @@ class ZApiWebHookController extends Controller
         if ($dados['isGroup']) {
             return;
         }
+        $dados['phone'] = substr($dados['phone'], 0, 4) . "9" . substr($dados['phone'], 4);
 
         //se não existir criar um usuario
         $user = $this->createNewUser($dados);
@@ -165,10 +166,9 @@ class ZApiWebHookController extends Controller
     public function createNewUser($dados)
     {
         $user = User::where('phone', $dados['phone'])->first();
-        $numero_formatado = substr($dados['phone'], 0, 5) . "9" . substr($dados['phone'], 5);
         if (!$user) {
             $newUser = new User();
-            $newUser->phone = $numero_formatado;
+            $newUser->phone = $dados['phone'];
             $newUser->username = $dados['senderName'] ?? 'anonimo';
             $newUser->email = 'e_greja_' . rand(1, 1000000000) . '@gmail.com';
             $newUser->password = '123456789';
