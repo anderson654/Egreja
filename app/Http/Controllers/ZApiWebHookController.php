@@ -264,14 +264,7 @@ class ZApiWebHookController extends Controller
                 $payerRequeest->voluntary_id = $user->id;
                 $payerRequeest->current_dialog_question_id = 15;
                 $payerRequeest->update();
-
-                //finalizar todas as requests qur possuem essa referencia
-                $payerRequests = PrayerRequest::where('reference',$nextNedRequest->reference)->get();
-                foreach ($payerRequests as $payerRequest) {
-                    $payerRequest['status_id'] = 3;
-                    $payerRequest->update();
-                    # code...
-                }
+                
                 break;
             case 'wait':
                 $payer = User::find($nextNedRequest->user_id);
