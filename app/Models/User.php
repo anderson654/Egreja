@@ -29,7 +29,9 @@ class User extends Authenticatable
         'country',
         'postal',
         'about',
-        'is_active'
+        'is_active',
+        'role_id',
+        'phone'
     ];
 
     /**

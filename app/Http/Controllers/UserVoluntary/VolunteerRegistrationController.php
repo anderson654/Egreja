@@ -83,10 +83,12 @@ class VolunteerRegistrationController extends Controller
             $data = [
                 "username" => $voluntary->name . " " .  $voluntary->surname,
                 "email" => $voluntary->email,
-                "phone" => $voluntary->phone,
+                "password" => str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT),
+                "phone" => "55".$voluntary->getRawOriginal('phone'),
+                "role_id" => 3,
                 "is_active" => 1
             ];
-            
+
             $user = User::create($data);
             return response()->json($user);
         }
