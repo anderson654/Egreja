@@ -183,6 +183,7 @@ class ZApiWebHookController extends Controller
 
     public function nextQuestion($resultVerifyQuestion, $currentQueestionId)
     {
+        Log::info($resultVerifyQuestion);
         $currentQuestion = DialogsQuestion::find($currentQueestionId);
         $nextQuestion = $currentQuestion->next_dialog_question_id;
 
