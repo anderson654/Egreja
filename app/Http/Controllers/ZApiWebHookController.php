@@ -59,6 +59,7 @@ class ZApiWebHookController extends Controller
         if ($nextNedRequest) {
             $message = $dados['text']['message'];
             $currentQueestionId = $nextNedRequest->current_dialog_question_id;
+            Log::info($nextNedRequest->current_dialog_question_id);
 
             //PEGA A MENSAGEM QUE O ASUARIO ENVIOU E SALVA;
             $this->saveMessage($nextNedRequest->id, $currentQueestionId, $dados['text']['message']);
