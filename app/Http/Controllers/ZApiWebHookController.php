@@ -90,6 +90,8 @@ class ZApiWebHookController extends Controller
                 case 'FORCE_STOP':
                     # code...
                     $nextQuestion = DialogsQuestion::find($nextQuestion->finish_dialog_question_id);
+                    $nextQuestion->status_id = 3;
+                    $nextQuestion->save();
                     $zApiController->sendMessage($dados['phone'], str_replace('\n', "\n", $nextQuestion->question));
                     break;
                 case 'STOP':
