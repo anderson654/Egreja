@@ -264,7 +264,7 @@ class ZApiWebHookController extends Controller
 
                 $zApiController->sendMessage($user->phone, str_replace('\n', "\n", "Voce aceitou atender ao atendimento.\nLigue para $payer->username\nTelefone: $payer->phone"));
                 //setar o pedido de ajuda que foi aceito
-                $zApiController->sendMessage($payer->phone, str_replace('\n', "\n", "Um irmão acabou de aceitar seu pedido fique atento ao seu telefone."));
+                $zApiController->sendMessage($payer->phone, str_replace('\n', "\n", "Um voluntário acabou de aceitar seu pedido fique atento ao seu telefone."));
 
                 //por enquanto salva as duas conveersas como finalizada
                 $nextNedRequest->status_id = 3;
