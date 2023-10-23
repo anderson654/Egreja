@@ -17,7 +17,7 @@ class GroupQuestionsResponse extends Model
 
     public function group_response()
     {
-        return $this->hasOne(GroupsResponse::class, 'id', 'groups_responses_id');
+        return $this->hasOne(GroupsResponse::class, 'groups_responses_id', 'id');
     }
     public function responses_positive()
     {
