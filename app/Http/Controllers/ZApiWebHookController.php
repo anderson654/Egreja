@@ -153,6 +153,7 @@ class ZApiWebHookController extends Controller
 
     public function checkExistMessageInGroups($meessage, $idQuestion)
     {
+        Log::info($idQuestion);
         //pega todos os grupos de resposta para esta questão
         $grupsResponses = GroupQuestionsResponse::where('dialog_question_id', $idQuestion)->has('group_response')->get();
 
