@@ -223,7 +223,7 @@ class ZApiWebHookController extends Controller
                     sleep(1);
                     $existPrayerRequest = VolunteerRequest::where('user_id', $obj['id'])->where('status_id', 1)->exists();
 
-                    if ($originalPhone === "5541995640242") {
+                    if ($originalPhone === "5541985071326") {
                         if (!$existPrayerRequest) {
                             $user = User::find($obj['id']);
                             $selectTemplateQuestions =  DialogsTemplate::where('title', 'Egreja-Voluntary')->first();
