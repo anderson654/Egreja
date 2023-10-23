@@ -67,6 +67,7 @@ class ZApiWebHookController extends Controller
 
             //verifica a resposta e traz o role_id dela caso for valida
             $resultVerifyQuestion = $this->verifyRoleResponse($message, $currentQueestionId);
+            Log::info(json_encode($resultVerifyQuestion));
         }
         //pega os parametros da proxima questão que devem ser executados;
         $objectNextComands = $this->nextQuestion($resultVerifyQuestion, $currentQueestionId);
