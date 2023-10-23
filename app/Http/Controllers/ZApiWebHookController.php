@@ -156,6 +156,8 @@ class ZApiWebHookController extends Controller
         //pega todos os grupos de resposta para esta questão
         $grupsResponses = GroupQuestionsResponse::where('dialog_question_id', $idQuestion)->has('group_response')->get();
 
+        Log::info(json_encode($grupsResponses));
+
         //fazer um pluck so id dos grupos;
         //este pluck esta errado
         $idsGroups = $grupsResponses->pluck('groups_responses_id');
