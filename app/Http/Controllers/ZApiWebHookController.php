@@ -194,9 +194,10 @@ class ZApiWebHookController extends Controller
         $currentQuestion = DialogsQuestion::find($currentQueestionId);
         $nextQuestion = $currentQuestion->next_dialog_question_id;
 
-        if (!$nextQuestion || $resultVerifyQuestion === 3) {
-            return (object)["next_question" => $nextQuestion ?? null, "method" => $currentQuestion->method ?? null];
-        }
+        //aqui o erro
+        // if (!$nextQuestion || $resultVerifyQuestion === 3) {
+        //     return (object)["next_question" => $nextQuestion ?? null, "method" => $currentQuestion->method ?? null];
+        // }
 
         if (in_array($resultVerifyQuestion, [1, 'next'])) {
             return (object)["next_question" => $nextQuestion, "method" => $currentQuestion->method ?? null];
