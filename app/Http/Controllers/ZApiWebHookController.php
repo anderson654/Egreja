@@ -39,6 +39,7 @@ class ZApiWebHookController extends Controller
 
         //verificar se este telefone tem um chamado em aberto
         $nextNedRequest = PrayerRequest::where('user_id', $user->id)->where('status_id', '!=', 3)->first();
+        Log::info(json_encode($nextNedRequest));
         $selectTemplateQuestions =  $user->role_id === 4 ? DialogsTemplate::where('title', 'Egreja')->first() : DialogsTemplate::where('title', 'Egreja-Voluntary')->first();
 
         if($user->role_id === 3 && !$nextNedRequest){
