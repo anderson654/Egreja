@@ -39,17 +39,15 @@ class ZApiWebHookController extends Controller
 
         //verificar se este telefone tem um chamado em aberto
         $nextNedRequest = PrayerRequest::where('user_id', $user->id)->where('status_id', '!=', 3)->first();
-        Log::info(json_encode($nextNedRequest));
-        $selectTemplateQuestions =  $user->role_id === 4 ? DialogsTemplate::where('title', 'Egreja')->first() : DialogsTemplate::where('title', 'Egreja-Voluntary')->first();
 
-        if($user->role_id === 3 && !$nextNedRequest){
+        if ($user->role_id === 3 && !$nextNedRequest) {
             $zApiController->sendMessage($dados['phone'], str_replace('\n', "\n", "Não há chamados a serem atendidos."));
             return;
         }
 
-
         //SE NÃO ESTIVER SIDO INICIADO UMA CONVERÇA FICA MANDANDO A PRIMEEIRA MENSAGEM DO TEMPLATE
-        if (!$nextNedRequest) {
+        if ($user->role_id === 4 && !$nextNedRequest) {
+            $selectTemplateQuestions = DialogsTemplate::where('title', 'Egreja')->first();
             $dialogQuestion = DialogsQuestion::where('dialog_template_id', $selectTemplateQuestions->id)->where('start', 1)->first();
             $this->createDefaultPrayerRequest($user, $dialogQuestion->id);
             $zApiController->sendMessage($dados['phone'], str_replace('\n', "\n", $dialogQuestion->question));
@@ -60,7 +58,6 @@ class ZApiWebHookController extends Controller
         if ($nextNedRequest) {
             $message = $dados['text']['message'];
             $currentQueestionId = $nextNedRequest->current_dialog_question_id;
-            Log::info($nextNedRequest->current_dialog_question_id);
 
             //PEGA A MENSAGEM QUE O ASUARIO ENVIOU E SALVA;
             $this->saveMessage($nextNedRequest->id, $currentQueestionId, $dados['text']['message']);
@@ -68,6 +65,8 @@ class ZApiWebHookController extends Controller
             //verifica a resposta e traz o role_id dela caso for valida
             $resultVerifyQuestion = $this->verifyRoleResponse($message, $currentQueestionId);
         }
+
+
         //pega os parametros da proxima questão que devem ser executados;
         $objectNextComands = $this->nextQuestion($resultVerifyQuestion, $currentQueestionId);
 
@@ -75,14 +74,20 @@ class ZApiWebHookController extends Controller
 
         //verificar se tem algum methodo para ser executado;
         if (is_object($objectNextComands)) {
-            if ($objectNextComands->next_question) {
-                $nextQuestion = DialogsQuestion::find($objectNextComands->next_question);
+            if (isset($objectNextComands->positive_response)) {
+                $nextQuestion = DialogsQuestion::find($objectNextComands->positive_response);
                 $zApiController->sendMessage($dados['phone'], str_replace('\n', "\n", $nextQuestion->question));
-                $this->updatePrayerRequest($objectNextComands->next_question, $nextNedRequest, 1);
+                $this->updatePrayerRequest($objectNextComands->positive_response, $nextNedRequest, 1);
+            }
+
+            if (isset($objectNextComands->negative_response)) {
+                $nextQuestion = DialogsQuestion::find($objectNextComands->negative_response);
+                $zApiController->sendMessage($dados['phone'], str_replace('\n', "\n", $nextQuestion->question));
+                $this->updatePrayerRequest($objectNextComands->negative_response, $nextNedRequest, 1);
             }
 
             if ($objectNextComands->method) {
-                $this->executeMethod($objectNextComands->method, $nextNedRequest, $dados['phone']);
+                $this->executeMethod($objectNextComands->method, $nextNedRequest, $dados['phone'], $dados['text']['message'], ($resultVerifyQuestion === 1));
             }
         } else {
             $nextQuestion = DialogsQuestion::find($currentQueestionId);
@@ -90,23 +95,22 @@ class ZApiWebHookController extends Controller
                 case 'FORCE_STOP':
                     # code...
                     $nextQuestion = DialogsQuestion::find($nextQuestion->finish_dialog_question_id);
-                    $nextNedRequest->status_id = 3;
-                    $nextNedRequest->save();
+                    $this->closePrayerRequest($nextNedRequest);
                     $zApiController->sendMessage($dados['phone'], str_replace('\n', "\n", $nextQuestion->question));
                     break;
-                case 'STOP':
-                    # code...
-                    $nextQuestion = DialogsQuestion::find($nextQuestion->finish_dialog_question_id);
-                    $zApiController->sendMessage($dados['phone'], str_replace('\n', "\n", $nextQuestion->question));
-                    break;
-
-                default:
+                case 'NOT_IDENTIFY':
                     $zApiController->sendMessage($dados['phone'], str_replace('\n', "\n", "Não foi possivel entender a resposta"));
-                    //SE NÃO EXISTIR RESPOSTA
+                default:
                     break;
             }
         }
         return response()->json(['message' => 'Dados do webhook recebidos com sucesso'], 200);
+    }
+
+    public function closePrayerRequest($nextNedRequest)
+    {
+        $nextNedRequest->status_id = 3;
+        $nextNedRequest->save();
     }
 
     public function saveMessage($idPrayerRequest, $idDialogQuestion, $message)
@@ -134,11 +138,10 @@ class ZApiWebHookController extends Controller
         //verifica se existe um grupo de respostas para a questão;
         $existResponsesQuestion = $this->existResponsesQuestion($idQuestion);
 
-
         //se não existir um grupo de respostas
-        // if (!$existResponsesQuestion) {
-        //     return 'next';
-        // }
+        if (!$existResponsesQuestion) {
+            return null;
+        }
 
         //se existir um grupo de respostas;
         $responseToGroup = $this->checkExistMessageInGroups($meessage, $idQuestion);
@@ -192,23 +195,24 @@ class ZApiWebHookController extends Controller
 
     public function nextQuestion($resultVerifyQuestion, $currentQueestionId)
     {
-        Log::info(json_encode($resultVerifyQuestion));
+        //trata o resultado da resposta;
+
         $currentQuestion = DialogsQuestion::find($currentQueestionId);
-        $nextQuestion = $currentQuestion->next_dialog_question_id;
+        $positiveQuestionResponse = $currentQuestion->next_dialog_question_id;
+        $negativeQuestionResponse = $currentQuestion->next_negative_dialog_question_id;
 
-        //aqui o erro
-        // if (!$nextQuestion || $resultVerifyQuestion === 3) {
-        //     return (object)["next_question" => $nextQuestion ?? null, "method" => $currentQuestion->method ?? null];
-        // }
-
-        if (in_array($resultVerifyQuestion, [1, 'next'])) {
-            return (object)["next_question" => $nextQuestion, "method" => $currentQuestion->method ?? null];
+        if (in_array($resultVerifyQuestion, [1])) {
+            //caso role id da resposta for positiva e negativa
+            return (object)["positive_response" => $positiveQuestionResponse, "method" => $currentQuestion->method ?? null];
         } else if (in_array($resultVerifyQuestion, [2])) {
-            return (object)["next_question" => $nextQuestion, "method" => $currentQuestion->method ?? null];
+            //caso role id da resposta for negativa
+            return (object)["negative_response" => $negativeQuestionResponse, "method" => $currentQuestion->method ?? null];
         } else if (in_array($resultVerifyQuestion, [3])) {
+            //caso exit
             return "FORCE_STOP";
         } else {
-            return (object)["next_question" => $nextQuestion, "method" => $currentQuestion->method ?? null];
+            //resposta não identificada
+            return "NOT_IDENTIFY";
         }
     }
 
@@ -220,10 +224,14 @@ class ZApiWebHookController extends Controller
     }
 
 
-    public function executeMethod($metod, $nextNedRequest, $actualyUserPhone = null)
+    public function executeMethod($metod, $nextNedRequest, $actualyUserPhone = null, $message = null, $positiveOrNegativeResponse = null)
     {
         switch ($metod) {
             case 'send_message_to_volunteers':
+                if (!$positiveOrNegativeResponse) {
+                    $this->closePrayerRequest($nextNedRequest);
+                    return;
+                }
                 # code...
                 //peagar todos os voluntarios da tabela e enviar 
                 $voluntariers = User::where('role_id', 3)->get();
@@ -234,7 +242,7 @@ class ZApiWebHookController extends Controller
                     sleep(1);
                     $existPrayerRequest = VolunteerRequest::where('user_id', $obj['id'])->where('status_id', 1)->exists();
 
-                    // if ($originalPhone === "5541985071326") {
+                    if ($originalPhone === "5541989022440") {
                         if (!$existPrayerRequest) {
                             $user = User::find($obj['id']);
                             $selectTemplateQuestions =  DialogsTemplate::where('title', 'Egreja-Voluntary')->first();
@@ -242,12 +250,16 @@ class ZApiWebHookController extends Controller
                             $this->createDefaultPrayerRequest($user, $dialogQuestion->id, $nextNedRequest->id);
                             $zApiController->sendMessage($originalPhone, str_replace('\n', "\n", $dialogQuestion->question));
                         }
-                    // }
+                    }
                 }
 
                 break;
             case 'acept_request_voluntary':
-                $user = User::where('phone',$actualyUserPhone)->first();
+                if (!$positiveOrNegativeResponse) {
+                    $this->closePrayerRequest($nextNedRequest);
+                    return;
+                }
+                $user = User::where('phone', $actualyUserPhone)->first();
                 //verifica see tem um usuario na chamada
                 $payerRequeest = PrayerRequest::find($nextNedRequest->reference);
                 $zApiController = new ZApiController();
@@ -269,20 +281,30 @@ class ZApiWebHookController extends Controller
                 //por enquanto salva as duas conveersas como finalizada
                 $nextNedRequest->status_id = 3;
                 $nextNedRequest->update();
-                
+
                 $payerRequeest = PrayerRequest::find($nextNedRequest->reference);
 
                 $payerRequeest->voluntary_id = $user->id;
                 $payerRequeest->current_dialog_question_id = 15;
                 $payerRequeest->update();
-                
+
                 break;
             case 'wait':
                 $payer = User::find($nextNedRequest->user_id);
                 $zApiController = new ZApiController();
                 $zApiController->sendMessage($payer->phone, str_replace('\n', "\n", "já possui um pedido de oração em aberto aguarde."));
                 break;
-
+            case 'save_dificult_contact':
+                //este metodo recebe a resposta do cliente
+                $payer = User::find($nextNedRequest->user_id);
+                $zApiController = new ZApiController();
+                if (!$message) {
+                    $zApiController->sendMessage($payer->phone, str_replace('\n', "\n", "Por favor digite uma mensagem válida."));
+                    break;
+                }
+                //finaliza o contato
+                $zApiController->sendMessage($payer->phone, str_replace('\n', "\n", "Obrigado pela resposta. Entendemos que podem acontecer imprevistos.A demanda será encaminhado ao pastor responsavel, que entrará em contato com chamador."));
+                break;
             default:
                 # code...
                 break;

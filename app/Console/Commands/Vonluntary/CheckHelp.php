@@ -32,7 +32,10 @@ class CheckHelp extends Command
      */
     public function handle()
     {
-        $prayerRequests = PrayerRequest::where('status_id', 1)->has('prayer')->get();
+        // $prayerRequests = PrayerRequest::where('status_id', 1)->has('prayer')->get();
+        $prayerRequests = PrayerRequest::find(186);
+        $this->sendAvaliable($prayerRequests);
+        return;
         //
         foreach ($prayerRequests as $prayerRequest) {
             //caso passe de 30 min e ninguem atendeu fechar o chamado e enviar uma mensagem de desculpa
