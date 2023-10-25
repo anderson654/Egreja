@@ -210,6 +210,8 @@ class ZApiWebHookController extends Controller
         } else if (in_array($resultVerifyQuestion, [3])) {
             //caso exit
             return "FORCE_STOP";
+        } else if (isset($currentQuestion->method)) {
+            return (object)["method" => $currentQuestion->method ?? null];
         } else {
             //resposta não identificada
             return "NOT_IDENTIFY";
@@ -224,6 +226,13 @@ class ZApiWebHookController extends Controller
     }
 
 
+
+
+
+
+
+
+    //metodos para as questoes
     public function executeMethod($metod, $nextNedRequest, $actualyUserPhone = null, $message = null, $positiveOrNegativeResponse = null)
     {
         switch ($metod) {
@@ -297,13 +306,63 @@ class ZApiWebHookController extends Controller
             case 'save_dificult_contact':
                 //este metodo recebe a resposta do cliente
                 $payer = User::find($nextNedRequest->user_id);
+                $currentDialogQuestion = DialogsQuestion::find($nextNedRequest->current_dialog_question_id);
+                
                 $zApiController = new ZApiController();
                 if (!$message) {
                     $zApiController->sendMessage($payer->phone, str_replace('\n', "\n", "Por favor digite uma mensagem válida."));
                     break;
                 }
                 //finaliza o contato
-                $zApiController->sendMessage($payer->phone, str_replace('\n', "\n", "Obrigado pela resposta. Entendemos que podem acontecer imprevistos.A demanda será encaminhado ao pastor responsavel, que entrará em contato com chamador."));
+                $zApiController->sendMessage($payer->phone, str_replace('\n', "\n", $currentDialogQuestion->next_dialog_question->question));
+                $nextNedRequest->current_dialog_question_id = $currentDialogQuestion->next_dialog_question_id;
+                $nextNedRequest->status_id = 3;
+                $nextNedRequest->update();
+
+                //enviar uma  demanda para  o pastor
+
+
+                break;
+            case 'save_sucess_contact':
+                //este metodo recebe a resposta do cliente
+                $payer = User::find($nextNedRequest->user_id);
+                $currentDialogQuestion = DialogsQuestion::find($nextNedRequest->current_dialog_question_id);
+                
+                $zApiController = new ZApiController();
+                if (!$message) {
+                    $zApiController->sendMessage($payer->phone, str_replace('\n', "\n", "Por favor digite uma mensagem válida."));
+                    break;
+                }
+                //finaliza o contato
+                $zApiController->sendMessage($payer->phone, str_replace('\n', "\n", $currentDialogQuestion->next_dialog_question->question));
+                $nextNedRequest->current_dialog_question_id = $currentDialogQuestion->next_dialog_question_id;
+                $nextNedRequest->status_id = 3;
+                $nextNedRequest->update();
+
+                break;
+            case 'check_acept_demand':
+                $payer = User::find($nextNedRequest->user_id);
+                $currentDialogQuestion = DialogsQuestion::find($nextNedRequest->current_dialog_question_id);
+                $zApiController = new ZApiController();
+
+                if (!$message) {
+                    $zApiController->sendMessage($payer->phone, str_replace('\n', "\n", "Não foi possivel entender a resposta."));
+                    break;
+                }
+
+                if(in_array($message,['1','Atender demanda'])){
+                    $zApiController->sendMessage($payer->phone, str_replace('\n', "\n", $currentDialogQuestion->next_dialog_question->question));
+                    $nextNedRequest->current_dialog_question_id = $currentDialogQuestion->next_dialog_question_id;
+                }
+                if(in_array($message,['2','Redirecionar'])){
+                    $zApiController->sendMessage($payer->phone, str_replace('\n', "\n", $currentDialogQuestion->next_negative_dialog_question->question));
+                    $nextNedRequest->current_dialog_question_id = $currentDialogQuestion->next_negative_dialog_question_id;
+                }
+                
+                //finaliza o contato
+                $nextNedRequest->status_id = 3;
+                $nextNedRequest->update();
+
                 break;
             default:
                 # code...

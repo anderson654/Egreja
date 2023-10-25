@@ -79,7 +79,7 @@ class CheckHelp extends Command
             //users
             $user = User::find($prayerRequest->voluntary_id);
             //questão
-            $firstQuestion = DialogsQuestion::where('dialog_template_id', 3)->where('start', 1)->first();
+            $firstQuestion = DialogsQuestion::where('dialog_template_id', 5)->where('start', 1)->first();
             $zapiWebHoockController->createDefaultPrayerRequest($user,$firstQuestion->id);
 
             //apos criar enviar a mensagem.
