@@ -66,6 +66,7 @@ class CheckHelp extends Command
     }
 
     public function sendAvaliable($prayerRequest){
+        //verificar se ja possui uma chamada questão em aberto.
         $zApiController = new ZApiController();
         //verifiaca se existe um voluntario na chamada
         if(!isset($prayerRequest->voluntary_id)){
@@ -84,6 +85,9 @@ class CheckHelp extends Command
 
             //apos criar enviar a mensagem.
             $zApiController->sendMessage($user->getRawOriginal('phone'),str_replace('\n', "\n", $firstQuestion->question));
+
+            $prayerRequest->questionary_user = 1;
+            $prayerRequest->update();
         }
     }
 
