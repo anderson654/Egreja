@@ -110,7 +110,7 @@ class ZApiWebHookController extends Controller
     public function closePrayerRequest($nextNedRequest)
     {
         $nextNedRequest->status_id = 3;
-        $nextNedRequest->save();
+        $nextNedRequest->update();
     }
 
     public function saveMessage($idPrayerRequest, $idDialogQuestion, $message)
@@ -237,17 +237,20 @@ class ZApiWebHookController extends Controller
     {
         switch ($metod) {
             case 'send_message_to_volunteers':
-                if (!$positiveOrNegativeResponse) {
+                $zApiController = new ZApiController();
+                if(!in_array($message,["1","2","SIM","NÃO","sim","nao","não"])){
+                    $zApiController->sendMessage($actualyUserPhone, str_replace('\n', "\n", "Não foi possivel entender a resposta."));
+                    return;
+                }
+                if (in_array($message,["2","NÃO","nao","não"])) {
                     $this->closePrayerRequest($nextNedRequest);
                     return;
                 }
-                # code...
                 //peagar todos os voluntarios da tabela e enviar 
                 $voluntariers = User::where('role_id', 3)->get();
                 foreach ($voluntariers as $obj) {
                     # code...
                     $originalPhone = preg_replace("/[^0-9]/", "", $obj['phone']);
-                    $zApiController = new ZApiController();
                     sleep(1);
                     $existPrayerRequest = VolunteerRequest::where('user_id', $obj['id'])->where('status_id', 1)->exists();
 
