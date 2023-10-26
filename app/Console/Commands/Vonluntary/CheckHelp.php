@@ -91,5 +91,4 @@ class CheckHelp extends Command
             $prayerRequest->update();
         }
     }
-
 }
