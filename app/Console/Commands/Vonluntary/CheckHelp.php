@@ -33,9 +33,9 @@ class CheckHelp extends Command
     public function handle()
     {
         $prayerRequests = PrayerRequest::where('status_id', 1)->has('prayer')->get();
-        // $prayerRequests = PrayerRequest::find(186);
-        // $this->sendAvaliable($prayerRequests);
-        // return;
+        $prayerRequests = PrayerRequest::find(238);
+        $this->sendAvaliable($prayerRequests);
+        return;
         //
         foreach ($prayerRequests as $prayerRequest) {
             //caso passe de 30 min e ninguem atendeu fechar o chamado e enviar uma mensagem de desculpa
@@ -68,7 +68,7 @@ class CheckHelp extends Command
     public function sendAvaliable($prayerRequest){
         //verificar se a chamada na questão foi aberto.
         //verifiaca se existe um voluntario na chamada.
-        if($prayerRequest->questionary_brother || !isset($prayerRequest->voluntary_id)){
+        if($prayerRequest->questionary_user || !isset($prayerRequest->voluntary_id)){
             return;
         }
         $zApiController = new ZApiController();
@@ -80,13 +80,13 @@ class CheckHelp extends Command
             //users
             $user = User::find($prayerRequest->voluntary_id);
             //questão
-            $firstQuestion = DialogsQuestion::where('dialog_template_id', 5)->where('start', 1)->first();
+            $firstQuestion = DialogsQuestion::where('dialog_template_id', 4)->where('start', 1)->first();
             $zapiWebHoockController->createDefaultPrayerRequest($user,$firstQuestion->id);
             //setar o user na mensagem
             $message = str_replace("{{REQUESTER_NAME}}", $user->username, $firstQuestion->question);
             //apos criar enviar a mensagem.
             $zApiController->sendMessage($user->getRawOriginal('phone'),str_replace('\n', "\n", $message));
-            $prayerRequest->questionary_brother = 1;
+            $prayerRequest->questionary_user = 1;
             $prayerRequest->update();
         }
     }
