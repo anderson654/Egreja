@@ -84,9 +84,4 @@ class User extends Authenticatable
         }
         return $phone;
     }
-
-    public function voluntary()
-    {
-        return $this->hasOne(User::class, 'id', 'voluntary_id');
-    }
 }

@@ -32,7 +32,7 @@ class CheckHelp extends Command
      */
     public function handle()
     {
-        $prayerRequests = PrayerRequest::where('status_id', 1)->has('prayer')->get();
+        $prayerRequests = PrayerRequest::where('status_id', 1)->has('prayer')->has('voluntary')->get();
         // $prayerRequests = PrayerRequest::find(238);
         // $this->sendAvaliable($prayerRequests);
         // return;
@@ -83,8 +83,8 @@ class CheckHelp extends Command
             $firstQuestion = DialogsQuestion::where('dialog_template_id', 3)->where('start', 1)->first();
             $zapiWebHoockController->createDefaultPrayerRequest($user,$firstQuestion->id);
             //setar o user na mensagem
-            $message = str_replace("{{VOLUNTEER_NAME}}", $user->voluntary->username, $firstQuestion->question);
             $message = str_replace("{{REQUESTER_NAME}}", $user->username, $firstQuestion->question);
+            $message = str_replace("{{VOLUNTEER_NAME}}", $prayerRequest->voluntary->username, $firstQuestion->question);
             //apos criar enviar a mensagem.
             $zApiController->sendMessage($user->getRawOriginal('phone'),str_replace('\n', "\n", $message));
             $prayerRequest->questionary_user = 1;

@@ -39,4 +39,9 @@ class PrayerRequest extends Model
 
         return $results;
     }
+
+    public function voluntary()
+    {
+        return $this->hasOne(User::class, 'id', 'voluntary_id');
+    }
 }
