@@ -83,6 +83,7 @@ class CheckHelp extends Command
             $firstQuestion = DialogsQuestion::where('dialog_template_id', 4)->where('start', 1)->first();
             $zapiWebHoockController->createDefaultPrayerRequest($user,$firstQuestion->id);
             //setar o user na mensagem
+            $message = str_replace("{{VOLUNTEER_NAME}}", $user->voluntary->username, $firstQuestion->question);
             $message = str_replace("{{REQUESTER_NAME}}", $user->username, $firstQuestion->question);
             //apos criar enviar a mensagem.
             $zApiController->sendMessage($user->getRawOriginal('phone'),str_replace('\n', "\n", $message));

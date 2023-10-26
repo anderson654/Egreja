@@ -57,8 +57,8 @@ class User extends Authenticatable
      * Always encrypt the password when it is updated.
      *
      * @param $value
-    * @return string
-    */
+     * @return string
+     */
     public function setPasswordAttribute($value)
     {
         $this->attributes['password'] = bcrypt($value);
@@ -79,9 +79,14 @@ class User extends Authenticatable
             $ddd = substr($phone, 2, 2);
             $prefixo = substr($phone, 4, 4);
             $sufixo = substr($phone, 8, 4);
-    
+
             return "+$codigoPais ($ddd) 9 $prefixo-$sufixo";
         }
         return $phone;
+    }
+
+    public function voluntary()
+    {
+        return $this->hasOne(User::class, 'id', 'voluntary_id');
     }
 }
