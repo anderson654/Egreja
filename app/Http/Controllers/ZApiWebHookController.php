@@ -23,6 +23,8 @@ class ZApiWebHookController extends Controller
         Log::info("-------WebhoockLaravel---------");
         $dados = $request->all();
 
+        Log::info($dados);
+
         //se os dados vierem de um grupo não fazer nada;
         if ($dados['isGroup']) {
             return;
