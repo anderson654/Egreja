@@ -2,7 +2,11 @@
 
 namespace App\Console\Commands\Vonluntary;
 
+use App\Http\Controllers\ZApiController;
+use App\Http\Controllers\ZApiWebHookController;
+use App\Models\DialogsQuestion;
 use App\Models\PrayerRequest;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
@@ -28,16 +32,20 @@ class CheckHelp extends Command
      */
     public function handle()
     {
-        $prayerRequests = PrayerRequest::where('status_id', 1)->has('prayer')->get();
+        // $prayerRequests = PrayerRequest::where('status_id', 1)->has('prayer')->get();
+        $prayerRequests = PrayerRequest::find(186);
+        $this->sendAvaliable($prayerRequests);
+        return;
         //
         foreach ($prayerRequests as $prayerRequest) {
             //caso passe de 30 min e ninguem atendeu fechar o chamado e enviar uma mensagem de desculpa
-            $this->closePrayer30Minuts($prayerRequest);
+            // $this->closePrayer30Minuts($prayerRequest);
 
             //verificar se alguem ja aceitou o chamado e fechar para todos enviando uma mensagem
             // $this->closePrayer30Minuts($prayerRequest);
 
             //apos 10 min enviar avaliação.
+            $this->sendAvaliable($prayerRequest);
         }
     }
 
@@ -57,7 +65,26 @@ class CheckHelp extends Command
         }
     }
 
-    // public function sendAvaliable(){
+    public function sendAvaliable($prayerRequest){
+        $zApiController = new ZApiController();
+        //verifiaca se existe um voluntario na chamada
+        if(!isset($prayerRequest->voluntary_id)){
+            return;
+        }
+        $limitTime = Carbon::parse($prayerRequest->created_at->toString())->addMinutes(10);
+        //verificar se ele não tem chamadas em aberto.
+        if ($limitTime < Carbon::now() ) {
+            //salvar e enviar o template para o user.
+            $zapiWebHoockController = new ZApiWebHookController();
+            //users
+            $user = User::find($prayerRequest->voluntary_id);
+            //questão
+            $firstQuestion = DialogsQuestion::where('dialog_template_id', 5)->where('start', 1)->first();
+            $zapiWebHoockController->createDefaultPrayerRequest($user,$firstQuestion->id);
 
-    // }
+            //apos criar enviar a mensagem.
+            $zApiController->sendMessage($user->getRawOriginal('phone'),str_replace('\n', "\n", $firstQuestion->question));
+        }
+    }
+
 }
