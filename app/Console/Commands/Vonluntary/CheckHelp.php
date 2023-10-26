@@ -66,15 +66,12 @@ class CheckHelp extends Command
     }
 
     public function sendAvaliable($prayerRequest){
-        //verificar se ja possui uma chamada questão em aberto.
-        if($prayerRequest->questionary_user){
+        //verificar se a chamada na questão foi aberto.
+        //verifiaca se existe um voluntario na chamada.
+        if($prayerRequest->questionary_brother || !isset($prayerRequest->voluntary_id)){
             return;
         }
         $zApiController = new ZApiController();
-        //verifiaca se existe um voluntario na chamada
-        if(!isset($prayerRequest->voluntary_id)){
-            return;
-        }
         $limitTime = Carbon::parse($prayerRequest->created_at->toString())->addMinutes(10);
         //verificar se ele não tem chamadas em aberto.
         if ($limitTime < Carbon::now() ) {
@@ -85,11 +82,11 @@ class CheckHelp extends Command
             //questão
             $firstQuestion = DialogsQuestion::where('dialog_template_id', 5)->where('start', 1)->first();
             $zapiWebHoockController->createDefaultPrayerRequest($user,$firstQuestion->id);
-
+            //setar o user na mensagem
+            $message = str_replace("{{REQUESTER_NAME}}", $user->username, $firstQuestion->question);
             //apos criar enviar a mensagem.
-            $zApiController->sendMessage($user->getRawOriginal('phone'),str_replace('\n', "\n", $firstQuestion->question));
-
-            $prayerRequest->questionary_user = 1;
+            $zApiController->sendMessage($user->getRawOriginal('phone'),str_replace('\n', "\n", $message));
+            $prayerRequest->questionary_brother = 1;
             $prayerRequest->update();
         }
     }
