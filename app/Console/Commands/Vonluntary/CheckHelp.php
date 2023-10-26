@@ -67,6 +67,9 @@ class CheckHelp extends Command
 
     public function sendAvaliable($prayerRequest){
         //verificar se ja possui uma chamada questão em aberto.
+        if($prayerRequest->questionary_user){
+            return;
+        }
         $zApiController = new ZApiController();
         //verifiaca se existe um voluntario na chamada
         if(!isset($prayerRequest->voluntary_id)){
