@@ -238,7 +238,7 @@ class ZApiWebHookController extends Controller
         switch ($metod) {
             case 'send_message_to_volunteers':
                 $zApiController = new ZApiController();
-                if(!in_array($message,["1","2","SIM","NÃO","sim","nao","não"])){
+                if(!in_array($message,["1","2","SIM","NÃO","Sim","sim","nao","não"])){
                     $zApiController->sendMessage($actualyUserPhone, str_replace('\n', "\n", "Não foi possivel entender a resposta."));
                     return;
                 }
