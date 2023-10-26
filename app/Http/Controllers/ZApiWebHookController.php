@@ -227,30 +227,30 @@ class ZApiWebHookController extends Controller
         return $nextNedRequest->save();
     }
 
-
-
-
-
-
-
-
     //metodos para as questoes
     public function executeMethod($metod, $nextNedRequest, $actualyUserPhone = null, $message = null, $positiveOrNegativeResponse = null)
     {
         switch ($metod) {
             case 'send_message_to_volunteers':
                 $zApiController = new ZApiController();
-                if(!in_array($message,["1","2","SIM","NÃO","Sim","sim","nao","não","preciso","Preciso"])){
+                if (!in_array($message, ["1", "2", "SIM", "NÃO", "Sim", "sim", "nao", "não", "preciso", "Preciso"])) {
                     $zApiController->sendMessage($actualyUserPhone, str_replace('\n', "\n", "Não foi possivel entender a resposta."));
                     return;
                 }
-                if (in_array($message,["2","NÃO","nao","não"])) {
+                if (in_array($message, ["2", "NÃO", "nao", "não"])) {
                     $this->closePrayerRequest($nextNedRequest);
                     return;
                 }
-                //peagar todos os voluntarios da tabela e enviar 
+                //peagar todos os voluntarios da tabela apenas o que não possuem chamado em aberto
                 $voluntariers = User::where('role_id', 3)->get();
                 foreach ($voluntariers as $obj) {
+                    //se tiver um chamado em aberto dar um break
+                    $existPrayerOpen = PrayerRequest::where('voluntary_id', $obj->id)->where('status_id', 1)->first();
+                    if($existPrayerOpen){
+                        return;
+                    }
+
+
                     # code...
                     $originalPhone = preg_replace("/[^0-9]/", "", $obj['phone']);
                     sleep(1);
@@ -312,7 +312,7 @@ class ZApiWebHookController extends Controller
                 //este metodo recebe a resposta do cliente
                 $payer = User::find($nextNedRequest->user_id);
                 $currentDialogQuestion = DialogsQuestion::find($nextNedRequest->current_dialog_question_id);
-                
+
                 $zApiController = new ZApiController();
                 if (!$message) {
                     $zApiController->sendMessage($payer->phone, str_replace('\n', "\n", "Por favor digite uma mensagem válida."));
@@ -332,7 +332,7 @@ class ZApiWebHookController extends Controller
                 //este metodo recebe a resposta do cliente
                 $payer = User::find($nextNedRequest->user_id);
                 $currentDialogQuestion = DialogsQuestion::find($nextNedRequest->current_dialog_question_id);
-                
+
                 $zApiController = new ZApiController();
                 if (!$message) {
                     $zApiController->sendMessage($payer->phone, str_replace('\n', "\n", "Por favor digite uma mensagem válida."));
@@ -355,15 +355,15 @@ class ZApiWebHookController extends Controller
                     break;
                 }
 
-                if(in_array($message,['1','Atender demanda'])){
+                if (in_array($message, ['1', 'Atender demanda'])) {
                     $zApiController->sendMessage($payer->phone, str_replace('\n', "\n", $currentDialogQuestion->next_dialog_question->question));
                     $nextNedRequest->current_dialog_question_id = $currentDialogQuestion->next_dialog_question_id;
                 }
-                if(in_array($message,['2','Redirecionar'])){
+                if (in_array($message, ['2', 'Redirecionar'])) {
                     $zApiController->sendMessage($payer->phone, str_replace('\n', "\n", $currentDialogQuestion->next_negative_dialog_question->question));
                     $nextNedRequest->current_dialog_question_id = $currentDialogQuestion->next_negative_dialog_question_id;
                 }
-                
+
                 //finaliza o contato
                 $nextNedRequest->status_id = 3;
                 $nextNedRequest->update();
