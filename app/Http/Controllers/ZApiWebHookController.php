@@ -252,17 +252,18 @@ class ZApiWebHookController extends Controller
                     # code...
                     $originalPhone = preg_replace("/[^0-9]/", "", $obj['phone']);
                     sleep(1);
+                    //ajustar o fechamento da chamada.
                     $existPrayerRequest = VolunteerRequest::where('user_id', $obj['id'])->where('status_id', 1)->exists();
 
-                    if ($originalPhone === "5541989022440") {
-                        if (!$existPrayerRequest) {
+                    // if ($originalPhone === "5541989022440") {
+                        // if (!$existPrayerRequest) {
                             $user = User::find($obj['id']);
                             $selectTemplateQuestions =  DialogsTemplate::where('title', 'Egreja-Voluntary')->first();
                             $dialogQuestion = DialogsQuestion::where('dialog_template_id', $selectTemplateQuestions->id)->where('start', 1)->first();
                             $this->createDefaultPrayerRequest($user, $dialogQuestion->id, $nextNedRequest->id);
                             $zApiController->sendMessage($originalPhone, str_replace('\n', "\n", $dialogQuestion->question));
-                        }
-                    }
+                        // }
+                    // }
                 }
 
                 break;
