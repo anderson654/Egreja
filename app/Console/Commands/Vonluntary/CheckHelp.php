@@ -70,7 +70,15 @@ class CheckHelp extends Command
             }
             //enviar mensagem
             $request = new Request();
-            $request->merge(["user_id" => $sideDishe->responsible_user_id, "template_id" => 6]);
+            $variables = [
+                "user_name"  => User::find($sideDishe->responsible_user_id)['username'],
+                "voluntary_name"  =>  User::find($sideDishe->user_id)['username'],
+            ];
+            $request->merge(["user_id" => $sideDishe->responsible_user_id, "template_id" => 6, "variables" => $variables]);
+
+
+
+
             $dialogTemplatesController = new DialogsTemplatesController();
             $dialogTemplatesController->sendTemplate($request);
 

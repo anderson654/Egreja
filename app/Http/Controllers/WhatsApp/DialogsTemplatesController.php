@@ -95,6 +95,8 @@ class DialogsTemplatesController extends Controller
         //pega a questão que inicia o template
         $questionTemplate = DialogsQuestion::where('dialog_template_id', $request->template_id)->where('start', true)->first();
 
+        $data = $request->all();
+        $variables = (object)$data['variables'];
 
         //cria uma nova chamada
         $prayerRequest = new PrayerRequest();
@@ -103,8 +105,8 @@ class DialogsTemplatesController extends Controller
         //enviar mensagem para o user
         $zapiController = new ZApiController();
 
-        $message = str_replace("{{REQUESTER_NAME}}", isset($prayerRequest->voluntary->username) ? $prayerRequest->voluntary->username : "UNDEFINED", $questionTemplate->question);
-        $message = str_replace("{{VOLUNTEER_NAME}}", isset($prayerRequest->user->username) ? $prayerRequest->user->username : "UNDEFINED", $questionTemplate->question);
+        $message = str_replace("{{REQUESTER_NAME}}", isset($variables->user_name) ? $variables->user_name : "UNDEFINED", $questionTemplate->question);
+        $message = str_replace("{{VOLUNTEER_NAME}}", isset($variables->voluntary_name) ? $variables->voluntary_name : "UNDEFINED", $message);
 
         $zapiController->sendMessage($user->phone, str_replace('\n', "\n", $message));
 
