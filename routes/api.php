@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\WhatsApp\DialogsTemplatesController;
 use App\Http\Controllers\ZApiWebHookController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -22,4 +23,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::prefix('webhook/zapi')->group(function () {
     Route::post('aoreceber', [ZApiWebHookController::class, 'getStatusMessage']);
     // Outras rotas do webhook, se necessário
+});
+
+
+//rotas de teste
+Route::prefix('sandbox')->group(function () {
+    // Criar uma rota para enviar um template para qualquer pessoa.
+    Route::post('sendTemplate', [DialogsTemplatesController::class, 'sendTemplate']);
 });

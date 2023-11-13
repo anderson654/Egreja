@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use PhpParser\Node\Stmt\Return_;
 
 class PrayerRequest extends Model
 {
@@ -43,5 +44,19 @@ class PrayerRequest extends Model
     public function voluntary()
     {
         return $this->hasOne(User::class, 'id', 'voluntary_id');
+    }
+
+
+
+    //cria uma linha de registro na tabela prayer_requests
+    public function newPrayerRequest($user, $question)
+    {
+        $prayerRequest = new PrayerRequest();
+        $prayerRequest->user_id = $user->id;
+        $prayerRequest->status_id = 1;
+        $prayerRequest->current_dialog_question_id = $question->id;
+        $prayerRequest->save();
+
+        return $prayerRequest;
     }
 }

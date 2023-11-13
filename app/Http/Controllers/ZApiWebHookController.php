@@ -371,6 +371,10 @@ class ZApiWebHookController extends Controller
 
             case 'new_side_dishes':
                 break;
+            case 'close_player_request':
+                $zApiController = new ZApiController();
+                $zApiController->sendMessage('41989022440', str_replace('\n', "\n", "fechado."));
+                break;
             default:
                 # code...
                 break;

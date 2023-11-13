@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\WhatsApp;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\ZApiController;
+use App\Models\DialogsQuestion;
 use App\Models\DialogsTemplate;
+use App\Models\PrayerRequest;
+use App\Models\User;
 use App\Models\WhatsApp\GroupsResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -80,5 +84,30 @@ class DialogsTemplatesController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+
+    //api
+    public function sendTemplate(Request $request)
+    {
+        //pegar o user
+        $user = User::find($request->user_id);
+        //pega a questão que inicia o template
+        $questionTemplate = DialogsQuestion::where('dialog_template_id', $request->template_id)->where('start', true)->first();
+
+
+        //cria uma nova chamada
+        $prayerRequest = new PrayerRequest();
+        $prayerRequest = $prayerRequest->newPrayerRequest($user, $questionTemplate);
+
+        //enviar mensagem para o user
+        $zapiController = new ZApiController();
+
+        $message = str_replace("{{REQUESTER_NAME}}", isset($prayerRequest->voluntary->username) ? $prayerRequest->voluntary->username : "UNDEFINED", $questionTemplate->question);
+        $message = str_replace("{{VOLUNTEER_NAME}}", isset($prayerRequest->user->username) ? $prayerRequest->user->username : "UNDEFINED", $questionTemplate->question);
+
+        $zapiController->sendMessage($user->phone, str_replace('\n', "\n", $message));
+
+        return response()->json(["message" => "Success"]);
     }
 }
