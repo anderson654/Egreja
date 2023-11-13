@@ -46,6 +46,9 @@ class CheckHelp extends Command
 
             //apos 10 min enviar avaliação.
             $this->sendAvaliable($prayerRequest);
+
+            //apos duas horas enviar questionario para o irmão
+            $this->sendAvaliable($prayerRequest);
         }
     }
 
@@ -65,28 +68,60 @@ class CheckHelp extends Command
         }
     }
 
-    public function sendAvaliable($prayerRequest){
+    public function sendAvaliable($prayerRequest)
+    {
         //verificar se a chamada na questão foi aberto.
         //verifiaca se existe um voluntario na chamada.
-        if($prayerRequest->questionary_user || !isset($prayerRequest->voluntary_id)){
+        if ($prayerRequest->questionary_brother || !isset($prayerRequest->voluntary_id)) {
             return;
         }
         $zApiController = new ZApiController();
         $limitTime = Carbon::parse($prayerRequest->created_at->toString())->addMinutes(10);
         //verificar se ele não tem chamadas em aberto.
-        if ($limitTime < Carbon::now() ) {
+        if ($limitTime < Carbon::now()) {
             //salvar e enviar o template para o user.
             $zapiWebHoockController = new ZApiWebHookController();
             //users
             $user = User::find($prayerRequest->voluntary_id);
             //questão
             $firstQuestion = DialogsQuestion::where('dialog_template_id', 3)->where('start', 1)->first();
-            $zapiWebHoockController->createDefaultPrayerRequest($user,$firstQuestion->id);
+            $zapiWebHoockController->createDefaultPrayerRequest($user, $firstQuestion->id);
             //setar o user na mensagem
             $message = str_replace("{{REQUESTER_NAME}}", $prayerRequest->user->username, $firstQuestion->question);
             $message = str_replace("{{VOLUNTEER_NAME}}", $prayerRequest->voluntary->username, $message);
             //apos criar enviar a mensagem.
-            $zApiController->sendMessage($user->getRawOriginal('phone'),str_replace('\n', "\n", $message));
+            $zApiController->sendMessage($user->getRawOriginal('phone'), str_replace('\n', "\n", $message));
+            $prayerRequest->questionary_brother = 1;
+            $prayerRequest->update();
+        }
+    }
+
+    public function sendAvaliableBrother($prayerRequest)
+    {
+        //ajustes en vez do user o voluntario setado.
+
+
+        //verificar se a chamada na questão foi aberto.
+        //verifiaca se existe um voluntario na chamada.
+        if ($prayerRequest->questionary_user || !isset($prayerRequest->user_id)) {
+            return;
+        }
+        $zApiController = new ZApiController();
+        $limitTime = Carbon::parse($prayerRequest->created_at->toString())->addHours(2);
+        //verificar se ele não tem chamadas em aberto.
+        if ($limitTime < Carbon::now()) {
+            //salvar e enviar o template para o user.
+            $zapiWebHoockController = new ZApiWebHookController();
+            //users
+            $user = User::find($prayerRequest->user_id);
+            //questão
+            $firstQuestion = DialogsQuestion::where('dialog_template_id', 5)->where('start', 1)->first();
+            $zapiWebHoockController->createDefaultPrayerRequest($user, $firstQuestion->id);
+            //setar o user na mensagem
+            $message = str_replace("{{REQUESTER_NAME}}", $prayerRequest->user->username, $firstQuestion->question);
+            $message = str_replace("{{VOLUNTEER_NAME}}", $prayerRequest->voluntary->username, $message);
+            //apos criar enviar a mensagem.
+            $zApiController->sendMessage($user->getRawOriginal('phone'), str_replace('\n', "\n", $message));
             $prayerRequest->questionary_user = 1;
             $prayerRequest->update();
         }
