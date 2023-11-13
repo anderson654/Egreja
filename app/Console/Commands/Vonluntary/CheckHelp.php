@@ -39,7 +39,7 @@ class CheckHelp extends Command
         //
         foreach ($prayerRequests as $prayerRequest) {
             //caso passe de 30 min e ninguem atendeu fechar o chamado e enviar uma mensagem de desculpa
-            // $this->closePrayer30Minuts($prayerRequest);
+            $this->closePrayer30Minuts($prayerRequest);
 
             //verificar se alguem ja aceitou o chamado e fechar para todos enviando uma mensagem
             // $this->closePrayer30Minuts($prayerRequest);
