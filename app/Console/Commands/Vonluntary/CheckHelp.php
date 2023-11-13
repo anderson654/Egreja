@@ -58,6 +58,7 @@ class CheckHelp extends Command
         //verifica se existe algum side_dishes com message_received = null
         $sideDishes = SideDishes::whereNull('message_send')->get();
         foreach ($sideDishes as $sideDishe) {
+            return;
             # code...
             //verificar se o pastor tem alguma chamada em aberto.
             $prayerRequest = PrayerRequest::where(function ($query) use ($sideDishe) {
@@ -75,9 +76,6 @@ class CheckHelp extends Command
                 "voluntary_name"  =>  User::find($sideDishe->user_id)['username'],
             ];
             $request->merge(["user_id" => $sideDishe->responsible_user_id, "template_id" => 6, "variables" => $variables]);
-
-
-
 
             $dialogTemplatesController = new DialogsTemplatesController();
             $dialogTemplatesController->sendTemplate($request);
