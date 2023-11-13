@@ -7,6 +7,7 @@ use App\Models\DialogsTemplate;
 use App\Models\GroupQuestionsResponse;
 use App\Models\PrayerRequest;
 use App\Models\ResponsesToGroup;
+use App\Models\SideDishes;
 use App\Models\User;
 use App\Models\VolunteerRegistration;
 use App\Models\VolunteerRequest;
@@ -370,6 +371,12 @@ class ZApiWebHookController extends Controller
                 break;
 
             case 'new_side_dishes':
+                if (!$positiveOrNegativeResponse) {
+                    break;
+                }
+                $sideDishes = new SideDishes();
+                $sideDishes->user_id = $nextNedRequest->user_id;
+                $sideDishes->responsible_user_id = 7;
                 break;
             case 'close_player_request':
                 $this->closePrayerRequest($nextNedRequest);
