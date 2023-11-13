@@ -2,14 +2,16 @@
 
 namespace App\Console\Commands\Vonluntary;
 
+use App\Http\Controllers\WhatsApp\DialogsTemplatesController;
 use App\Http\Controllers\ZApiController;
 use App\Http\Controllers\ZApiWebHookController;
 use App\Models\DialogsQuestion;
 use App\Models\PrayerRequest;
+use App\Models\SideDishes;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Request;
 
 class CheckHelp extends Command
 {
@@ -49,6 +51,31 @@ class CheckHelp extends Command
 
             //apos duas horas enviar questionario para o irmão
             $this->sendAvaliableBrother($prayerRequest);
+        }
+
+
+
+        //verifica se existe algum side_dishes com message_received = null
+        $sideDishes = SideDishes::whereNull('message_send')->get();
+        foreach ($sideDishes as $sideDishe) {
+            # code...
+            //verificar se o pastor tem alguma chamada em aberto.
+            $prayerRequest = PrayerRequest::where(function ($query) use ($sideDishe) {
+                $query->where('user_id', $sideDishe->responsible_user_id)
+                    ->orWhere('voluntary_id', $sideDishe->responsible_user_id);
+            })->where('status_id', 1)->exists();
+
+            if ($prayerRequest) {
+                return;
+            }
+            //enviar mensagem
+            $request = new Request();
+            $request->merge(["user_id" => $sideDishe->responsible_user_id, "template_id" => 6]);
+            $dialogTemplatesController = new DialogsTemplatesController();
+            $dialogTemplatesController->sendTemplate($request);
+
+            $sideDishe->message_send = true;
+            $sideDishe->save();
         }
     }
 
