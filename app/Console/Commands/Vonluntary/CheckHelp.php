@@ -32,7 +32,7 @@ class CheckHelp extends Command
      */
     public function handle()
     {
-        $prayerRequests = PrayerRequest::whereIn('status_id', [1, 4])->has('prayer')->has('voluntary')->get();
+        $prayerRequests = PrayerRequest::whereIn('status_id', [1, 3])->has('prayer')->has('voluntary')->get();
         // $prayerRequests = PrayerRequest::find(238);
         // $this->sendAvaliable($prayerRequests);
         // return;
