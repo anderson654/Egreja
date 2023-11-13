@@ -48,7 +48,7 @@ class CheckHelp extends Command
             $this->sendAvaliable($prayerRequest);
 
             //apos duas horas enviar questionario para o irmão
-            $this->sendAvaliable($prayerRequest);
+            $this->sendAvaliableBrother($prayerRequest);
         }
     }
 
