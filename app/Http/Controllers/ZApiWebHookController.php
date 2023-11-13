@@ -376,10 +376,11 @@ class ZApiWebHookController extends Controller
                 }
                 $sideDishes = new SideDishes();
                 $sideDishes->user_id = $nextNedRequest->user_id;
-                $sideDishes->responsible_user_id = 7;
+                //id do responsavel
+                $sideDishes->responsible_user_id = 45;
                 $sideDishes->save();
                 $this->closePrayerRequest($nextNedRequest);
-                
+
                 break;
             case 'close_player_request':
                 $this->closePrayerRequest($nextNedRequest);
