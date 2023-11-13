@@ -246,7 +246,7 @@ class ZApiWebHookController extends Controller
                 foreach ($voluntariers as $obj) {
                     //se tiver um chamado em aberto dar um break
                     $existPrayerOpen = PrayerRequest::where('voluntary_id', $obj->id)->where('status_id', 1)->first();
-                    if($existPrayerOpen){
+                    if ($existPrayerOpen) {
                         return;
                     }
 
@@ -257,13 +257,13 @@ class ZApiWebHookController extends Controller
                     $existPrayerRequest = VolunteerRequest::where('user_id', $obj['id'])->where('status_id', 1)->exists();
 
                     // if ($originalPhone === "5541989022440") {
-                        if (!$existPrayerRequest) {
-                            $user = User::find($obj['id']);
-                            $selectTemplateQuestions =  DialogsTemplate::where('title', 'Egreja-Voluntary')->first();
-                            $dialogQuestion = DialogsQuestion::where('dialog_template_id', $selectTemplateQuestions->id)->where('start', 1)->first();
-                            $this->createDefaultPrayerRequest($user, $dialogQuestion->id, $nextNedRequest->id);
-                            $zApiController->sendMessage($originalPhone, str_replace('\n', "\n", $dialogQuestion->question));
-                        }
+                    if (!$existPrayerRequest) {
+                        $user = User::find($obj['id']);
+                        $selectTemplateQuestions =  DialogsTemplate::where('title', 'Egreja-Voluntary')->first();
+                        $dialogQuestion = DialogsQuestion::where('dialog_template_id', $selectTemplateQuestions->id)->where('start', 1)->first();
+                        $this->createDefaultPrayerRequest($user, $dialogQuestion->id, $nextNedRequest->id);
+                        $zApiController->sendMessage($originalPhone, str_replace('\n', "\n", $dialogQuestion->question));
+                    }
                     // }
                 }
 
@@ -367,7 +367,9 @@ class ZApiWebHookController extends Controller
                 //finaliza o contato
                 $nextNedRequest->status_id = 3;
                 $nextNedRequest->update();
+                break;
 
+            case 'new_side_dishes':
                 break;
             default:
                 # code...
