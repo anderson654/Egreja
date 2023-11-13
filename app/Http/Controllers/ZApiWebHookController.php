@@ -378,6 +378,7 @@ class ZApiWebHookController extends Controller
                 $sideDishes->user_id = $nextNedRequest->user_id;
                 $sideDishes->responsible_user_id = 7;
                 $sideDishes->save();
+                $this->closePrayerRequest($nextNedRequest);
                 
                 break;
             case 'close_player_request':
