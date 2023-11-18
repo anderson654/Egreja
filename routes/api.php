@@ -20,7 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::prefix('webhook/zapi')->group(function () {
+Route::prefix('webhook/zapi')->middleware('blockMessageGroup')->group(function () {
     Route::post('aoreceber', [ZApiWebHookController::class, 'getStatusMessage']);
     // Outras rotas do webhook, se necessário
 });

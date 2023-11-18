@@ -17,32 +17,33 @@ use Illuminate\Support\Facades\Log;
 
 class ZApiWebHookController extends Controller
 {
+
+    private $zApiController;
+    private $date;
+    private $phone;
+    private $user;
+
+    public function __construct(Request $request)
+    {
+        $this->zApiController = new ZApiController();
+        $this->date = $request->all();
+        $this->phone = substr($request->all()['phone'], 0, 4) . "9" . substr($request->all()['phone'], 4);
+    }
+
+
     public function getStatusMessage(Request $request)
     {
-        Log::info("-------WebhoockLaravel---------");
-        $zApiController = new ZApiController();
-        Log::info("-------WebhoockLaravel---------");
-        $dados = $request->all();
+        Log::info("-------WebhoockLaravel: mensagen recebida---------");
+        //se não existir criar um usuario role id = 4;
+        $user = User::createNewUserZapi($this->phone);
+        $this->user = $user;
 
-        Log::info($dados);
+        //verificar a qual canal ele pertence e qual deve ser redirecionado
 
-        //se os dados vierem de um grupo não fazer nada;
-        if ($dados['isGroup']) {
-            return;
-        }
-        $dados['phone'] = substr($dados['phone'], 0, 4) . "9" . substr($dados['phone'], 4);
+        //é tipo o reegisto de uma ligação verifica se ele tem alguma e esta em aberto.
+        $prayer_requests = PrayerRequest::where('user_id', $user->id)->whereIn('status_id', [1])->first();
 
-        //se não existir criar um usuario
-        $user = $this->createNewUser($dados);
-
-        //deixe true para teste
-        if (false) {
-            $dados['phone'] = '5541989022440';
-        }
-
-        //verificar se este telefone tem um chamado em aberto
-        $nextNedRequest = PrayerRequest::where('user_id', $user->id)->where('status_id', '!=', 3)->first();
-
+        //aqui faz a verificação em que tipo de user é
         if ($user->role_id === 3 && !$nextNedRequest) {
             $zApiController->sendMessage($dados['phone'], str_replace('\n', "\n", "Não há chamados a serem atendidos."));
             return;
@@ -108,6 +109,10 @@ class ZApiWebHookController extends Controller
             }
         }
         return response()->json(['message' => 'Dados do webhook recebidos com sucesso'], 200);
+    }
+
+    public function redirectFlow(){
+
     }
 
     public function closePrayerRequest($nextNedRequest)
@@ -176,24 +181,6 @@ class ZApiWebHookController extends Controller
         $idsGroups = $grupsResponses->pluck('groups_responses_id');
         //verifica se em algun grupo existe uma resposta com esse valor;
         return ResponsesToGroup::where('response', $meessage)->whereIn('group_responses_id', $idsGroups)->with('group_response')->first();
-    }
-
-    public function createNewUser($dados)
-    {
-        $user = User::where('phone', $dados['phone'])->first();
-        if (!$user) {
-            $newUser = new User();
-            $newUser->phone = $dados['phone'];
-            $newUser->username = $dados['senderName'] ?? 'anonimo';
-            $newUser->email = 'e_greja_' . rand(1, 1000000000) . '@gmail.com';
-            $newUser->password = '123456789';
-            $newUser->role_id = 4;
-            if (!$newUser->save()) {
-                Log::info('Erro ao salvar User: ' . $dados['phone']);
-            }
-            $user = $newUser;
-        }
-        return $user;
     }
 
     public function nextQuestion($resultVerifyQuestion, $currentQueestionId)
