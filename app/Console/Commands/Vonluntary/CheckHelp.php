@@ -108,7 +108,8 @@ class CheckHelp extends Command
             return;
         }
         $zApiController = new ZApiController();
-        $limitTime = Carbon::parse($prayerRequest->created_at->toString())->addMinutes(10);
+        //10min
+        $limitTime = Carbon::parse($prayerRequest->created_at->toString())->addMinutes(2);
         //verificar se ele não tem chamadas em aberto.
         if ($limitTime < Carbon::now()) {
             //salvar e enviar o template para o user.
@@ -139,7 +140,8 @@ class CheckHelp extends Command
             return;
         }
         $zApiController = new ZApiController();
-        $limitTime = Carbon::parse($prayerRequest->created_at->toString())->addHours(2);
+        // ->addHours(2)
+        $limitTime = Carbon::parse($prayerRequest->created_at->toString())->addMinutes(5);
         //verificar se ele não tem chamadas em aberto.
         if ($limitTime < Carbon::now()) {
             //salvar e enviar o template para o user.
