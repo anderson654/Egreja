@@ -48,6 +48,9 @@ Route::get('/', function () {
 Route::get('/home', function () {
 	return view('pages/site/home/home');
 });
+Route::get('/index', function () {
+	return view('pages/site/home/index');
+});
 Route::get('/register', [RegisterController::class, 'create'])->middleware('guest')->name('register');
 Route::get('/register-voluntary', [VolunteerRegistrationController::class, 'create'])->middleware('guest');
 Route::post('/register-voluntary-store', [VolunteerRegistrationController::class, 'store'])->middleware('guest')->name('register.voluntary.store');
