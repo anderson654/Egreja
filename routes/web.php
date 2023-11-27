@@ -34,8 +34,6 @@ use App\Http\Controllers\WhatsApp\GroupQuestionsResponsesController;
 use App\Http\Controllers\WhatsApp\GroupsResponsesController;
 use App\Http\Controllers\WhatsApp\ResponsesToGroupsController;
 use App\Http\Controllers\WhatsAppController;
-use App\Http\Controllers\ZApiWebHookController;
-use App\Models\ResponsesToGroup;
 
 Route::get('/enviarMensagem', [WhatsAppController::class, 'enviarMensagemPersonalizada']);
 

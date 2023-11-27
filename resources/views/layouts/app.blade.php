@@ -4,10 +4,12 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-icon.png">
     <link rel="icon" type="image/png" href="/img/logo.png">
     <title>
-        Argon Dashboard 2 by Creative Tim
+        {{-- Argon Dashboard 2 by Creative Tim --}}
+        {{ $title ?? 'Egreja' }}
     </title>
     <!-- jquery -->
     <script src="/assets/js/core/code.jquery.com_jquery-3.7.1.min.js"></script>
@@ -64,6 +66,27 @@
 
 <body class="{{ $class ?? '' }}">
     {{-- criar um component modal --}}
+
+    <!-- Button trigger modal -->
+    {{-- <button type="button" class="btn bg-gradient-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Launch demo modal
+    </button> --}}
+    <!-- Modal -->
+    <div class="modal fade" id="modalLoadding" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document" style="justify-content: center">
+            <div class="spinner-border" style="color: #fff" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+    </div>
+    {{-- fim modal --}}
+
+
+
+
+
+
     @guest
         @yield('content')
     @endguest
@@ -130,21 +153,24 @@
             }
         });
 
+        //quil editor de texto
         //ajustar para script da pagina
-        var quill = new Quill('#editor', {
-            modules: {
-                toolbar: true
-            },
-            theme: 'snow' // Specify theme in configuration
-        });
+        if ($('#editor').length) {
+            var quill = new Quill('#editor', {
+                modules: {
+                    toolbar: true
+                },
+                theme: 'snow' // Specify theme in configuration
+            });
 
-        quill.on('text-change', function(delta, oldDelta, source) {
-            $('#exampleFormControlInput1').val(quill.getText());
-            console.log($('#exampleFormControlInput1').val());
-        });
-        //ajustar para script da pagina
+            quill.on('text-change', function(delta, oldDelta, source) {
+                $('#exampleFormControlInput1').val(quill.getText());
+                console.log($('#exampleFormControlInput1').val());
+            });
+        }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/choices.js@9.0.1/public/assets/scripts/choices.min.js"></script>
+    @yield('script')
 </body>
 
 </html>

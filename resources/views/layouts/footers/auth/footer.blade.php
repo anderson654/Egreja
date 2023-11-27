@@ -8,13 +8,12 @@
                         document.write(new Date().getFullYear())
                     </script>,
                     Criado <i class="fa fa-heart"></i> por
-                    <a href="https://www.cidadebelieve.com" class="font-weight-bold" target="_blank">Ministério Cidade Believe</a>
+                    <a href="https://www.cidadebelieve.com" class="font-weight-bold" target="_blank">Ministério Cidade
+                        Believe</a>
 
                 </div>
             </div>
             <div class="col-lg-6">
-
-
                 </ul>
             </div>
         </div>

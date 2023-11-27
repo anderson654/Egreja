@@ -74,7 +74,7 @@ class VolunteerRegistrationController extends Controller
     {
         // criar um novo user
 
-        if($request->ajax()){
+        if ($request->ajax()) {
             $voluntary = VolunteerRegistration::find($id);
             $voluntary->is_aproved = 1;
             $voluntary->save();
@@ -84,16 +84,20 @@ class VolunteerRegistrationController extends Controller
                 "username" => $voluntary->name . " " .  $voluntary->surname,
                 "email" => $voluntary->email,
                 "password" => str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT),
-                "phone" => "55".$voluntary->getRawOriginal('phone'),
+                "phone" => "55" . $voluntary->getRawOriginal('phone'),
                 "role_id" => 3,
                 "is_active" => 1
             ];
 
             $user = User::create($data);
+            //salvar o id que foi gerado do user no voluntario
+            $voluntary->user_id = $user->id;
+            $voluntary->save();
+
             return response()->json($user);
         }
         $voluntary = VolunteerRegistration::find($id)->update($request->all());
-        if(!$voluntary){
+        if (!$voluntary) {
             dd('Erro');
         }
 

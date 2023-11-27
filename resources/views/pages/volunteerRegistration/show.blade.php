@@ -1,18 +1,19 @@
-@extends('layouts.app', ['class' => 'g-sidenav-show bg-gray-100'])
+@extends('layouts.app', ['class' => 'g-sidenav-show bg-gray-100', 'title' => 'edit user'])
 
 @section('content')
-    @include('layouts.navbars.auth.topnav', ['title' => 'Aprovar voluntário'])
-    {{-- <div id="alert">
-        @include('components.alert')
-    </div> --}}
+    @include('layouts.navbars.auth.topnav', ['title' => $title ?? "Aprovar voluntário"])
     <div class="container-fluid py-4">
         <div class="row">
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-header pb-0">
                         <div class="d-flex align-items-center">
-                            <p class="mb-0">Aguardando aprovação</p>
-                            <button class="btn btn-primary btn-sm ms-auto">Aprovar</button>
+                            @if (!$voluntary->user_id)
+                                <p class="mb-0">Aguardando aprovação</p>
+                                {{-- //verificar se já estiver aprovado e remover o btn --}}
+                                <button class="btn btn-primary btn-sm ms-auto"
+                                    data-update="{{ $voluntary->id }}">Aprovar</button>
+                            @endif
                         </div>
                     </div>
                     <div class="card-body">
@@ -57,8 +58,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="example-text-input" class="form-control-label">Telefone</label>
-                                    <input class="form-control" type="text"
-                                        value="{{$voluntary->phone}}">
+                                    <input class="form-control" type="text" value="{{ $voluntary->phone }}">
                                 </div>
                             </div>
                             <div class="col-md-8">
@@ -75,8 +75,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="example-text-input" class="form-control-label">Igreja</label>
-                                    <input class="form-control" type="text"
-                                        value="{{$voluntary->igreja}}">
+                                    <input class="form-control" type="text" value="{{ $voluntary->igreja }}">
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -180,4 +179,41 @@
         </div>
         @include('layouts.footers.auth.footer')
     </div>
+@endsection
+
+@section('script')
+    <script>
+        $(document).ready(function() {
+            const elements = $('[data-update]');
+            elements.click(function(e) {
+                e.preventDefault();
+                $("#modalLoadding").modal('show');
+
+                const lineTable = $(this).closest('tr');
+                const idUser = $(this).attr('data-update');
+                $("#exampleModalToggle").modal("show");
+                $.ajax({
+                    url: `/admin/aprove-voluntary-update/${idUser}`,
+                    type: 'PUT',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                            'content') // Define o cabeçalho CSRF-Token
+                    },
+                    success: function(response) {
+                        // Lida com a resposta do servidor, se necessário
+                        lineTable.fadeOut(500);
+                    },
+                    error: function(error) {
+                        // Lida com erros, se houver
+                        console.error(error);
+                    },
+                    complete: function() {
+                        // Esta função será executada independentemente de sucesso ou erro
+                        console.log('Solicitação concluída.');
+                        location.reload()
+                    }
+                });
+            })
+        })
+    </script>
 @endsection

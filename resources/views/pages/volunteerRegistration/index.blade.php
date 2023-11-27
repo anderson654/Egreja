@@ -2,10 +2,6 @@
 
 @section('content')
     @include('layouts.navbars.auth.topnav', ['title' => 'Aprovar voluntário'])
-    {{-- <div id="alert">
-        @include('components.alert')
-    </div> --}}
-    <meta name="csrf-token" content="{{ csrf_token() }}">
     <div class="container-fluid py-4">
         <div class="row">
             <div class="col-12">
@@ -13,12 +9,6 @@
                     <div class="card-header pb-0">
                         <div class="d-flex justify-content-between">
                             <h6>Aguardando aprovação</h6>
-                            {{-- <a href="http://127.0.0.1:8000/admin/voluntary/create">
-                                <button type="submit" class="btn btn-primary btn-sm ms-auto">
-                                    <i class="ni ni-fat-add text-ligth text-sm opacity-10"></i>
-                                    Adicionar voluntario
-                                </button>
-                            </a> --}}
                         </div>
                     </div>
                     <div class="card-body px-0 pt-0 pb-2">
@@ -78,39 +68,41 @@
             </div>
         </div>
         @include('layouts.footers.auth.footer')
-        <script>
-            $(document).ready(function() {
-                const elements = $('[data-update]');
-                elements.click(function(e) {
-                    e.preventDefault();
-                    const lineTable = $(this).closest('tr');
-                    const idUser = $(this).attr('data-update');
-                    $("#exampleModalToggle").modal("show");
-                    $.ajax({
-                        url: `aprove-voluntary-update/${idUser}`,
-                        type: 'PUT',
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
-                                'content') // Define o cabeçalho CSRF-Token
-                        },
-                        success: function(response) {
-                            // Lida com a resposta do servidor, se necessário
-                            lineTable.fadeOut(500);
-                        },
-                        error: function(error) {
-                            // Lida com erros, se houver
-                            console.error(error);
-                        },
-                        complete: function() {
-                            // Esta função será executada independentemente de sucesso ou erro
-                            console.log('Solicitação concluída.');
-                            $("#exampleModalToggle").modal("hide");
-
-                            // Execute outras ações aqui
-                        }
-                    });
-                })
-            })
-        </script>
     </div>
+@endsection
+
+@section('script')
+    <script>
+        $(document).ready(function() {
+            const elements = $('[data-update]');
+            elements.click(function(e) {
+                e.preventDefault();
+                const lineTable = $(this).closest('tr');
+                const idUser = $(this).attr('data-update');
+                $("#exampleModalToggle").modal("show");
+                $.ajax({
+                    url: `aprove-voluntary-update/${idUser}`,
+                    type: 'PUT',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                            'content') // Define o cabeçalho CSRF-Token
+                    },
+                    success: function(response) {
+                        // Lida com a resposta do servidor, se necessário
+                        lineTable.fadeOut(500);
+                    },
+                    error: function(error) {
+                        // Lida com erros, se houver
+                        console.error(error);
+                    },
+                    complete: function() {
+                        // Esta função será executada independentemente de sucesso ou erro
+                        console.log('Solicitação concluída.');
+                        $("#exampleModalToggle").modal("hide");
+                        // Execute outras ações aqui
+                    }
+                });
+            })
+        })
+    </script>
 @endsection
