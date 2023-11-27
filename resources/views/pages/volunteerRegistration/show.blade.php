@@ -1,7 +1,7 @@
-@extends('layouts.app', ['class' => 'g-sidenav-show bg-gray-100', 'title' => 'edit user'])
+@extends('layouts.app', ['class' => 'g-sidenav-show bg-gray-100', 'title' => $title ?? 'edit user'])
 
 @section('content')
-    @include('layouts.navbars.auth.topnav', ['title' => $title ?? "Aprovar voluntário"])
+    @include('layouts.navbars.auth.topnav', ['title' => $subtitle ?? "Aprovar voluntário"])
     <div class="container-fluid py-4">
         <div class="row">
             <div class="col-md-8">

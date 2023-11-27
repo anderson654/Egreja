@@ -43,8 +43,9 @@ class VoluntaryController extends Controller
     {
         //aqui a view
         $voluntary = VolunteerRegistration::find($id);
-        $title = "Informações sobre voluntario";
-        return view('pages.volunteerRegistration.show', compact('voluntary','title'));
+        $title = "Visualizar voluntario";
+        $subtitle = "Informações sobre voluntario";
+        return view('pages.volunteerRegistration.show', compact('voluntary','title','subtitle'));
     }
 
     /**
