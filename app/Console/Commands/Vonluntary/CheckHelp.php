@@ -112,13 +112,12 @@ class CheckHelp extends Command
         $limitTime = Carbon::parse($prayerRequest->created_at->toString())->addMinutes(2);
         //verificar se ele não tem chamadas em aberto.
         if ($limitTime < Carbon::now()) {
-            //salvar e enviar o template para o user.
-            $zapiWebHoockController = new ZApiWebHookController($prayerRequest->user);
             //users
             $user = User::find($prayerRequest->voluntary_id);
             //questão
             $firstQuestion = DialogsQuestion::where('dialog_template_id', 3)->where('start', 1)->first();
-            $zapiWebHoockController->createDefaultPrayerRequest($user, $firstQuestion->id);
+
+            PrayerRequest::newPrayerRequest($user, $firstQuestion);
             //setar o user na mensagem
             $message = str_replace("{{REQUESTER_NAME}}", $prayerRequest->user->username, $firstQuestion->question);
             $message = str_replace("{{VOLUNTEER_NAME}}", $prayerRequest->voluntary->username, $message);
