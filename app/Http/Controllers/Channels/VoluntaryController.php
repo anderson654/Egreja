@@ -40,6 +40,14 @@ class VoluntaryController extends Controller
      */
     public function initChanelVoluntary($date)
     {
+        //regra adicional verificar se vc esta atendendo alguem
+        $isAttending = $this->checkIsAttending();
+        if($isAttending){
+            $prayer = User::find($isAttending->user_id);
+            $this->zApiController->sendMessage($date['phone'], str_replace('\n', "\n", "Voce já aceitou atender a um atendimento.\nLigue para $prayer->username\nTelefone: $prayer->phone"));
+            return;
+        }
+    
         //se não existir nenhuma chamada em aberto retornar
         if (!$this->prayerRequests) {
             $this->zApiController->sendMessage($date['phone'], str_replace('\n', "\n", "Não há chamados a serem atendidos."));
@@ -76,5 +84,14 @@ class VoluntaryController extends Controller
                 $this->zApiController->sendMessage($phone, str_replace('\n', "\n", $message));
             }
         }
+    }
+
+    /**
+     * Verifica  se o voluntario esta em um atendimento;
+     * @return  PrayerRequest
+     */
+    public function checkIsAttending(){
+        $prayerRequest =  PrayerRequest::where('status_id',2)->where('voluntary_id',$this->user->id)->first();
+        return $prayerRequest;
     }
 }
