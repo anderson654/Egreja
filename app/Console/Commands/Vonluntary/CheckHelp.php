@@ -102,6 +102,11 @@ class CheckHelp extends Command
 
     public function sendAvaliable($prayerRequest)
     {
+        //para iniciar um outrodialogo feche as prayeer requests atuais
+        //verificar aqui se o  status é 3
+
+
+
         //verificar se a chamada na questão foi aberto.
         //verifiaca se existe um voluntario na chamada.
         if ($prayerRequest->questionary_brother || !isset($prayerRequest->voluntary_id)) {
