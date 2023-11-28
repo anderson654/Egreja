@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class GroupQuestionsResponse extends Model
 {
     use HasFactory;
-    
+
     protected $fillable = [
         'dialog_question_id',
         'groups_responses_id'
@@ -30,5 +30,14 @@ class GroupQuestionsResponse extends Model
     public function responses_exit()
     {
         return $this->hasOne(GroupsResponse::class, 'id', 'groups_responses_id')->where('responses_role_id', 3);
+    }
+
+    /**
+     * @param int $idQuestion id da instancia DialogsQuestion
+     * @return bool
+     */
+    public static function existResponsesQuestion($idQuestion)
+    {
+        return GroupQuestionsResponse::where('dialog_question_id', $idQuestion)->exists();
     }
 }

@@ -65,6 +65,11 @@ class User extends Authenticatable
         $this->attributes['password'] = bcrypt($value);
     }
 
+    public function prayer_requests()
+    {
+        return $this->hasMany(PrayerRequest::class);
+    }
+
     public function getCreatedAtAttribute()
     {
         $newDataCarbom = Carbon::parse($this->attributes['created_at']);
@@ -87,7 +92,7 @@ class User extends Authenticatable
     }
 
 
-    public static function createNewUserZapi($phone)
+    public static function createNewUserZapi($phone, $dados)
     {
         $user = User::where('phone', $phone)->first();
         if (!$user) {
@@ -103,5 +108,20 @@ class User extends Authenticatable
             $user = $newUser;
         }
         return $user;
+    }
+
+    /**
+     * Pega todos os Voluntarios que não estão em atendimento
+     */
+    public static function getVoluntariesNotAttending()
+    {
+        $users = User::where('role_id', 3)
+            ->whereDoesntHave('prayer_requests', function ($query) {
+                $query->whereIn('status_id', [1, 2, 4]);
+            })
+            ->whereNotNull('phone')
+            ->get();
+
+        return $users;
     }
 }
