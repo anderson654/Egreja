@@ -46,15 +46,22 @@ class PrayerRequest extends Model
         return $this->hasOne(User::class, 'id', 'voluntary_id');
     }
 
-
+    /**
+     * @param User  $user recebe user
+     * @param DialogsQuestion $question recebe uma  questão
+     * @param  int $reference recebe o id de uma questão opicional
+     * @param  int $statusId estado inicial do prayer_requests
+     * @return PrayerRequest
+     */
 
     //cria uma linha de registro na tabela prayer_requests
-    public function newPrayerRequest($user, $question)
+    public static function newPrayerRequest($user, $question, $reference = null,$statusId = null)
     {
         $prayerRequest = new PrayerRequest();
         $prayerRequest->user_id = $user->id;
-        $prayerRequest->status_id = 1;
+        $prayerRequest->status_id = $statusId ?? 1;
         $prayerRequest->current_dialog_question_id = $question->id;
+        $prayerRequest->reference = $reference;
         $prayerRequest->save();
 
         return $prayerRequest;

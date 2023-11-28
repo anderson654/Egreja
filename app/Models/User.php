@@ -7,6 +7,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Log;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -64,6 +65,11 @@ class User extends Authenticatable
         $this->attributes['password'] = bcrypt($value);
     }
 
+    public function prayer_requests()
+    {
+        return $this->hasMany(PrayerRequest::class);
+    }
+
     public function getCreatedAtAttribute()
     {
         $newDataCarbom = Carbon::parse($this->attributes['created_at']);
@@ -83,5 +89,39 @@ class User extends Authenticatable
             return "+$codigoPais ($ddd) 9 $prefixo-$sufixo";
         }
         return $phone;
+    }
+
+
+    public static function createNewUserZapi($phone, $dados)
+    {
+        $user = User::where('phone', $phone)->first();
+        if (!$user) {
+            $newUser = new User();
+            $newUser->phone = $phone;
+            $newUser->username = $dados['senderName'] ?? 'anonimo';
+            $newUser->email = 'e_greja_' . rand(1, 1000000000) . '@gmail.com';
+            $newUser->password = '123456789';
+            $newUser->role_id = 4;
+            if (!$newUser->save()) {
+                Log::info('Erro ao salvar User: ' . $phone);
+            }
+            $user = $newUser;
+        }
+        return $user;
+    }
+
+    /**
+     * Pega todos os Voluntarios que não estão em atendimento
+     */
+    public static function getVoluntariesNotAttending()
+    {
+        $users = User::where('role_id', 3)
+            ->whereDoesntHave('prayer_requests', function ($query) {
+                $query->whereIn('status_id', [1, 2, 4]);
+            })
+            ->whereNotNull('phone')
+            ->get();
+
+        return $users;
     }
 }
