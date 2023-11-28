@@ -34,7 +34,7 @@ class CheckHelp extends Command
      */
     public function handle()
     {
-        $prayerRequests = PrayerRequest::whereIn('status_id', [1, 3])->has('prayer')->has('voluntary')->get();
+        $prayerRequests = PrayerRequest::whereIn('status_id', [1, 2, 3])->has('prayer')->has('voluntary')->get();
         // $prayerRequests = PrayerRequest::find(238);
         // $this->sendAvaliable($prayerRequests);
         // return;
@@ -50,38 +50,38 @@ class CheckHelp extends Command
             $this->sendAvaliable($prayerRequest);
 
             //apos duas horas enviar questionario para o irmão
-            $this->sendAvaliableBrother($prayerRequest);
+            // $this->sendAvaliableBrother($prayerRequest);
         }
 
 
 
         //verifica se existe algum side_dishes com message_received = null
-        $sideDishes = SideDishes::whereNull('message_send')->get();
-        foreach ($sideDishes as $sideDishe) {
-            # code...
-            //verificar se o pastor tem alguma chamada em aberto.
-            $prayerRequest = PrayerRequest::where(function ($query) use ($sideDishe) {
-                $query->where('user_id', $sideDishe->responsible_user_id)
-                    ->orWhere('voluntary_id', $sideDishe->responsible_user_id);
-            })->where('status_id', 1)->exists();
+        // $sideDishes = SideDishes::whereNull('message_send')->get();
+        // foreach ($sideDishes as $sideDishe) {
+        //     # code...
+        //     //verificar se o pastor tem alguma chamada em aberto.
+        //     $prayerRequest = PrayerRequest::where(function ($query) use ($sideDishe) {
+        //         $query->where('user_id', $sideDishe->responsible_user_id)
+        //             ->orWhere('voluntary_id', $sideDishe->responsible_user_id);
+        //     })->where('status_id', 1)->exists();
 
-            if ($prayerRequest) {
-                return;
-            }
-            //enviar mensagem
-            $request = new Request();
-            $variables = [
-                "user_name"  => User::find($sideDishe->responsible_user_id)['username'],
-                "voluntary_name"  =>  User::find($sideDishe->user_id)['username'],
-            ];
-            $request->merge(["user_id" => $sideDishe->responsible_user_id, "template_id" => 6, "variables" => $variables]);
+        //     if ($prayerRequest) {
+        //         return;
+        //     }
+        //     //enviar mensagem
+        //     $request = new Request();
+        //     $variables = [
+        //         "user_name"  => User::find($sideDishe->responsible_user_id)['username'],
+        //         "voluntary_name"  =>  User::find($sideDishe->user_id)['username'],
+        //     ];
+        //     $request->merge(["user_id" => $sideDishe->responsible_user_id, "template_id" => 6, "variables" => $variables]);
 
-            $dialogTemplatesController = new DialogsTemplatesController();
-            $dialogTemplatesController->sendTemplate($request);
+        //     $dialogTemplatesController = new DialogsTemplatesController();
+        //     $dialogTemplatesController->sendTemplate($request);
 
-            $sideDishe->message_send = true;
-            $sideDishe->save();
-        }
+        //     $sideDishe->message_send = true;
+        //     $sideDishe->save();
+        // }
     }
 
     public function closePrayer30Minuts($prayerRequest)
@@ -113,7 +113,7 @@ class CheckHelp extends Command
         //verificar se ele não tem chamadas em aberto.
         if ($limitTime < Carbon::now()) {
             //salvar e enviar o template para o user.
-            $zapiWebHoockController = new ZApiWebHookController();
+            $zapiWebHoockController = new ZApiWebHookController($prayerRequest->user);
             //users
             $user = User::find($prayerRequest->voluntary_id);
             //questão
@@ -144,10 +144,10 @@ class CheckHelp extends Command
         $limitTime = Carbon::parse($prayerRequest->created_at->toString())->addMinutes(5);
         //verificar se ele não tem chamadas em aberto.
         if ($limitTime < Carbon::now()) {
-            //salvar e enviar o template para o user.
-            $zapiWebHoockController = new ZApiWebHookController();
             //users
             $user = User::find($prayerRequest->user_id);
+            //salvar e enviar o template para o user.
+            $zapiWebHoockController = new ZApiWebHookController($user);
             //questão
             $firstQuestion = DialogsQuestion::where('dialog_template_id', 5)->where('start', 1)->first();
             $zapiWebHoockController->createDefaultPrayerRequest($user, $firstQuestion->id);
