@@ -134,6 +134,10 @@ class DefaultFunctionsController extends Controller
                 # code...
                 $this->describProblemPrayer();
                 break;
+            case 'problem_prayer_response':
+                # code...
+                $this->describProblemPrayer();
+                break;
 
             default:
                 # code...
@@ -251,5 +255,9 @@ class DefaultFunctionsController extends Controller
     {
         $this->manualyNextQuestion(3);
         $this->closePrayerRequest();
+    }
+
+    public function  problemPrayerResponse(){
+        $this->manualyNextQuestion(3);
     }
 }
