@@ -267,5 +267,6 @@ class DefaultFunctionsController extends Controller
     public function callMenber(){
         //fazer aqui a logica para enviar a  chamada de menbro.
         $this->nextQuestion();
+        $this->closePrayerRequest();
     }
 }
