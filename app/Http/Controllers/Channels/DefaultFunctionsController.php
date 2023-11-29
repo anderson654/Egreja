@@ -144,10 +144,7 @@ class DefaultFunctionsController extends Controller
     //metodos default;
     public function nextQuestion()
     {
-        $nextQuestion = DialogsQuestion::where('dialog_template_id', $this->question->dialog_template_id)->where('priority', $this->question->priority + 1)->first();
-        $this->zApiController->sendMessage($this->user->phone, str_replace('\n', "\n", $nextQuestion->question));
-        $this->prayerRequests->current_dialog_question_id = $nextQuestion->id;
-        $this->prayerRequests->save();
+        $this->manualyNextQuestion($this->question->priority + 1);
     }
 
     public function notIdentifyResponse()
@@ -165,6 +162,12 @@ class DefaultFunctionsController extends Controller
     {
         $this->prayerRequests->current_dialog_question_id = $id;
         $this->prayerRequests->save();
+    }
+
+    public function manualyNextQuestion($priority){
+        $nextQuestion = DialogsQuestion::where('dialog_template_id', $this->question->dialog_template_id)->where('priority', $priority)->first();
+        $this->zApiController->sendMessage($this->user->phone, str_replace('\n', "\n", $nextQuestion->question));
+        $this->updatePrayerRequest($nextQuestion->id);
     }
     //fim metodos default;
 
@@ -212,8 +215,7 @@ class DefaultFunctionsController extends Controller
 
     public function negativeResponseTemplateOne()
     {
-        $nextQuestion = DialogsQuestion::where('dialog_template_id', $this->question->dialog_template_id)->where('priority', 3)->first();
-        $this->zApiController->sendMessage($this->user->phone, str_replace('\n', "\n", $nextQuestion->question));
+        $this->manualyNextQuestion(3);
         $this->closePrayerRequest();
     }
 
@@ -227,9 +229,7 @@ class DefaultFunctionsController extends Controller
 
     public function dificult()
     {
-        $nextQuestion = DialogsQuestion::where('dialog_template_id', $this->question->dialog_template_id)->where('priority', 5)->first();
-        $this->zApiController->sendMessage($this->user->phone, str_replace('\n', "\n", $nextQuestion->question));
-        $this->updatePrayerRequest($nextQuestion->id);
+        $this->manualyNextQuestion(5);
     }
 
     public function saveResponseDificult()
@@ -240,9 +240,7 @@ class DefaultFunctionsController extends Controller
     public function problemPrayer()
     {
         if ($this->date['text']['message']  ==  7) {
-            $nextQuestion = DialogsQuestion::where('dialog_template_id', $this->question->dialog_template_id)->where('priority', 4)->first();
-            $this->zApiController->sendMessage($this->user->phone, str_replace('\n', "\n", $nextQuestion->question));
-            $this->updatePrayerRequest($nextQuestion->id);
+            $this->manualyNextQuestion(4);
             return;
         }
         $this->nextQuestion();
@@ -250,8 +248,7 @@ class DefaultFunctionsController extends Controller
 
     public function describProblemPrayer()
     {
-        $nextQuestion = DialogsQuestion::where('dialog_template_id', $this->question->dialog_template_id)->where('priority', 3)->first();
-        $this->zApiController->sendMessage($this->user->phone, str_replace('\n', "\n", $nextQuestion->question));
-        $this->updatePrayerRequest($nextQuestion->id);
+        $this->manualyNextQuestion(3);
+        $this->closePrayerRequest();
     }
 }
