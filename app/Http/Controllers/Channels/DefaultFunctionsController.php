@@ -108,10 +108,10 @@ class DefaultFunctionsController extends Controller
                 # code...
                 $this->aceptRequestVoluntary();
                 break;
-            // case 'did_not_respond':
-            //     # code...
-            //     $this->didNotRespond();
-            //     break;
+                // case 'did_not_respond':
+                //     # code...
+                //     $this->didNotRespond();
+                //     break;
             case 'negative_response_template_one':
                 # code...
                 $this->negativeResponseTemplateOne();
@@ -130,18 +130,26 @@ class DefaultFunctionsController extends Controller
     //metodos default;
     public function nextQuestion()
     {
-        $nextQuestion = DialogsQuestion::where('dialog_template_id',$this->question->dialog_template_id)->where('priority', $this->question->priority + 1)->first();
+        $nextQuestion = DialogsQuestion::where('dialog_template_id', $this->question->dialog_template_id)->where('priority', $this->question->priority + 1)->first();
         $this->zApiController->sendMessage($this->user->phone, str_replace('\n', "\n", $nextQuestion->question));
         $this->prayerRequests->current_dialog_question_id = $nextQuestion->id;
         $this->prayerRequests->save();
     }
 
-    public function notIdentifyResponse(){
+    public function notIdentifyResponse()
+    {
         $this->zApiController->sendMessage($this->user->phone, str_replace('\n', "\n", "Não foi possível identificar a resposta."));
     }
 
-    public function closePrayerRequest(){
+    public function closePrayerRequest()
+    {
         $this->prayerRequests->status_id = 3;
+        $this->prayerRequests->save();
+    }
+
+    public function updatePrayerRequest($id)
+    {
+        this->prayerRequests->current_dialog_question_id = 3;
         $this->prayerRequests->save();
     }
     //fim metodos default;
@@ -187,24 +195,26 @@ class DefaultFunctionsController extends Controller
         $this->finishPrayerRequest($this->prayerRequests);
     }
 
-    
-    public function negativeResponseTemplateOne(){
-        $nextQuestion = DialogsQuestion::where('dialog_template_id',$this->question->dialog_template_id)->where('priority', 3)->first();
+
+    public function negativeResponseTemplateOne()
+    {
+        $nextQuestion = DialogsQuestion::where('dialog_template_id', $this->question->dialog_template_id)->where('priority', 3)->first();
         $this->zApiController->sendMessage($this->user->phone, str_replace('\n', "\n", $nextQuestion->question));
         $this->closePrayerRequest();
     }
-    
-    
-    
+
+
+
     //negative responses
     // public function didNotRespond(){
     //     $nextQuestion = DialogsQuestion::where('dialog_template_id',$this->question->dialog_template_id)->where('priority', 10)->first();
     //     $this->zApiController->sendMessage($this->user->phone, str_replace('\n', "\n", $nextQuestion->question));
     // }
 
-    public function dificult(){
-        $nextQuestion = DialogsQuestion::where('dialog_template_id',$this->question->dialog_template_id)->where('priority', 5)->first();
+    public function dificult()
+    {
+        $nextQuestion = DialogsQuestion::where('dialog_template_id', $this->question->dialog_template_id)->where('priority', 5)->first();
         $this->zApiController->sendMessage($this->user->phone, str_replace('\n', "\n", $nextQuestion->question));
+        $this->updatePrayerRequest($nextQuestion->id);
     }
-    
 }
