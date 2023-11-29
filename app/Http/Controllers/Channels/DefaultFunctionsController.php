@@ -108,13 +108,17 @@ class DefaultFunctionsController extends Controller
                 # code...
                 $this->aceptRequestVoluntary();
                 break;
-            case 'did_not_respond':
-                # code...
-                $this->didNotRespond();
-                break;
+            // case 'did_not_respond':
+            //     # code...
+            //     $this->didNotRespond();
+            //     break;
             case 'negative_response_template_one':
                 # code...
                 $this->negativeResponseTemplateOne();
+                break;
+            case 'dificult':
+                # code...
+                $this->dificult();
                 break;
 
             default:
@@ -183,14 +187,24 @@ class DefaultFunctionsController extends Controller
         $this->finishPrayerRequest($this->prayerRequests);
     }
 
-    public function didNotRespond(){
-        $nextQuestion = DialogsQuestion::where('priority', 10)->first();
-        $this->zApiController->sendMessage($this->user->phone, str_replace('\n', "\n", $nextQuestion->question));
-    }
     
     public function negativeResponseTemplateOne(){
         $nextQuestion = DialogsQuestion::where('dialog_template_id',$this->question->dialog_template_id)->where('priority', 3)->first();
         $this->zApiController->sendMessage($this->user->phone, str_replace('\n', "\n", $nextQuestion->question));
         $this->closePrayerRequest();
     }
+    
+    
+    
+    //negative responses
+    // public function didNotRespond(){
+    //     $nextQuestion = DialogsQuestion::where('dialog_template_id',$this->question->dialog_template_id)->where('priority', 10)->first();
+    //     $this->zApiController->sendMessage($this->user->phone, str_replace('\n', "\n", $nextQuestion->question));
+    // }
+
+    public function dificult(){
+        $nextQuestion = DialogsQuestion::where('dialog_template_id',$this->question->dialog_template_id)->where('priority', 5)->first();
+        $this->zApiController->sendMessage($this->user->phone, str_replace('\n', "\n", $nextQuestion->question));
+    }
+    
 }
