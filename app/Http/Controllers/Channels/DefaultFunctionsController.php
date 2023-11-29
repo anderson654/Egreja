@@ -8,6 +8,7 @@ use App\Models\DialogsQuestion;
 use App\Models\GroupQuestionsResponse;
 use App\Models\PrayerRequest;
 use App\Models\ResponsesToGroup;
+use App\Models\SideDishes;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -278,26 +279,32 @@ class DefaultFunctionsController extends Controller
         $this->closePrayerRequest();
     }
     public function callMenber(){
-        //fazer aqui a logica para enviar a  chamada de menbro.
+        $this->createNewSideDishers();
         $this->nextQuestion();
         $this->closePrayerRequest();
     }
     public function finishOne(){
-        //fazer aqui a logica para enviar a  chamada de menbro.
         $this->manualyNextQuestion(11);
         $this->closePrayerRequest();
     }
     public function finishTwo(){
-        //fazer aqui a logica para enviar a  chamada de menbro.
         $this->manualyNextQuestion(7);
     }
     public function positiveOne(){
-        //fazer aqui a logica para enviar a  chamada de menbro.
         $this->manualyNextQuestion(5);
     }
     public function finishTree(){
-        //fazer aqui a logica para enviar a  chamada de menbro.
         $this->manualyNextQuestion(9);
         $this->closePrayerRequest();
+    }
+
+
+    public function createNewSideDishers(){
+        //logica de acolhimento
+        $sideDishes = new SideDishes();
+        $sideDishes->user_id = $this->prayerRequests->user_id;
+        //id do responsavel
+        $sideDishes->responsible_user_id = 45;
+        $sideDishes->save();
     }
 }
