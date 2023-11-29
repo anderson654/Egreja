@@ -78,6 +78,8 @@ class DefaultFunctionsController extends Controller
                 break;
             case 4:
                 # code...
+                //não  possui um grupo de respostas
+                $this->executeMethods($this->question->not_exist_group_responses_method);
                 break;
             case 5:
                 # code...
@@ -119,6 +121,10 @@ class DefaultFunctionsController extends Controller
             case 'dificult':
                 # code...
                 $this->dificult();
+                break;
+            case 'save_response_dificult':
+                # code...
+                $this->saveResponseDificult();
                 break;
 
             default:
@@ -216,5 +222,9 @@ class DefaultFunctionsController extends Controller
         $nextQuestion = DialogsQuestion::where('dialog_template_id', $this->question->dialog_template_id)->where('priority', 5)->first();
         $this->zApiController->sendMessage($this->user->phone, str_replace('\n', "\n", $nextQuestion->question));
         $this->updatePrayerRequest($nextQuestion->id);
+    }
+
+    public function saveResponseDificult(){
+        $this->nextQuestion();
     }
 }
