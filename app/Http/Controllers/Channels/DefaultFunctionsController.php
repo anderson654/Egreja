@@ -230,8 +230,14 @@ class DefaultFunctionsController extends Controller
         //pegar o user
         $prayer = User::find($payerRequeest->user_id);
 
-        //fechar todas as outras abertas
-        PrayerRequest::where('reference',  $payerRequeest->reference)->get()->update(['status_id' => 3]);
+        //fecha todas as abertas quando alguem aceita
+        PrayerRequest::where('reference',  $payerRequeest->id)->update(['status_id' => 3]);
+        // foreach ($closeRequests as $request) {
+        //     $request->status_id = 3;
+        //     $request->save();
+        // }
+
+
         $this->zApiController->sendMessage($this->user->phone, str_replace('\n', "\n", "Voce aceitou atender ao atendimento.\nLigue para $prayer->username\nTelefone: $prayer->phone"));
 
         $payerRequeest->voluntary_id = $this->user->id;
