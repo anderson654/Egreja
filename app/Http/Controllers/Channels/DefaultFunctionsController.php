@@ -136,7 +136,7 @@ class DefaultFunctionsController extends Controller
                 break;
             case 'problem_prayer_response':
                 # code...
-                $this->describProblemPrayer();
+                $this->problemPrayerResponse();
                 break;
             case 'call_menber':
                 # code...
