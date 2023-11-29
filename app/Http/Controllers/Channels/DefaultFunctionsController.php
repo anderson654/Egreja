@@ -64,7 +64,6 @@ class DefaultFunctionsController extends Controller
 
     public function filterAndExecuteMethods($roleResponse)
     {
-        dd($roleResponse);
         switch ($roleResponse) {
             case 1:
                 # code...
