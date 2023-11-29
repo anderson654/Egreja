@@ -128,6 +128,7 @@ class CheckHelp extends Command
             $message = str_replace("{{VOLUNTEER_NAME}}", $prayerRequest->voluntary->username, $message);
             //apos criar enviar a mensagem.
             $zApiController->sendMessage($user->getRawOriginal('phone'), str_replace('\n', "\n", $message));
+            $prayerRequest->status_id = 3;
             $prayerRequest->questionary_brother = 1;
             $prayerRequest->update();
         }

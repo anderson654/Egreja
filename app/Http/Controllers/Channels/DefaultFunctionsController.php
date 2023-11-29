@@ -232,7 +232,7 @@ class DefaultFunctionsController extends Controller
         $this->zApiController->sendMessage($this->user->phone, str_replace('\n', "\n", "Voce aceitou atender ao atendimento.\nLigue para $prayer->username\nTelefone: $prayer->phone"));
 
         $payerRequeest->voluntary_id = $this->user->id;
-        $payerRequeest->status_id = 3;
+        $payerRequeest->status_id = 2;
         $payerRequeest->save();
         $this->finishPrayerRequest($this->prayerRequests);
     }
