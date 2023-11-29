@@ -244,6 +244,7 @@ class DefaultFunctionsController extends Controller
             return;
         }
         $this->nextQuestion();
+        $this->closePrayerRequest();
     }
 
     public function describProblemPrayer()
