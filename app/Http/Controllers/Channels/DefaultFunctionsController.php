@@ -142,6 +142,10 @@ class DefaultFunctionsController extends Controller
                 # code...
                 $this->callMenber();
                 break;
+            case 'finish_one':
+                # code...
+                $this->finishOne();
+                break;
 
             default:
                 # code...
@@ -267,6 +271,11 @@ class DefaultFunctionsController extends Controller
     public function callMenber(){
         //fazer aqui a logica para enviar a  chamada de menbro.
         $this->nextQuestion();
+        $this->closePrayerRequest();
+    }
+    public function finishOne(){
+        //fazer aqui a logica para enviar a  chamada de menbro.
+        $this->manualyNextQuestion(11);
         $this->closePrayerRequest();
     }
 }
