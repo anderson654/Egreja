@@ -64,6 +64,7 @@ class DefaultFunctionsController extends Controller
 
     public function filterAndExecuteMethods($roleResponse)
     {
+        dd($roleResponse);
         switch ($roleResponse) {
             case 1:
                 # code...
@@ -266,7 +267,8 @@ class DefaultFunctionsController extends Controller
     }
 
     public function  problemPrayerResponse(){
-        $this->manualyNextQuestion(3);
+        $this->manualyNextQuestion(10);
+        $this->closePrayerRequest();
     }
     public function callMenber(){
         //fazer aqui a logica para enviar a  chamada de menbro.
