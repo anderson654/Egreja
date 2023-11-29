@@ -93,6 +93,11 @@ class DefaultFunctionsController extends Controller
         switch ($name) {
             case 'next_question':
                 # code...
+                $this->nextQuestion();
+                break;
+            case 'not_identify_response':
+                # code...
+                $this->notIdentifyResponse();
                 break;
             case 'send_message_to_volunteers':
                 # code...
@@ -102,6 +107,10 @@ class DefaultFunctionsController extends Controller
                 # code...
                 $this->aceptRequestVoluntary();
                 break;
+            case 'did_not_respond':
+                # code...
+                $this->didNotRespond();
+                break;
 
             default:
                 # code...
@@ -109,18 +118,27 @@ class DefaultFunctionsController extends Controller
         }
     }
 
-
+    //metodos default;
     public function nextQuestion()
     {
         $nextQuestion = DialogsQuestion::where('priority', $this->question->priority + 1)->first();
+        $this->zApiController->sendMessage($this->user->phone, str_replace('\n', "\n", $nextQuestion->question));
         $this->prayerRequests->current_dialog_question_id = $nextQuestion->id;
         $this->prayerRequests->save();
     }
 
+    public function notIdentifyResponse(){
+        $this->zApiController->sendMessage($this->user->phone, str_replace('\n', "\n", "Não foi possível identificar a resposta."));
+    }
+    //fim metodos default;
+
+
+
     /**
      * @param PrayerRequest $prayerRequest
      */
-    public function finishPrayerRequest($prayerRequest){
+    public function finishPrayerRequest($prayerRequest)
+    {
         $prayerRequest->status_id = 3;
         $prayerRequest->save();
     }
@@ -144,15 +162,19 @@ class DefaultFunctionsController extends Controller
             $this->finishPrayerRequest($this->prayerRequests);
             return;
         }
-        
+
         //pegar o user
         $prayer = User::find($payerRequeest->user_id);
         $this->zApiController->sendMessage($this->user->phone, str_replace('\n', "\n", "Voce aceitou atender ao atendimento.\nLigue para $prayer->username\nTelefone: $prayer->phone"));
-        
+
         $payerRequeest->voluntary_id = $this->user->id;
         $payerRequeest->status_id = 2;
         $payerRequeest->save();
         $this->finishPrayerRequest($this->prayerRequests);
     }
 
+    public function didNotRespond(){
+        $nextQuestion = DialogsQuestion::where('priority', 10)->first();
+        $this->zApiController->sendMessage($this->user->phone, str_replace('\n', "\n", $nextQuestion->question));
+    }
 }
