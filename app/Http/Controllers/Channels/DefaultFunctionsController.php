@@ -99,6 +99,10 @@ class DefaultFunctionsController extends Controller
                 # code...
                 $this->nextQuestion();
                 break;
+            case 'next_and_finish_prayer':
+                # code...
+                $this->nextQuestion();
+                break;
             case 'not_identify_response':
                 # code...
                 $this->notIdentifyResponse();
@@ -228,7 +232,7 @@ class DefaultFunctionsController extends Controller
         $this->zApiController->sendMessage($this->user->phone, str_replace('\n', "\n", "Voce aceitou atender ao atendimento.\nLigue para $prayer->username\nTelefone: $prayer->phone"));
 
         $payerRequeest->voluntary_id = $this->user->id;
-        $payerRequeest->status_id = 2;
+        $payerRequeest->status_id = 3;
         $payerRequeest->save();
         $this->finishPrayerRequest($this->prayerRequests);
     }
@@ -296,6 +300,10 @@ class DefaultFunctionsController extends Controller
     public function finishTree(){
         $this->manualyNextQuestion(9);
         $this->closePrayerRequest();
+    }
+    public function nextAndFinishPrayer(){
+        dd($this->prayerRequests);
+        $this->nextQuestion();
     }
 
 
