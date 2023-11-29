@@ -149,7 +149,7 @@ class DefaultFunctionsController extends Controller
 
     public function updatePrayerRequest($id)
     {
-        this->prayerRequests->current_dialog_question_id = 3;
+        $this->prayerRequests->current_dialog_question_id = $id;
         $this->prayerRequests->save();
     }
     //fim metodos default;
