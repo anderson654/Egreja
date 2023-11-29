@@ -50,7 +50,7 @@ class CheckHelp extends Command
             $this->sendAvaliable($prayerRequest);
 
             //apos duas horas enviar questionario para o irmão
-            // $this->sendAvaliableBrother($prayerRequest);
+            $this->sendAvaliableBrother($prayerRequest);
         }
 
 
@@ -151,10 +151,9 @@ class CheckHelp extends Command
             //users
             $user = User::find($prayerRequest->user_id);
             //salvar e enviar o template para o user.
-            $zapiWebHoockController = new ZApiWebHookController($user);
             //questão
             $firstQuestion = DialogsQuestion::where('dialog_template_id', 5)->where('start', 1)->first();
-            $zapiWebHoockController->createDefaultPrayerRequest($user, $firstQuestion->id);
+            PrayerRequest::newPrayerRequest($user, $firstQuestion);
             //setar o user na mensagem
             $message = str_replace("{{REQUESTER_NAME}}", $prayerRequest->user->username, $firstQuestion->question);
             $message = str_replace("{{VOLUNTEER_NAME}}", $prayerRequest->voluntary->username, $message);
