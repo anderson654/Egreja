@@ -110,10 +110,6 @@ class DefaultFunctionsController extends Controller
                 # code...
                 $this->aceptRequestVoluntary();
                 break;
-                // case 'did_not_respond':
-                //     # code...
-                //     $this->didNotRespond();
-                //     break;
             case 'negative_response_template_one':
                 # code...
                 $this->negativeResponseTemplateOne();
@@ -145,6 +141,18 @@ class DefaultFunctionsController extends Controller
             case 'finish_one':
                 # code...
                 $this->finishOne();
+                break;
+            case 'finish_two':
+                # code...
+                $this->finishTwo();
+                break;
+            case 'positive_one':
+                # code...
+                $this->positiveOne();
+                break;
+            case 'finish_tree':
+                # code...
+                $this->finishTree();
                 break;
 
             default:
@@ -277,6 +285,19 @@ class DefaultFunctionsController extends Controller
     public function finishOne(){
         //fazer aqui a logica para enviar a  chamada de menbro.
         $this->manualyNextQuestion(11);
+        $this->closePrayerRequest();
+    }
+    public function finishTwo(){
+        //fazer aqui a logica para enviar a  chamada de menbro.
+        $this->manualyNextQuestion(7);
+    }
+    public function positiveOne(){
+        //fazer aqui a logica para enviar a  chamada de menbro.
+        $this->manualyNextQuestion(5);
+    }
+    public function finishTree(){
+        //fazer aqui a logica para enviar a  chamada de menbro.
+        $this->manualyNextQuestion(9);
         $this->closePrayerRequest();
     }
 }
