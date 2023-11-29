@@ -130,6 +130,10 @@ class DefaultFunctionsController extends Controller
                 # code...
                 $this->problemPrayer();
                 break;
+            case 'describ_problem_prayer':
+                # code...
+                $this->describProblemPrayer();
+                break;
 
             default:
                 # code...
@@ -228,17 +232,26 @@ class DefaultFunctionsController extends Controller
         $this->updatePrayerRequest($nextQuestion->id);
     }
 
-    public function saveResponseDificult(){
+    public function saveResponseDificult()
+    {
         $this->nextQuestion();
         $this->closePrayerRequest();
     }
-    public function problemPrayer(){
-        if($this->date['text']['message']  ==  7){
+    public function problemPrayer()
+    {
+        if ($this->date['text']['message']  ==  7) {
             $nextQuestion = DialogsQuestion::where('dialog_template_id', $this->question->dialog_template_id)->where('priority', 4)->first();
             $this->zApiController->sendMessage($this->user->phone, str_replace('\n', "\n", $nextQuestion->question));
             $this->updatePrayerRequest($nextQuestion->id);
             return;
         }
         $this->nextQuestion();
+    }
+
+    public function describProblemPrayer()
+    {
+        $nextQuestion = DialogsQuestion::where('dialog_template_id', $this->question->dialog_template_id)->where('priority', 3)->first();
+        $this->zApiController->sendMessage($this->user->phone, str_replace('\n', "\n", $nextQuestion->question));
+        $this->updatePrayerRequest($nextQuestion->id);
     }
 }
