@@ -71,6 +71,7 @@ class DefaultFunctionsController extends Controller
                 break;
             case 2:
                 # code...
+                $this->executeMethods($this->question->negaative_response_method);
                 break;
             case 3:
                 # code...
@@ -80,7 +81,7 @@ class DefaultFunctionsController extends Controller
                 break;
             case 5:
                 # code...
-                dd('Hello');
+                $this->executeMethods($this->question->not_indentify_response_method ?? 'not_identify_response');
                 break;
             default:
                 # code...
@@ -111,6 +112,10 @@ class DefaultFunctionsController extends Controller
                 # code...
                 $this->didNotRespond();
                 break;
+            case 'negative_response_template_one':
+                # code...
+                $this->negativeResponseTemplateOne();
+                break;
 
             default:
                 # code...
@@ -121,7 +126,7 @@ class DefaultFunctionsController extends Controller
     //metodos default;
     public function nextQuestion()
     {
-        $nextQuestion = DialogsQuestion::where('priority', $this->question->priority + 1)->first();
+        $nextQuestion = DialogsQuestion::where('dialog_template_id',$this->question->dialog_template_id)->where('priority', $this->question->priority + 1)->first();
         $this->zApiController->sendMessage($this->user->phone, str_replace('\n', "\n", $nextQuestion->question));
         $this->prayerRequests->current_dialog_question_id = $nextQuestion->id;
         $this->prayerRequests->save();
@@ -129,6 +134,11 @@ class DefaultFunctionsController extends Controller
 
     public function notIdentifyResponse(){
         $this->zApiController->sendMessage($this->user->phone, str_replace('\n', "\n", "Não foi possível identificar a resposta."));
+    }
+
+    public function closePrayerRequest(){
+        $this->prayerRequests->status_id = 3;
+        $this->prayerRequests->save();
     }
     //fim metodos default;
 
@@ -176,5 +186,11 @@ class DefaultFunctionsController extends Controller
     public function didNotRespond(){
         $nextQuestion = DialogsQuestion::where('priority', 10)->first();
         $this->zApiController->sendMessage($this->user->phone, str_replace('\n', "\n", $nextQuestion->question));
+    }
+    
+    public function negativeResponseTemplateOne(){
+        $nextQuestion = DialogsQuestion::where('dialog_template_id',$this->question->dialog_template_id)->where('priority', 3)->first();
+        $this->zApiController->sendMessage($this->user->phone, str_replace('\n', "\n", $nextQuestion->question));
+        $this->closePrayerRequest();
     }
 }
