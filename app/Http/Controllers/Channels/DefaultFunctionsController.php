@@ -226,14 +226,20 @@ class DefaultFunctionsController extends Controller
             $this->finishPrayerRequest($this->prayerRequests);
             return;
         }
-
+        
         //pegar o user
         $prayer = User::find($payerRequeest->user_id);
+
+        //fechar todas as outras abertas
+        PrayerRequest::where('reference',  $payerRequeest->reference)->get()->update(['status_id' => 3]);
         $this->zApiController->sendMessage($this->user->phone, str_replace('\n', "\n", "Voce aceitou atender ao atendimento.\nLigue para $prayer->username\nTelefone: $prayer->phone"));
 
         $payerRequeest->voluntary_id = $this->user->id;
         $payerRequeest->status_id = 2;
         $payerRequeest->save();
+
+
+
         $this->finishPrayerRequest($this->prayerRequests);
     }
 
