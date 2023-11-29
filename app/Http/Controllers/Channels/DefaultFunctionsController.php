@@ -226,5 +226,6 @@ class DefaultFunctionsController extends Controller
 
     public function saveResponseDificult(){
         $this->nextQuestion();
+        $this->closePrayerRequest();
     }
 }
