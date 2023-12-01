@@ -300,13 +300,13 @@ class DefaultFunctionsController extends Controller
     public function forceAceptAllVoluntaries()
     {
         $payerRequeest = PrayerRequest::find($this->prayerRequests->reference);
+        $payerRequeest->questionary_user = 1;
+        $payerRequeest->save();
 
         $newPrayerRequest = $payerRequeest->replicate();
 
         //antigo
         $this->finishPrayerRequest($payerRequeest);
-        $payerRequeest->questionary_user = 0;
-        $payerRequeest->save();
 
         //novo
         $newPrayerRequest->voluntary_id = null;
