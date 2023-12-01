@@ -305,6 +305,8 @@ class DefaultFunctionsController extends Controller
 
         //antigo
         $this->finishPrayerRequest($payerRequeest);
+        $payerRequeest->questionary_user = 0;
+        $payerRequeest->save();
 
         //novo
         $newPrayerRequest->voluntary_id = null;
