@@ -33,6 +33,7 @@ class CheckHelp extends Command
 
     public function __construct()
     {
+        parent::__construct();
         $this->zApiController = new ZApiController();
     }
 
