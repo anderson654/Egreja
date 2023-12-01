@@ -144,7 +144,10 @@ class CheckHelp extends Command
     public function sendAvaliableBrother($prayerRequest)
     {
         //ajustes en vez do user o voluntario setado.
-
+        $prayerRequests = PrayerRequest::whereIn('status_id', [1, 2, 4, 6])->where('user_id', $prayerRequest->user->id)->exists();
+        if ($prayerRequests) {
+            return;
+        }
 
         //verificar se a chamada na questão foi aberto.
         //verifiaca se existe um voluntario na chamada.
