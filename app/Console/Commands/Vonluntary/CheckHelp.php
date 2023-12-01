@@ -78,7 +78,7 @@ class CheckHelp extends Command
             $user = User::find(7);
             $dialogQuestion = DialogsQuestion::where('dialog_template_id', 6)->where('priority', 1)->first();
             PrayerRequest::newPrayerRequest($user, $dialogQuestion, $prayerRequest->id);
-            $message = $this->setDefaultNames(['username' =>  $user->username, 'voluntaryname' => $user->username], $dialogQuestion->question);
+            $message = $this->setDefaultNames(['username' =>  $user->username, 'voluntaryname' => $sideDishe->user->username], $dialogQuestion->question);
             $this->zApiController->sendMessage($user->getRawOriginal('phone'), str_replace('\n', "\n", $message));
 
             $sideDishe->message_send = true;
