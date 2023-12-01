@@ -63,34 +63,31 @@ class CheckHelp extends Command
 
 
 
-        //pegar todos os prayer requests que tenhão o status_id = 6
-        //verifica se existe algum side_dishes com message_received = null
-        // $sideDishes = SideDishes::whereNull('message_send')->get();
-        // foreach ($sideDishes as $sideDishe) {
-        //     # code...
-        //     //verificar se o pastor tem alguma chamada em aberto.
-        //     $prayerRequest = PrayerRequest::where(function ($query) use ($sideDishe) {
-        //         $query->where('user_id', $sideDishe->responsible_user_id)
-        //             ->orWhere('voluntary_id', $sideDishe->responsible_user_id);
-        //     })->where('status_id', 1)->exists();
+        // pegar todos os prayer requests que tenhão o status_id = 6
+        // verifica se existe algum side_dishes com message_received = null
+        $sideDishes = SideDishes::whereNull('message_send')->get();
+        foreach ($sideDishes as $sideDishe) {
+            # code...
+            //verificar se o pastor tem alguma chamada em aberto.
+            $prayerRequests = PrayerRequest::whereIn('status_id', [1, 2, 4, 6])->where('user_id', 65)->exists();
+            if ($prayerRequests) {
+                return;
+            }
 
-        //     if ($prayerRequest) {
-        //         return;
-        //     }
-        //     //enviar mensagem
-        //     $request = new Request();
-        //     $variables = [
-        //         "user_name"  => User::find($sideDishe->responsible_user_id)['username'],
-        //         "voluntary_name"  =>  User::find($sideDishe->user_id)['username'],
-        //     ];
-        //     $request->merge(["user_id" => $sideDishe->responsible_user_id, "template_id" => 6, "variables" => $variables]);
+            //enviar mensagem
+            $request = new Request();
+            $variables = [
+                "user_name"  => User::find($sideDishe->responsible_user_id)['username'],
+                "voluntary_name"  =>  User::find($sideDishe->user_id)['username'],
+            ];
+            $request->merge(["user_id" => $sideDishe->responsible_user_id, "template_id" => 6, "variables" => $variables]);
 
-        //     $dialogTemplatesController = new DialogsTemplatesController();
-        //     $dialogTemplatesController->sendTemplate($request);
+            $dialogTemplatesController = new DialogsTemplatesController();
+            $dialogTemplatesController->sendTemplate($request);
 
-        //     $sideDishe->message_send = true;
-        //     $sideDishe->save();
-        // }
+            $sideDishe->message_send = true;
+            $sideDishe->save();
+        }
     }
 
     public function closePrayer30Minuts($prayerRequest)
@@ -113,7 +110,7 @@ class CheckHelp extends Command
     {
         //para iniciar um outrodialogo feche as prayeer requests atuais
         //verificar aqui se o  status é 3
-    
+
         //verificar se a chamada na questão foi aberto.
         //verifiaca se existe um voluntario na chamada.
         if ($prayerRequest->questionary_brother || !isset($prayerRequest->voluntary_id)) {

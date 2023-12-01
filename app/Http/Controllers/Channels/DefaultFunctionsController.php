@@ -160,7 +160,11 @@ class DefaultFunctionsController extends Controller
                 # code...
                 $this->forceAceptVoluntary();
                 break;
-
+            case 'next_and_close':
+                # code...
+                $this->nextQuestion();
+                $this->closePrayerRequest();
+                break;
             default:
                 # code...
                 break;
@@ -210,7 +214,7 @@ class DefaultFunctionsController extends Controller
         $sideDishes = new SideDishes();
         $sideDishes->user_id = $this->prayerRequests->user_id;
         //id do responsavel
-        $sideDishes->responsible_user_id = 45;
+        $sideDishes->responsible_user_id = 65;
         $sideDishes->save();
     }
 
