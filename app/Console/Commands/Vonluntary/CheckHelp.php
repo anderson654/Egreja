@@ -12,7 +12,6 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class CheckHelp extends Command
 {
@@ -48,10 +47,10 @@ class CheckHelp extends Command
             // $this->closePrayer30Minuts($prayerRequest);
 
             //apos 10 min enviar avaliação.
-            // $this->sendAvaliable($prayerRequest);
+            $this->sendAvaliable($prayerRequest);
 
-            // //apos duas horas enviar questionario para o irmão
-            // $this->sendAvaliableBrother($prayerRequest);
+            //apos duas horas enviar questionario para o irmão
+            $this->sendAvaliableBrother($prayerRequest);
         }
 
 
@@ -88,13 +87,11 @@ class CheckHelp extends Command
     public function closePrayer30Minuts($prayerRequest)
     {
         $limitTime = Carbon::parse($prayerRequest->created_at->toString())->addMinutes(30);
-        Log::info(json_encode($limitTime));
         if ($limitTime < Carbon::now()) {
             $prayerRequest->status_id = 3;
             $prayerRequest->update();
             //pegar todos os pedidos relacionados e fechar
             $voluntaryPrayerRequests = PrayerRequest::where('reference', $prayerRequest->id)->get();
-            Log::info(json_encode($voluntaryPrayerRequests));
             foreach ($voluntaryPrayerRequests as $voluntaryPrayerRequest) {
                 # code...
                 $voluntaryPrayerRequest->status_id = 3;
