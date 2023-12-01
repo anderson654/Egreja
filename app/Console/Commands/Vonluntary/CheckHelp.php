@@ -182,7 +182,7 @@ class CheckHelp extends Command
 
         $limitTime = Carbon::parse($prayerRequest->created_at->toString())->addMinutes(10);
         if ($limitTime < Carbon::now()) {
-            $dialogQuestion = DialogsQuestion::where('dialog_template', 4)->where('priority', 1)->first();
+            $dialogQuestion = DialogsQuestion::where('dialog_template_id', 4)->where('priority', 1)->first();
             $message = $this->setDefaultNames(['username' =>  $prayerRequest->user->username, 'voluntaryname' => $prayerRequest->voluntary->username], $dialogQuestion->question);
     
             //apos criar enviar a mensagem.
