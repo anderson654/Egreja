@@ -195,8 +195,8 @@ class CheckHelp extends Command
 
     public function setDefaultNames($paramns, $question)
     {
-        $message = str_replace("{{REQUESTER_NAME}}", $paramns->username, $question);
-        $message = str_replace("{{VOLUNTEER_NAME}}", $paramns->voluntaryname, $message);
+        $message = str_replace("{{REQUESTER_NAME}}", $paramns['username'], $question);
+        $message = str_replace("{{VOLUNTEER_NAME}}", $paramns['voluntaryname'], $message);
         return $message;
     }
 }
