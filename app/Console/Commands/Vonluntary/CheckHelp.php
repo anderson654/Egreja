@@ -173,7 +173,7 @@ class CheckHelp extends Command
     {
         //verifica se o user tem algo em aberto;
         //65 pastor
-        $idUser = 92;
+        $idUser = 7;
         $prayerRequests = PrayerRequest::whereIn('status_id', [1, 2, 4, 6])->where('user_id', $idUser)->get();
         if ($prayerRequests) {
             return;
