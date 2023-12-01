@@ -99,10 +99,6 @@ class DefaultFunctionsController extends Controller
                 # code...
                 $this->nextQuestion();
                 break;
-            case 'next_and_finish_prayer':
-                # code...
-                $this->nextQuestion();
-                break;
             case 'not_identify_response':
                 # code...
                 $this->notIdentifyResponse();
@@ -323,9 +319,5 @@ class DefaultFunctionsController extends Controller
     public function finishTree(){
         $this->manualyNextQuestion(9);
         $this->closePrayerRequest();
-    }
-    public function nextAndFinishPrayer(){
-        dd($this->prayerRequests);
-        $this->nextQuestion();
     }
 }

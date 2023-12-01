@@ -46,9 +46,11 @@ class CheckHelp extends Command
             $this->sendAvaliableBrother($prayerRequest);
         }
 
+
+
+        
+
         //pegar todos os prayer requests que tenhão o status_id = 6
-
-
         //verifica se existe algum side_dishes com message_received = null
         // $sideDishes = SideDishes::whereNull('message_send')->get();
         // foreach ($sideDishes as $sideDishe) {
