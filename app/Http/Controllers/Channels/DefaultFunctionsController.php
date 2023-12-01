@@ -273,6 +273,7 @@ class DefaultFunctionsController extends Controller
     public function dificult()
     {
         $this->manualyNextQuestion(5);
+        $this->failPrayerRequest();
     }
 
     public function saveResponseDificult()
@@ -293,7 +294,7 @@ class DefaultFunctionsController extends Controller
     public function describProblemPrayer()
     {
         $this->manualyNextQuestion(3);
-        $this->failPrayerRequest();
+        $this->closePrayerRequest();
     }
 
     public function  problemPrayerResponse(){
