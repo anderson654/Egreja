@@ -113,6 +113,10 @@ class CheckHelp extends Command
     {
         //para iniciar um outrodialogo feche as prayeer requests atuais
         //verificar aqui se o  status é 3
+        $prayerRequests = PrayerRequest::whereIn('status_id', [1, 2, 4, 5, 6])->where('user_id', $prayerRequest->user->id)->exists();
+        if ($prayerRequests) {
+            return;
+        }
 
 
 
@@ -143,12 +147,6 @@ class CheckHelp extends Command
 
     public function sendAvaliableBrother($prayerRequest)
     {
-        //ajustes en vez do user o voluntario setado.
-        $prayerRequests = PrayerRequest::whereIn('status_id', [1, 2, 4, 6])->where('user_id', $prayerRequest->user->id)->exists();
-        if ($prayerRequests) {
-            return;
-        }
-
         //verificar se a chamada na questão foi aberto.
         //verifiaca se existe um voluntario na chamada.
         if ($prayerRequest->questionary_user || !isset($prayerRequest->user_id)) {
@@ -187,13 +185,12 @@ class CheckHelp extends Command
         if ($limitTime < Carbon::now()) {
             $dialogQuestion = DialogsQuestion::where('dialog_template_id', 4)->where('priority', 1)->first();
             $message = $this->setDefaultNames(['username' =>  $prayerRequest->user->username, 'voluntaryname' => $prayerRequest->voluntary->username], $dialogQuestion->question);
-    
+
             //apos criar enviar a mensagem.
             $user = User::find($idUser);
             PrayerRequest::newPrayerRequest($user, $dialogQuestion, $prayerRequest->id);
             $this->zApiController->sendMessage($user->getRawOriginal('phone'), str_replace('\n', "\n", $message));
         }
-
     }
 
     public function setDefaultNames($paramns, $question)
