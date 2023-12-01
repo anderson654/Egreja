@@ -69,7 +69,7 @@ class CheckHelp extends Command
         foreach ($sideDishes as $sideDishe) {
             # code...
             //verificar se o pastor tem alguma chamada em aberto.
-            $prayerRequests = PrayerRequest::whereIn('status_id', [1, 2, 4, 6])->where('user_id', 65)->exists();
+            $prayerRequests = PrayerRequest::whereIn('status_id', [1, 2, 4, 6])->where('user_id', 7)->exists();
             if ($prayerRequests) {
                 return;
             }
