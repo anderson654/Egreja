@@ -30,11 +30,13 @@ class CheckHelp extends Command
     protected $description = 'Este comando verifica os chamados em aberto a cada 1';
 
     private $zApiController;
+    private $broterId;
 
     public function __construct()
     {
         parent::__construct();
         $this->zApiController = new ZApiController();
+        $this->broterId = 65;
     }
 
     /**
@@ -69,13 +71,13 @@ class CheckHelp extends Command
         foreach ($sideDishes as $sideDishe) {
             # code...
             //verificar se o pastor tem alguma chamada em aberto.
-            $prayerRequests = PrayerRequest::whereIn('status_id', [1, 2, 4, 6])->where('user_id', 7)->exists();
+            $prayerRequests = PrayerRequest::whereIn('status_id', [1, 2, 4, 6])->where('user_id', $this->broterId)->exists();
             if ($prayerRequests) {
                 return;
             }
 
             //enviar mensagem
-            $user = User::find(7);
+            $user = User::find($this->broterId);
             $dialogQuestion = DialogsQuestion::where('dialog_template_id', 6)->where('priority', 1)->first();
             PrayerRequest::newPrayerRequest($user, $dialogQuestion, $prayerRequest->id);
             $message = $this->setDefaultNames(['username' => $sideDishe->user->username, 'voluntaryname' => $user->username], $dialogQuestion->question);
@@ -162,8 +164,7 @@ class CheckHelp extends Command
     {
         //verifica se o user tem algo em aberto;
         //65 pastor
-        $idUser = 7;
-        $prayerRequests = PrayerRequest::whereIn('status_id', [1, 2, 4, 6])->where('user_id', $idUser)->exists();
+        $prayerRequests = PrayerRequest::whereIn('status_id', [1, 2, 4, 6])->where('user_id', $this->broterId)->exists();
         if ($prayerRequests) {
             return;
         }
@@ -174,7 +175,7 @@ class CheckHelp extends Command
             $message = $this->setDefaultNames(['username' =>  $prayerRequest->user->username, 'voluntaryname' => $prayerRequest->voluntary->username], $dialogQuestion->question);
 
             //apos criar enviar a mensagem.
-            $user = User::find($idUser);
+            $user = User::find($this->broterId);
             PrayerRequest::newPrayerRequest($user, $dialogQuestion, $prayerRequest->id);
             $this->zApiController->sendMessage($user->getRawOriginal('phone'), str_replace('\n', "\n", $message));
         }
