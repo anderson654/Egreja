@@ -35,16 +35,9 @@ class CheckHelp extends Command
     public function handle()
     {
         $prayerRequests = PrayerRequest::whereIn('status_id', [1, 2, 3])->has('prayer')->has('voluntary')->get();
-        // $prayerRequests = PrayerRequest::find(238);
-        // $this->sendAvaliable($prayerRequests);
-        // return;
-        //
         foreach ($prayerRequests as $prayerRequest) {
             //caso passe de 30 min e ninguem atendeu fechar o chamado e enviar uma mensagem de desculpa
             $this->closePrayer30Minuts($prayerRequest);
-
-            //verificar se alguem ja aceitou o chamado e fechar para todos enviando uma mensagem
-            // $this->closePrayer30Minuts($prayerRequest);
 
             //apos 10 min enviar avaliação.
             $this->sendAvaliable($prayerRequest);
@@ -53,6 +46,7 @@ class CheckHelp extends Command
             $this->sendAvaliableBrother($prayerRequest);
         }
 
+        //pegar todos os prayer requests que tenhão o status_id = 6
 
 
         //verifica se existe algum side_dishes com message_received = null
@@ -122,7 +116,7 @@ class CheckHelp extends Command
             //questão
             $firstQuestion = DialogsQuestion::where('dialog_template_id', 3)->where('start', 1)->first();
 
-            PrayerRequest::newPrayerRequest($user, $firstQuestion);
+            PrayerRequest::newPrayerRequest($user, $firstQuestion, $prayerRequest->id);
             //setar o user na mensagem
             $message = str_replace("{{REQUESTER_NAME}}", $prayerRequest->user->username, $firstQuestion->question);
             $message = str_replace("{{VOLUNTEER_NAME}}", $prayerRequest->voluntary->username, $message);
@@ -154,7 +148,7 @@ class CheckHelp extends Command
             //salvar e enviar o template para o user.
             //questão
             $firstQuestion = DialogsQuestion::where('dialog_template_id', 5)->where('start', 1)->first();
-            PrayerRequest::newPrayerRequest($user, $firstQuestion);
+            PrayerRequest::newPrayerRequest($user, $firstQuestion, $prayerRequest->id);
             //setar o user na mensagem
             $message = str_replace("{{REQUESTER_NAME}}", $prayerRequest->user->username, $firstQuestion->question);
             $message = str_replace("{{VOLUNTEER_NAME}}", $prayerRequest->voluntary->username, $message);

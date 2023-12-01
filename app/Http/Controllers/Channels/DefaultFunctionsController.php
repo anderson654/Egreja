@@ -191,6 +191,8 @@ class DefaultFunctionsController extends Controller
 
     public function failPrayerRequest()
     {
+        //vai mudar o status da referencia;
+        //as questoes tamben vão ter que ter referencia;
         $this->prayerRequests->status_id = 6;
         $this->prayerRequests->save();
     }
