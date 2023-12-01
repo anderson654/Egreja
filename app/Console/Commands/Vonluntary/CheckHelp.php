@@ -36,7 +36,7 @@ class CheckHelp extends Command
     {
         parent::__construct();
         $this->zApiController = new ZApiController();
-        $this->broterId = 7;
+        $this->broterId = 65;
     }
 
     /**
