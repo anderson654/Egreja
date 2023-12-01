@@ -65,7 +65,7 @@ class CheckHelp extends Command
 
         // pegar todos os prayer requests que tenhão o status_id = 6
         // verifica se existe algum side_dishes com message_received = null
-        $sideDishes = SideDishes::whereNull('message_send')->get();
+        $sideDishes = SideDishes::whereNull('message_send')->with('user')->get();
         foreach ($sideDishes as $sideDishe) {
             # code...
             //verificar se o pastor tem alguma chamada em aberto.
@@ -74,14 +74,13 @@ class CheckHelp extends Command
                 return;
             }
 
-            
             //enviar mensagem
             $user = User::find(7);
             $dialogQuestion = DialogsQuestion::where('dialog_template_id', 6)->where('priority', 1)->first();
             PrayerRequest::newPrayerRequest($user, $dialogQuestion, $prayerRequest->id);
-            $message = $this->setDefaultNames(['username' =>  $user->username, 'voluntaryname' => $sideDishe->user->name], $dialogQuestion->question);
+            $message = $this->setDefaultNames(['username' =>  $user->username, 'voluntaryname' => $user->username], $dialogQuestion->question);
             $this->zApiController->sendMessage($user->getRawOriginal('phone'), str_replace('\n', "\n", $message));
-            
+
             $sideDishe->message_send = true;
             $sideDishe->save();
         }
