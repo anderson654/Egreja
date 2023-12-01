@@ -182,10 +182,16 @@ class DefaultFunctionsController extends Controller
         $this->prayerRequests->status_id = 3;
         $this->prayerRequests->save();
     }
-
+    
     public function updatePrayerRequest($id)
     {
         $this->prayerRequests->current_dialog_question_id = $id;
+        $this->prayerRequests->save();
+    }
+
+    public function failPrayerRequest()
+    {
+        $this->prayerRequests->status_id = 6;
         $this->prayerRequests->save();
     }
 
@@ -194,6 +200,16 @@ class DefaultFunctionsController extends Controller
         $this->zApiController->sendMessage($this->user->phone, str_replace('\n', "\n", $nextQuestion->question));
         $this->updatePrayerRequest($nextQuestion->id);
     }
+
+    public function createNewSideDishers(){
+        //logica de acolhimento
+        $sideDishes = new SideDishes();
+        $sideDishes->user_id = $this->prayerRequests->user_id;
+        //id do responsavel
+        $sideDishes->responsible_user_id = 45;
+        $sideDishes->save();
+    }
+    
     //fim metodos default;
 
 
@@ -256,16 +272,9 @@ class DefaultFunctionsController extends Controller
         $this->closePrayerRequest();
     }
 
-
-
-    //negative responses
-    // public function didNotRespond(){
-    //     $nextQuestion = DialogsQuestion::where('dialog_template_id',$this->question->dialog_template_id)->where('priority', 10)->first();
-    //     $this->zApiController->sendMessage($this->user->phone, str_replace('\n', "\n", $nextQuestion->question));
-    // }
-
     public function dificult()
     {
+        $this->failPrayerRequest();
         $this->manualyNextQuestion(5);
     }
 
@@ -316,15 +325,5 @@ class DefaultFunctionsController extends Controller
     public function nextAndFinishPrayer(){
         dd($this->prayerRequests);
         $this->nextQuestion();
-    }
-
-
-    public function createNewSideDishers(){
-        //logica de acolhimento
-        $sideDishes = new SideDishes();
-        $sideDishes->user_id = $this->prayerRequests->user_id;
-        //id do responsavel
-        $sideDishes->responsible_user_id = 45;
-        $sideDishes->save();
     }
 }
