@@ -29,13 +29,25 @@ class CheckHelp extends Command
      */
     protected $description = 'Este comando verifica os chamados em aberto a cada 1';
 
+    private $zApiController;
+
+    public function __construct()
+    {
+        $this->zApiController = new ZApiController();
+    }
+
     /**
      * Execute the console command.
      */
     public function handle()
     {
-        $prayerRequests = PrayerRequest::whereIn('status_id', [1, 2, 3])->has('prayer')->has('voluntary')->get();
+        $prayerRequests = PrayerRequest::whereIn('status_id', [1, 2, 3, 6])->has('prayer')->has('voluntary')->get();
         foreach ($prayerRequests as $prayerRequest) {
+            //envia a mensagem para o pastor que não foi atendida
+            if ($prayerRequest->status_id == 6) {
+                $this->alertBroter($prayerRequest);
+                return;
+            }
             //caso passe de 30 min e ninguem atendeu fechar o chamado e enviar uma mensagem de desculpa
             $this->closePrayer30Minuts($prayerRequest);
 
@@ -48,7 +60,7 @@ class CheckHelp extends Command
 
 
 
-        
+
 
         //pegar todos os prayer requests que tenhão o status_id = 6
         //verifica se existe algum side_dishes com message_received = null
@@ -108,7 +120,6 @@ class CheckHelp extends Command
         if ($prayerRequest->questionary_brother || !isset($prayerRequest->voluntary_id)) {
             return;
         }
-        $zApiController = new ZApiController();
         //10min
         $limitTime = Carbon::parse($prayerRequest->created_at->toString())->addMinutes(2);
         //verificar se ele não tem chamadas em aberto.
@@ -120,10 +131,9 @@ class CheckHelp extends Command
 
             PrayerRequest::newPrayerRequest($user, $firstQuestion, $prayerRequest->id);
             //setar o user na mensagem
-            $message = str_replace("{{REQUESTER_NAME}}", $prayerRequest->user->username, $firstQuestion->question);
-            $message = str_replace("{{VOLUNTEER_NAME}}", $prayerRequest->voluntary->username, $message);
+            $message = $this->setDefaultNames(['username' =>  $prayerRequest->user->username, 'voluntaryname' => $prayerRequest->voluntary->username], $firstQuestion->question);
             //apos criar enviar a mensagem.
-            $zApiController->sendMessage($user->getRawOriginal('phone'), str_replace('\n', "\n", $message));
+            $this->zApiController->sendMessage($user->getRawOriginal('phone'), str_replace('\n', "\n", $message));
             $prayerRequest->status_id = 3;
             $prayerRequest->questionary_brother = 1;
             $prayerRequest->update();
@@ -140,7 +150,6 @@ class CheckHelp extends Command
         if ($prayerRequest->questionary_user || !isset($prayerRequest->user_id)) {
             return;
         }
-        $zApiController = new ZApiController();
         // ->addHours(2)
         $limitTime = Carbon::parse($prayerRequest->created_at->toString())->addMinutes(5);
         //verificar se ele não tem chamadas em aberto.
@@ -152,12 +161,41 @@ class CheckHelp extends Command
             $firstQuestion = DialogsQuestion::where('dialog_template_id', 5)->where('start', 1)->first();
             PrayerRequest::newPrayerRequest($user, $firstQuestion, $prayerRequest->id);
             //setar o user na mensagem
-            $message = str_replace("{{REQUESTER_NAME}}", $prayerRequest->user->username, $firstQuestion->question);
-            $message = str_replace("{{VOLUNTEER_NAME}}", $prayerRequest->voluntary->username, $message);
+            $message = $this->setDefaultNames(['username' =>  $prayerRequest->user->username, 'voluntaryname' => $prayerRequest->voluntary->username], $firstQuestion->question);
             //apos criar enviar a mensagem.
-            $zApiController->sendMessage($user->getRawOriginal('phone'), str_replace('\n', "\n", $message));
+            $this->zApiController->sendMessage($user->getRawOriginal('phone'), str_replace('\n', "\n", $message));
             $prayerRequest->questionary_user = 1;
             $prayerRequest->update();
         }
+    }
+
+    public function alertBroter($prayerRequest)
+    {
+        //verifica se o user tem algo em aberto;
+        //65 pastor
+        $idUser = 92;
+        $prayerRequests = PrayerRequest::whereIn('status_id', [1, 2, 4, 6])->where('user_id', $idUser)->get();
+        if ($prayerRequests) {
+            return;
+        }
+
+        $limitTime = Carbon::parse($prayerRequest->created_at->toString())->addMinutes(10);
+        if ($limitTime < Carbon::now()) {
+            $dialogQuestion = DialogsQuestion::where('dialog_template', 4)->where('priority', 1)->first();
+            $message = $this->setDefaultNames(['username' =>  $prayerRequest->user->username, 'voluntaryname' => $prayerRequest->voluntary->username], $dialogQuestion->question);
+    
+            //apos criar enviar a mensagem.
+            $user = User::find($idUser);
+            PrayerRequest::newPrayerRequest($user, $dialogQuestion, $prayerRequest->id);
+            $this->zApiController->sendMessage($user->getRawOriginal('phone'), str_replace('\n', "\n", $message));
+        }
+
+    }
+
+    public function setDefaultNames($paramns, $question)
+    {
+        $message = str_replace("{{REQUESTER_NAME}}", $paramns->username, $question);
+        $message = str_replace("{{VOLUNTEER_NAME}}", $paramns->voluntaryname, $message);
+        return $message;
     }
 }
