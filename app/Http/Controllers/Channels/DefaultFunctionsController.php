@@ -10,6 +10,7 @@ use App\Models\PrayerRequest;
 use App\Models\ResponsesToGroup;
 use App\Models\SideDishes;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class DefaultFunctionsController extends Controller
@@ -155,6 +156,10 @@ class DefaultFunctionsController extends Controller
                 # code...
                 $this->finishTree();
                 break;
+            case 'force_accept_voluntary':
+                # code...
+                $this->forceAceptVoluntary();
+                break;
 
             default:
                 # code...
@@ -178,7 +183,7 @@ class DefaultFunctionsController extends Controller
         $this->prayerRequests->status_id = 3;
         $this->prayerRequests->save();
     }
-    
+
     public function updatePrayerRequest($id)
     {
         $this->prayerRequests->current_dialog_question_id = $id;
@@ -192,13 +197,15 @@ class DefaultFunctionsController extends Controller
         $referencePrayerRequest->save();
     }
 
-    public function manualyNextQuestion($priority){
+    public function manualyNextQuestion($priority)
+    {
         $nextQuestion = DialogsQuestion::where('dialog_template_id', $this->question->dialog_template_id)->where('priority', $priority)->first();
         $this->zApiController->sendMessage($this->user->phone, str_replace('\n', "\n", $nextQuestion->question));
         $this->updatePrayerRequest($nextQuestion->id);
     }
 
-    public function createNewSideDishers(){
+    public function createNewSideDishers()
+    {
         //logica de acolhimento
         $sideDishes = new SideDishes();
         $sideDishes->user_id = $this->prayerRequests->user_id;
@@ -206,7 +213,7 @@ class DefaultFunctionsController extends Controller
         $sideDishes->responsible_user_id = 45;
         $sideDishes->save();
     }
-    
+
     //fim metodos default;
 
 
@@ -239,7 +246,7 @@ class DefaultFunctionsController extends Controller
             $this->finishPrayerRequest($this->prayerRequests);
             return;
         }
-        
+
         //pegar o user
         $prayer = User::find($payerRequeest->user_id);
 
@@ -258,6 +265,59 @@ class DefaultFunctionsController extends Controller
         $payerRequeest->save();
 
 
+
+        $this->finishPrayerRequest($this->prayerRequests);
+    }
+
+    public function forceAceptVoluntary()
+    {
+        if (in_array($this->date['text']['message'], ['Atender demanda', 1])) {
+            //pegar o user
+            $userId = 7;
+            $user = User::find($userId);
+
+            $payerRequeest = PrayerRequest::find($this->prayerRequests->reference);
+
+            $username =  $payerRequeest->user->username;
+            $phone =  $payerRequeest->user->phone;
+
+            $this->zApiController->sendMessage($user->phone, str_replace('\n', "\n", "Voce aceitou atender ao atendimento.\nLigue para $username\nTelefone: $phone"));
+            //close current PrayerRequest
+            $this->prayerRequests->status_id = 3;
+
+            $payerRequeest->voluntary_id = $userId;
+            $payerRequeest->status_id = 3;
+            $payerRequeest->created_at = Carbon::now();
+            $payerRequeest->update();
+
+            $this->finishPrayerRequest($this->prayerRequests);
+        } else if (in_array($this->date['text']['message'], ['Redirecionar', 2])) {
+            $this->forceAceptAllVoluntaries();
+        }
+    }
+
+
+    public function forceAceptAllVoluntaries()
+    {
+        $payerRequeest = PrayerRequest::find($this->prayerRequests->reference);
+
+        $newPrayerRequest = $payerRequeest->replicate();
+
+        //antigo
+        $this->finishPrayerRequest($payerRequeest);
+
+        //novo
+        $newPrayerRequest->voluntary_id = null;
+        $newPrayerRequest->questionary_user = null;
+        $newPrayerRequest->questionary_brother = null;
+        $newPrayerRequest->status_id = 1;
+        $newPrayerRequest->save();
+
+        $voluntaryController =  new VoluntaryController($payerRequeest->user);
+        $payerRequeest->status_id = 4;
+        $dialogQuestion = DialogsQuestion::where('dialog_template_id', 2)->where('priority', 1)->first();
+        $voluntaryController->sendMessageAllVoluntaries($dialogQuestion->question, $dialogQuestion);
+        $this->manualyNextQuestion(3);
 
         $this->finishPrayerRequest($this->prayerRequests);
     }
@@ -296,26 +356,32 @@ class DefaultFunctionsController extends Controller
         $this->closePrayerRequest();
     }
 
-    public function  problemPrayerResponse(){
+    public function  problemPrayerResponse()
+    {
         $this->manualyNextQuestion(10);
         $this->closePrayerRequest();
     }
-    public function callMenber(){
+    public function callMenber()
+    {
         $this->createNewSideDishers();
         $this->nextQuestion();
         $this->closePrayerRequest();
     }
-    public function finishOne(){
+    public function finishOne()
+    {
         $this->manualyNextQuestion(11);
         $this->closePrayerRequest();
     }
-    public function finishTwo(){
+    public function finishTwo()
+    {
         $this->manualyNextQuestion(7);
     }
-    public function positiveOne(){
+    public function positiveOne()
+    {
         $this->manualyNextQuestion(5);
     }
-    public function finishTree(){
+    public function finishTree()
+    {
         $this->manualyNextQuestion(9);
         $this->closePrayerRequest();
     }
