@@ -175,7 +175,7 @@ class CheckHelp extends Command
         //verifica se o user tem algo em aberto;
         //65 pastor
         $idUser = 7;
-        $prayerRequests = PrayerRequest::whereIn('status_id', [1, 2, 4, 6])->where('user_id', $idUser)->get();
+        $prayerRequests = PrayerRequest::whereIn('status_id', [1, 2, 4, 6])->where('user_id', $idUser)->exists();
         if ($prayerRequests) {
             return;
         }
