@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;0,1000;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900;1,1000&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kristi&display=swap');
+
+body {
+    padding: 0;
+    margin: 0;
+    font-family: 'Nunito', sans-serif;
+}
+
+.custom-size-title-h1 {
+    font-size: 6rem;
+}
+
+.custom-sub-title-h1 {
+    font-size: 2.5rem;
+}
+
+
+.section-one {
+    margin: 0;
+    padding: 0;
+    background-image: url('/img/BANNER HOME.jpg');
+    /* Substitua pelo caminho da sua imagem */
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+    background-attachment: fixed;
+}
+.section-tree {
+    margin: 0;
+    padding: 0;
+    background-image: url('/img/banner_desk.jpg');
+    /* Substitua pelo caminho da sua imagem */
+    background-size: cover;
+    background-position: contain;
+    background-repeat: no-repeat;
+    color: #fff;
+    /* background-attachment: fixed; */
+   height: 100%;
+}
+
+a.style-none {
+    color: inherit;
+    text-decoration: inherit;
+}
+
+.kristi{
+    font-family: 'Kristi', cursive;
+}
+.image-container{
+    width: 100%;
+    height: 450px; 
+    position: relative;
+    overflow: hidden;
+    background-position: 0% 50%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url('/img/perssona1.jpg');
+    border-radius: 20px;
+}
