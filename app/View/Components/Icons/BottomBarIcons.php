@@ -1,23 +1,19 @@
 <?php
 
-namespace App\View\Components\Images;
+namespace App\View\Components\Icons;
 
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class imageContainerOne extends Component
+class BottomBarIcons extends Component
 {
     /**
      * Create a new component instance.
      */
-
-    public string $height;
-
-    public function __construct($height)
+    public function __construct()
     {
         //
-        $this->height = $height;
     }
 
     /**
@@ -25,6 +21,6 @@ class imageContainerOne extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.images.image-container-one');
+        return view('components.icons.bottom-bar-icons');
     }
 }

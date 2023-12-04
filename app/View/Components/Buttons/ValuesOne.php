@@ -1,23 +1,22 @@
 <?php
 
-namespace App\View\Components\Images;
+namespace App\View\Components\Buttons;
 
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class imageContainerOne extends Component
+class ValuesOne extends Component
 {
     /**
      * Create a new component instance.
      */
+    public string $value;
 
-    public string $height;
-
-    public function __construct($height)
+    public function __construct($value = "R$ 100,00")
     {
         //
-        $this->height = $height;
+        $this->value = $value;
     }
 
     /**
@@ -25,6 +24,6 @@ class imageContainerOne extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.images.image-container-one');
+        return view('components.buttons.values-one');
     }
 }
