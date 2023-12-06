@@ -11,9 +11,12 @@ class BottomBarIcons extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct()
+    public string $pathImage;
+
+    public function __construct($pathImage)
     {
         //
+        $this->pathImage = $pathImage;
     }
 
     /**

@@ -1,6 +1,6 @@
 <div>
-    <!-- I begin to speak only when I am certain what I will say is not better left unsaid. - Cato the Younger -->
+    <img class="icons-size my-5" src="{{ asset($pathImage) }}" alt="">
 </div>
-<div>
-    {{$slot}}
+<div class="mb-5">
+    {{ $slot }}
 </div>

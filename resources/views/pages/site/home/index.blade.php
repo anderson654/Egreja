@@ -163,19 +163,19 @@
             <div style="width: 80%">
                 <div class="row text-center" style="color: #fff;font-weight: 200">
                     <div class="col-md-4">
-                        <x-icons.bottom-bar-icons>
+                        <x-icons.bottom-bar-icons :pathImage="'/img/icons/socialmedias/GMAIL.png'">
+                            <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cupiditate, vel adipisci
+                                voluptatibus dolorem voluptates cum error nam.</p>
+                        </x-icons.bottom-bar-icons >
+                    </div>
+                    <div class="col-md-4">
+                        <x-icons.bottom-bar-icons :pathImage="'/img/icons/socialmedias/YOUTUBE.png'">
                             <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cupiditate, vel adipisci
                                 voluptatibus dolorem voluptates cum error nam.</p>
                         </x-icons.bottom-bar-icons>
                     </div>
                     <div class="col-md-4">
-                        <x-icons.bottom-bar-icons>
-                            <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cupiditate, vel adipisci
-                                voluptatibus dolorem voluptates cum error nam.</p>
-                        </x-icons.bottom-bar-icons>
-                    </div>
-                    <div class="col-md-4">
-                        <x-icons.bottom-bar-icons>
+                        <x-icons.bottom-bar-icons :pathImage="'/img/icons/socialmedias/LOCALIZACAO.png'">
                             <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cupiditate, vel adipisci
                                 voluptatibus dolorem voluptates cum error nam.</p>
                         </x-icons.bottom-bar-icons>
