@@ -44,7 +44,7 @@ class VoluntaryController extends Controller
         $isAttending = $this->checkIsAttending();
         if($isAttending){
             $prayer = User::find($isAttending->user_id);
-            $this->zApiController->sendMessage($date['phone'], str_replace('\n', "\n", "Voce já aceitou atender a um atendimento.\nLigue para $prayer->username\nTelefone: $prayer->phone"));
+            $this->zApiController->sendMessage($date['phone'], str_replace('\n', "\n", "Você já aceitou atender a um pedido de oração.\nLigue para $prayer->username\nTelefone: $prayer->phone"));
             return;
         }
     
@@ -76,13 +76,13 @@ class VoluntaryController extends Controller
 
         foreach ($voluntaries as $voluntary) {
             # code...
-            // if ($voluntary->phone === "5541995640242") {
+            if ($voluntary->phone === "5541995640242") {
                 if ($dialogQuestion) {
                     PrayerRequest::newPrayerRequest($voluntary, $dialogQuestion, $this->prayerRequests->id, 5);
                 }
                 $phone = $voluntary->getOriginal('phone');
                 $this->zApiController->sendMessage($phone, str_replace('\n', "\n", $message));
-            // }
+            }
         }
     }
 
