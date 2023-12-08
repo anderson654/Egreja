@@ -390,7 +390,7 @@ class DefaultFunctionsController extends Controller
     }
     public function finishTree()
     {
-        $this->manualyNextQuestion(9);
+        $this->manualyNextQuestion(3);
         $this->closePrayerRequest();
     }
 
