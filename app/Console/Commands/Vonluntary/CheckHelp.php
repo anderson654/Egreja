@@ -44,6 +44,7 @@ class CheckHelp extends Command
      */
     public function handle()
     {
+        return;
         $prayerRequests = PrayerRequest::whereIn('status_id', [1, 2, 3, 6])->has('prayer')->has('voluntary')->get();
         foreach ($prayerRequests as $prayerRequest) {
             //envia a mensagem para o pastor que não foi atendida
