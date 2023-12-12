@@ -44,7 +44,20 @@ class CheckHelp extends Command
      */
     public function handle()
     {
+        $prayerRequests = PrayerRequest::get();
+        foreach ($prayerRequests as $prayerRequest) {
+            # code...
+            $limitTime = Carbon::parse($prayerRequest->created_at->toString())->addMinutes(5);
+            if($limitTime < Carbon::now()){
+                $prayerRequest->status_id = 3;
+                $prayerRequest->update();
+            }
+        }
         return;
+
+
+
+        
         $prayerRequests = PrayerRequest::whereIn('status_id', [1, 2, 3, 6])->has('prayer')->has('voluntary')->get();
         foreach ($prayerRequests as $prayerRequest) {
             //envia a mensagem para o pastor que não foi atendida
