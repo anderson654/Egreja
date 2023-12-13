@@ -10,24 +10,23 @@ class HistoricalConversation extends Model
     use HasFactory;
 
     protected $fillable = [
-        'prayer_requests_id',
-        'dialogs_questions_id',
+        'conversation_id',
+        'messages_id',
         'response'
     ];
 
     /**
-     * @param int $idPrayerRequest id da instancia PlayerRequests
-     * @param int $idDialogQuestion id da instancia DialogsQuestions
-     * @param string $message mensagen a ser salva pode vir do z-api
+     * @param Conversation $conversation instancia Conversation
+     * @param string $response mensagen a ser salva pode vir do z-api
      * @return void
      */
 
-    public static function saveMessage($idPrayerRequest, $idDialogQuestion, $message)
+    public static function saveMessage($conversation, $response)
     {
         HistoricalConversation::create([
-            'prayer_requests_id' => $idPrayerRequest,
-            'dialogs_questions_id' => $idDialogQuestion,
-            'response' => $message
+            'conversation_id' => $conversation->id,
+            'messages_id' => $conversation->message->id,
+            'response' => $response
         ]);
     }
 }

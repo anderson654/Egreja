@@ -112,16 +112,22 @@ class User extends Authenticatable
 
     /**
      * Pega todos os Voluntarios que não estão em atendimento
+     * @return Collection
      */
     public static function getVoluntariesNotAttending()
     {
         $users = User::where('role_id', 3)
-            ->whereDoesntHave('prayer_requests', function ($query) {
-                $query->whereIn('status_id', [1, 2, 4]);
+            ->whereDoesntHave('conversations', function ($query) {
+                $query->whereIn('status_conversation_id', [1, 2]);
             })
             ->whereNotNull('phone')
             ->get();
 
         return $users;
+    }
+
+    public function conversations()
+    {
+        return $this->hasMany(Conversation::class);
     }
 }

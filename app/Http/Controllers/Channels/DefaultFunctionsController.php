@@ -4,12 +4,15 @@ namespace App\Http\Controllers\Channels;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ZApiController;
+use App\Models\Conversation;
 use App\Models\DialogsQuestion;
 use App\Models\GroupQuestionsResponse;
+use App\Models\Message;
 use App\Models\PrayerRequest;
 use App\Models\ResponsesToGroup;
 use App\Models\SideDishes;
 use App\Models\User;
+use App\Utils\Utils;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -18,33 +21,69 @@ class DefaultFunctionsController extends Controller
     private $user;
     private $date;
     private $zApiController;
-    private $prayerRequests;
+    private $conversation;
     private $question;
+    private $methods;
+    private $paramns;
 
 
     /**
      * @param User $user Recebe o usuario
      * @param object $date objeto z-api
-     * @param PrayerRequest $prayerRequest
-     * @param DialogsQuestion $question type dialogs_questions
+     * @param Conversation $conversation
+     * @param Message $question type dialogs_questions
      */
-    public function __construct($user, $date, $prayerRequest, $question)
+    public function __construct($user, $date, $conversation)
     {
         $this->zApiController = new ZApiController();
         $this->date =  $date;
         $this->user = $user;
-        $this->prayerRequests = $prayerRequest;
-        if ($this->prayerRequests && isset($this->prayerRequests->current_dialog_question_id)) {
-            $this->question =  $question;
+        $this->conversation = $conversation;
+        if ($this->conversation && isset($this->conversation->messages_id)) {
+            $this->question = $this->conversation->message;
         }
+        //mapeia os métodos
+        $this->mapedFunctions();
     }
+
+    /**
+     * Mapeia as funçoes 
+     * @return void
+     */
+    public function mapedFunctions()
+    {
+        $this->methods = [
+            'next_question' => 'nextQuestion',
+            'not_identify_response' => 'notIdentifyResponse',
+            'send_message_to_volunteers' => 'sendMessageToVolunteers',
+            'acept_request_voluntary' => 'aceptRequestVoluntary',
+            'negative_response_template_one' => 'negativeResponseTemplateOne',
+            'dificult' => 'dificult',
+            'save_response_dificult' => 'saveResponseDificult',
+            'problem_prayer' => 'problemPrayer',
+            'describ_problem_prayer' => 'describProblemPrayer',
+            'problem_prayer_response' => 'problemPrayerResponse',
+            'call_menber' => 'callMenber',
+            'finish_one' => 'finishOne',
+            'finish_two' => 'finishTwo',
+            'positive_one' => 'positiveOne',
+            'finish_tree' => 'finishTree',
+            'force_accept_voluntary' => 'forceAceptVoluntary',
+            'next_and_close' => ['nextQuestion', 'closePrayerRequest'],
+            'recuse_prayer' => 'recusePrayer',
+            'wait' => 'wait',
+            'wait_close_request' => 'waitCloseRequest'
+        ];
+    }
+
+
+
 
     //daqui para baixo verificar o que fazer;
     public function nextDialogQuestion()
     {
         //verificar se tem resposta;
         //uma resposta positiva negativa ou um dialogo de encerramento?
-
         $existResponse = GroupQuestionsResponse::existResponsesQuestion($this->question->id);
         if (!$existResponse) {
             //caso o grupo de respostas não exista
@@ -53,8 +92,6 @@ class DefaultFunctionsController extends Controller
         }
 
         $responseToGroup = ResponsesToGroup::verifyRoleResponse($this->date['text']['message'], $this->question->id);
-        //pega o role da resposta
-        // $this->filterAndExecuteMethods($responseToGroup->group_response);
         if (!$responseToGroup) {
             //executar methodo caso exista grupo mais resposta não identificada
             $this->filterAndExecuteMethods(5);
@@ -95,81 +132,18 @@ class DefaultFunctionsController extends Controller
 
     public function executeMethods($name)
     {
-        switch ($name) {
-            case 'next_question':
-                # code...
-                $this->nextQuestion();
-                break;
-            case 'not_identify_response':
-                # code...
-                $this->notIdentifyResponse();
-                break;
-            case 'send_message_to_volunteers':
-                # code...
-                $this->sendMessageToVolunteers();
-                break;
-            case 'acept_request_voluntary':
-                # code...
-                $this->aceptRequestVoluntary();
-                break;
-            case 'negative_response_template_one':
-                # code...
-                $this->negativeResponseTemplateOne();
-                break;
-            case 'dificult':
-                # code...
-                $this->dificult();
-                break;
-            case 'save_response_dificult':
-                # code...
-                $this->saveResponseDificult();
-                break;
-            case 'problem_prayer':
-                # code...
-                $this->problemPrayer();
-                break;
-            case 'describ_problem_prayer':
-                # code...
-                $this->describProblemPrayer();
-                break;
-            case 'problem_prayer_response':
-                # code...
-                $this->problemPrayerResponse();
-                break;
-            case 'call_menber':
-                # code...
-                $this->callMenber();
-                break;
-            case 'finish_one':
-                # code...
-                $this->finishOne();
-                break;
-            case 'finish_two':
-                # code...
-                $this->finishTwo();
-                break;
-            case 'positive_one':
-                # code...
-                $this->positiveOne();
-                break;
-            case 'finish_tree':
-                # code...
-                $this->finishTree();
-                break;
-            case 'force_accept_voluntary':
-                # code...
-                $this->forceAceptVoluntary();
-                break;
-            case 'next_and_close':
-                # code...
-                $this->nextQuestion();
-                $this->closePrayerRequest();
-                break;
-            case  'recuse_prayer':
-                $this->recusePrayer();
-            default:
-                # code...
-                break;
+
+        if (isset($this->methods[$name])) {
+            $method = $this->methods[$name];
+            if (is_array($method)) {
+                foreach ($method as $m) {
+                    $this->$m();
+                }
+            } else {
+                $this->$method();
+            }
+        } else {
+            // Lidar com o caso padrão ou desconhecido, se necessário
         }
     }
 
@@ -186,35 +160,45 @@ class DefaultFunctionsController extends Controller
 
     public function closePrayerRequest()
     {
-        $this->prayerRequests->status_id = 3;
-        $this->prayerRequests->save();
+        $this->conversation->status_conversation_id = 3;
+        $this->conversation->save();
     }
 
     public function updatePrayerRequest($id)
     {
-        $this->prayerRequests->current_dialog_question_id = $id;
-        $this->prayerRequests->save();
+        $this->conversation->messages_id = $id;
+        $this->conversation->save();
     }
 
     public function failPrayerRequest()
     {
-        $referencePrayerRequest = PrayerRequest::find($this->prayerRequests->reference);
+        $referencePrayerRequest = PrayerRequest::find($this->conversation->reference);
         $referencePrayerRequest->status_id = 6;
         $referencePrayerRequest->save();
     }
 
     public function manualyNextQuestion($priority)
     {
-        $nextQuestion = DialogsQuestion::where('dialog_template_id', $this->question->dialog_template_id)->where('priority', $priority)->first();
-        $this->zApiController->sendMessage($this->user->phone, str_replace('\n', "\n", $nextQuestion->question));
-        $this->updatePrayerRequest($nextQuestion->id);
+        $nextMessage = $this->sendNextMessage($priority);
+        $this->updatePrayerRequest($nextMessage->id);
+    }
+
+    public function sendNextMessage($priority)
+    {
+        $nextMessage = Message::where('template_id', $this->question->template_id)->where('priority', $priority)->first();
+        $message = $nextMessage->message;
+        if ($this->paramns) {
+           $message = Utils::setDefaultNames($this->paramns, $message);
+        }
+        $this->zApiController->sendMessage($this->user->phone, str_replace('\n', "\n", $message));
+        return $nextMessage;
     }
 
     public function createNewSideDishers()
     {
         //logica de acolhimento
         $sideDishes = new SideDishes();
-        $sideDishes->user_id = $this->prayerRequests->user_id;
+        $sideDishes->user_id = $this->conversation->user_id;
         //id do responsavel
         $sideDishes->responsible_user_id = 65;
         $sideDishes->save();
@@ -233,47 +217,74 @@ class DefaultFunctionsController extends Controller
         $prayerRequest->save();
     }
 
+    /**
+     * Esta função envia uma mensagem para todos os voluntarios que não estiverem em outra chamada.
+     */
     public function sendMessageToVolunteers()
     {
+        //abrir uma notofocação na tabela
+
+
         $voluntaryController =  new VoluntaryController($this->user);
-        $this->prayerRequests->status_id = 4;
-        $dialogQuestion = DialogsQuestion::where('dialog_template_id', 2)->where('priority', 1)->first();
-        $voluntaryController->sendMessageAllVoluntaries($dialogQuestion->question, $dialogQuestion);
+        $nextMessage = Message::where('template_id', 2)->where('priority', 1)->first();
+        $voluntaryController->sendMessageAllVoluntaries($nextMessage, $this->conversation);
         $this->nextQuestion();
     }
 
     public function aceptRequestVoluntary()
     {
-        //verifica se tem um usuario na chamada
-        $payerRequeest = PrayerRequest::find($this->prayerRequests->reference);
+        $phone = $this->user->getRawOriginal('phone');
+        //verifica se já possui um voluntario na chamada
+        $existVoluntary = Conversation::existUserInConversation($this->conversation->reference_conversation_id);
 
-        if (isset($payerRequeest->voluntary_id)) {
-            $this->zApiController->sendMessage($this->user->phone, str_replace('\n', "\n", "Este atendimento ja foi aceito por outro voluntário. \nObrigado."));
-            $this->finishPrayerRequest($this->prayerRequests);
+        // dd($this->user->getRawOriginal('phone'));
+        if ($existVoluntary) {
+            $this->zApiController->sendMessage($phone, str_replace('\n', "\n", "Este atendimento ja foi aceito por outro voluntário. \nObrigado."));
+            Conversation::finishConversation($this->conversation);
             return;
         }
 
-        //pegar o user
-        $prayer = User::find($payerRequeest->user_id);
+        //esta é a referencia
+        $conversationPrayer = Conversation::find($this->conversation->reference_conversation_id);
+        //quem solicitou o atendimento.
+        $prayer = User::find($conversationPrayer->user_id);
+        //seta quem aceitou na chamada;
+        Conversation::setUserAcept($conversationPrayer,$this->conversation->user_id);
 
-        //fecha todas as abertas quando alguem aceita
-        PrayerRequest::where('reference',  $payerRequeest->id)->update(['status_id' => 3]);
+        //fecha todas as abertas quando alguem aceita menos a de quem aceitou;
+        Conversation::where('reference_conversation_id',  $conversationPrayer->id)->where('user_id', '!=', $this->conversation->user_id)->update(['status_conversation_id' => 3]);
+
+        $this->paramns = [
+            "username" => $prayer->username,
+            "phone" => $prayer->phone
+        ];
+
+        $this->nextQuestion();
+
+
+        // Utils::setDefaultNames();
+        // dd('aqui');
+
+
+
+
         // foreach ($closeRequests as $request) {
         //     $request->status_id = 3;
         //     $request->save();
         // }
 
 
-        $this->zApiController->sendMessage($this->user->phone, str_replace('\n', "\n", "Você aceitou atender ao pedido de oração.\nLigue para $prayer->username\nTelefone: $prayer->phone"));
+        // $this->zApiController->sendMessage($phone, str_replace('\n', "\n", "Você aceitou atender ao pedido de oração.\nLigue para $prayer->username\nTelefone: $prayer->phone"));
 
-        $payerRequeest->voluntary_id = $this->user->id;
-        $payerRequeest->status_id = 2;
-        $payerRequeest->save();
+        // $payerRequeest->voluntary_id = $this->user->id;
+        // $payerRequeest->status_id = 2;
+        // $payerRequeest->save();
 
 
 
-        $this->finishPrayerRequest($this->prayerRequests);
+        // $this->finishPrayerRequest($this->conversation);
     }
+
 
     public function forceAceptVoluntary()
     {
@@ -282,21 +293,21 @@ class DefaultFunctionsController extends Controller
             $userId = 7;
             $user = User::find($userId);
 
-            $payerRequeest = PrayerRequest::find($this->prayerRequests->reference);
+            $payerRequeest = PrayerRequest::find($this->conversation->reference);
 
             $username =  $payerRequeest->user->username;
             $phone =  $payerRequeest->user->phone;
 
             $this->zApiController->sendMessage($user->phone, str_replace('\n', "\n", "Voce aceitou atender ao pedido de oração.\nLigue para $username\nTelefone: $phone"));
             //close current PrayerRequest
-            $this->prayerRequests->status_id = 3;
+            $this->conversation->status_id = 3;
 
             $payerRequeest->voluntary_id = $userId;
             $payerRequeest->status_id = 3;
             $payerRequeest->created_at = Carbon::now();
             $payerRequeest->update();
 
-            $this->finishPrayerRequest($this->prayerRequests);
+            $this->finishPrayerRequest($this->conversation);
         } else if (in_array($this->date['text']['message'], ['Redirecionar', 2])) {
             $this->forceAceptAllVoluntaries();
         }
@@ -305,7 +316,7 @@ class DefaultFunctionsController extends Controller
 
     public function forceAceptAllVoluntaries()
     {
-        $payerRequeest = PrayerRequest::find($this->prayerRequests->reference);
+        $payerRequeest = PrayerRequest::find($this->conversation->reference);
         $payerRequeest->questionary_user = 1;
         $payerRequeest->save();
 
@@ -327,8 +338,10 @@ class DefaultFunctionsController extends Controller
         $voluntaryController->sendMessageAllVoluntaries($dialogQuestion->question, $dialogQuestion);
         $this->manualyNextQuestion(3);
 
-        $this->finishPrayerRequest($this->prayerRequests);
+        $this->finishPrayerRequest($this->conversation);
     }
+
+
 
 
     public function negativeResponseTemplateOne()
@@ -394,8 +407,26 @@ class DefaultFunctionsController extends Controller
         $this->closePrayerRequest();
     }
 
-    public function recusePrayer(){
+    public function recusePrayer()
+    {
         $this->manualyNextQuestion(2);
         $this->closePrayerRequest();
+    }
+
+    public function wait()
+    {
+        $this->sendNextMessage(4);
+    }
+    public function waitCloseRequest(){
+        //esta é a referencia
+        $conversationPrayer = Conversation::find($this->conversation->reference_conversation_id);
+        //quem solicitou o atendimento.
+        $prayer = User::find($conversationPrayer->user_id);
+
+        $this->paramns = [
+            "username" => $prayer->username,
+            "phone" => $prayer->phone
+        ];
+        $this->sendNextMessage(4);
     }
 }

@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Channels;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ZApiController;
+use App\Models\Conversation;
 use App\Models\DialogsQuestion;
+use App\Models\Notification;
 use App\Models\PrayerRequest;
 use App\Models\User;
 use App\Models\WhatsApp\HistoricalConversation;
@@ -13,7 +15,7 @@ use Illuminate\Http\Request;
 class VoluntaryController extends Controller
 {
     private $zApiController;
-    private $prayerRequests;
+    private $conversation;
     private $user;
     private $date;
     private $question;
@@ -25,9 +27,9 @@ class VoluntaryController extends Controller
     {
         $this->zApiController = new ZApiController();
         $this->user = $user;
-        $this->prayerRequests = PrayerRequest::where('user_id', $user->id)->whereIn('status_id', [1, 2, 4, 5])->first();
-        if ($this->prayerRequests && isset($this->prayerRequests->current_dialog_question_id)) {
-            $this->question =  DialogsQuestion::find($this->prayerRequests->current_dialog_question_id);
+        $this->conversation = Conversation::where('user_id', $user->id)->where('status_conversation_id', 1)->first();
+        if ($this->conversation) {
+            $this->question =  $this->conversation->message;
         }
     }
 
@@ -40,58 +42,74 @@ class VoluntaryController extends Controller
      */
     public function initChanelVoluntary($date)
     {
-        //regra adicional verificar se vc esta atendendo alguem
-        $isAttending = $this->checkIsAttending();
-        if($isAttending){
-            $prayer = User::find($isAttending->user_id);
-            $this->zApiController->sendMessage($date['phone'], str_replace('\n', "\n", "Você já aceitou atender a um pedido de oração.\nLigue para $prayer->username\nTelefone: $prayer->phone"));
-            return;
-        }
-    
+        //se existe uma converça aberta continua se não avisa que não tem chhamados em aberto.
+        // dd($this->conversation);
+        // $isAttending = $this->checkIsAttending();
+
+        // dd($isAttending);
+
+
+        // if ($isAttending) {
+        //     $prayer = User::find($isAttending->user_id);
+        //     $this->zApiController->sendMessage($date['phone'], str_replace('\n', "\n", "Você já aceitou atender a um pedido de oração.\nLigue para $prayer->username\nTelefone: $prayer->phone"));
+        //     return;
+        // }
+
         //se não existir nenhuma chamada em aberto retornar
-        if (!$this->prayerRequests) {
+        if (!$this->conversation) {
             $this->zApiController->sendMessage($date['phone'], str_replace('\n', "\n", "Não há chamados a serem atendidos."));
             return;
         }
-       
         $this->date = $date;
         //salva a mensagem no historico.
-        HistoricalConversation::saveMessage($this->prayerRequests->id, $this->question->id, $this->date['text']['message']);
+        HistoricalConversation::saveMessage($this->conversation, $this->date['text']['message']);
 
         //inicias as funçoes padrão
-        $defaultFunctionsController = new DefaultFunctionsController($this->user, $date, $this->prayerRequests, $this->question);
+        $defaultFunctionsController = new DefaultFunctionsController($this->user, $this->date, $this->conversation);
         $defaultFunctionsController->nextDialogQuestion();
     }
 
 
     /**
-     * @param string $message recebe uma questão
-     * @param DialogsQuestion $question  recebe uma questão opcional
+     * @param Message $message a mensagem a ser enviada
+     * @param Conversation $question  recebe uma questão opcional
      */
-    public function sendMessageAllVoluntaries($message, $dialogQuestion = null)
+    public function sendMessageAllVoluntaries($message, $conversation = null)
     {
+        // dd($dialogQuestion);
         //pegar todos menos aqueles que possuem dialogos em aberto;
         //existe 1,2,4 em aberto?
         $voluntaries = User::getVoluntariesNotAttending();
-
-        foreach ($voluntaries as $voluntary) {
-            # code...
-            // if ($voluntary->phone === "5541995640242") {
-                if ($dialogQuestion) {
-                    PrayerRequest::newPrayerRequest($voluntary, $dialogQuestion, $this->prayerRequests->id, 5);
+        // dd($voluntaries);
+        if ($voluntaries->count() > 0) {
+            foreach ($voluntaries as $voluntary) {
+                # code...
+                $phone = $voluntary->getRawOriginal('phone');
+                if ($phone === "554195640242") {
+                    if ($conversation) {
+                        Conversation::newConversation($voluntary, $message, $conversation->id, 1);
+                    }
+                    $this->zApiController->sendMessage($phone, str_replace('\n', "\n", $message->message));
                 }
-                $phone = $voluntary->getOriginal('phone');
-                $this->zApiController->sendMessage($phone, str_replace('\n', "\n", $message));
-            // }
+            }
+        } else {
+            //cria uma notificação para executar depois caso não haja voluntarios disponiveis.
+            $notification = new Notification();
+            $notification->user_id = $conversation->user_id;
+            $notification->conversation_id = $conversation->id;
+            $notification->status_notifications_id = 2;
+            $notification->type_notifications_id = 1;
+            $notification->save();
         }
     }
 
     /**
-     * Verifica  se o voluntario esta em um atendimento;
-     * @return  PrayerRequest
+     * Verifica  se o voluntario esta em um atendimento ou esta em uma converça;
+     * @return  Conversation
      */
-    public function checkIsAttending(){
-        $prayerRequest =  PrayerRequest::where('status_id',2)->where('voluntary_id',$this->user->id)->first();
-        return $prayerRequest;
+    public function checkIsAttending()
+    {
+        $conversation = Conversation::where('status_conversation_id', 1)->where('user_accepted', $this->user->id)->orWhere('user_id', $this->user->id)->first();
+        return $conversation;
     }
 }
