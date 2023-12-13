@@ -5,6 +5,7 @@ namespace App\Console\Commands\Vonluntary;
 use App\Http\Controllers\WhatsApp\DialogsTemplatesController;
 use App\Http\Controllers\ZApiController;
 use App\Http\Controllers\ZApiWebHookController;
+use App\Models\Conversation;
 use App\Models\DialogsQuestion;
 use App\Models\PrayerRequest;
 use App\Models\SideDishes;
@@ -44,13 +45,13 @@ class CheckHelp extends Command
      */
     public function handle()
     {
-        $prayerRequests = PrayerRequest::get();
-        foreach ($prayerRequests as $prayerRequest) {
+        $conversations = Conversation::get();
+        foreach ($conversations as $conversation) {
             # code...
-            $limitTime = Carbon::parse($prayerRequest->created_at->toString())->addMinutes(5);
+            $limitTime = Carbon::parse($conversation->created_at->toString())->addMinutes(5);
             if($limitTime < Carbon::now()){
-                $prayerRequest->status_id = 3;
-                $prayerRequest->update();
+                $conversation->status_conversation_id = 3;
+                $conversation->update();
             }
         }
         return;
