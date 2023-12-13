@@ -85,12 +85,12 @@ class VoluntaryController extends Controller
             foreach ($voluntaries as $voluntary) {
                 # code...
                 $phone = $voluntary->getRawOriginal('phone');
-                if ($phone === "554195640242") {
+                // if ($phone === "554195640242") {
                     if ($conversation) {
                         Conversation::newConversation($voluntary, $message, $conversation->id, 1);
                     }
                     $this->zApiController->sendMessage($phone, str_replace('\n', "\n", $message->message));
-                }
+                // }
             }
         } else {
             //cria uma notificação para executar depois caso não haja voluntarios disponiveis.
