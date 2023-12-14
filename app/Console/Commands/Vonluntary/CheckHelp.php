@@ -54,8 +54,8 @@ class CheckHelp extends Command
         //envia a chamada que esta na fila para os voluntarios.
         $this->sendMessageInQueue();
 
-
         //envia o questionario para os voluntarios.
+        $this->sendQuestionaryVoluntary();
 
 
         //envia o questionario para os usuarios.
