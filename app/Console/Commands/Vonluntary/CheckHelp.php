@@ -255,40 +255,31 @@ class CheckHelp extends Command
 
     public function sendQuestionaryVoluntary()
     {
-        DB::beginTransaction();
+        //code...
+        $notifications = Notification::where('type_notifications_id', 2)
+            ->where('status_notifications_id', 2)
+            ->whereHas('user', function ($query) {
+                $query->where('role_id', 3);
+            })->get();
 
-        try {
-            //code...
-            $notifications = Notification::where('type_notifications_id', 2)
-                ->where('status_notifications_id', 2)
-                ->whereHas('user', function ($query) {
-                    $query->where('role_id', 3);
-                })->get();
-
-            foreach ($notifications as $notification) {
-                # code...
-                if ($notification->user_id !== 7) {
-                    return;
-                }
-                $isAttending = User::verifyUserInAttending($notification->user_id);
-                if (!$isAttending) {
-                    //boot abre uma converça
-                    Conversation::openConversation($notification->user_id, 3, $notification->conversation_id);
-                    //envia a primeira mensagem
-                    $data = [
-                        'username' => $notification->conversation->user->username,
-                        'voluntaryname' => $notification->user->username
-                    ];
-                    $this->sendInitialMessage($data, 3, $notification->user->getRawOriginal('phone'));
-                    //fecha a notificação
-                    Notification::aceptedNotification($notification);
-                }
+        foreach ($notifications as $notification) {
+            # code...
+            if ($notification->user_id !== 7) {
+                return;
             }
-
-            DB::commit();
-        } catch (\Throwable $th) {
-            //throw $th;
-            DB::rollBack();
+            $isAttending = User::verifyUserInAttending($notification->user_id);
+            if (!$isAttending) {
+                //boot abre uma converça
+                Conversation::openConversation($notification->user_id, 3, $notification->conversation_id);
+                //envia a primeira mensagem
+                $data = [
+                    'username' => $notification->conversation->user->username,
+                    'voluntaryname' => $notification->user->username
+                ];
+                $this->sendInitialMessage($data, 3, $notification->user->getRawOriginal('phone'));
+                //fecha a notificação
+                Notification::aceptedNotification($notification);
+            }
         }
     }
 

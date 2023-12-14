@@ -173,9 +173,9 @@ class DefaultFunctionsController extends Controller
 
     public function failPrayerRequest()
     {
-        $referencePrayerRequest = PrayerRequest::find($this->conversation->reference);
-        $referencePrayerRequest->status_id = 6;
-        $referencePrayerRequest->save();
+        $conversation = Conversation::find($this->conversation->reference_conversation_id);
+        $conversation->status_conversation_id = 2;
+        $conversation->save();
     }
 
     public function manualyNextQuestion($priority)
@@ -336,7 +336,7 @@ class DefaultFunctionsController extends Controller
 
     public function dificult()
     {
-        $this->manualyNextQuestion(5);
+        $this->manualyNextQuestion(4);
         $this->failPrayerRequest();
     }
 
@@ -348,7 +348,7 @@ class DefaultFunctionsController extends Controller
     public function problemPrayer()
     {
         if ($this->date['text']['message']  ==  7) {
-            $this->manualyNextQuestion(4);
+            $this->manualyNextQuestion(7);
             return;
         }
         $this->nextQuestion();
@@ -361,7 +361,7 @@ class DefaultFunctionsController extends Controller
         $this->closePrayerRequest();
     }
 
-    public function  problemPrayerResponse()
+    public function problemPrayerResponse()
     {
         $this->manualyNextQuestion(10);
         $this->closePrayerRequest();
