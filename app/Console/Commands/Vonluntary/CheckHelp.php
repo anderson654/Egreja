@@ -2,11 +2,14 @@
 
 namespace App\Console\Commands\Vonluntary;
 
+use App\Http\Controllers\Channels\VoluntaryController;
 use App\Http\Controllers\WhatsApp\DialogsTemplatesController;
 use App\Http\Controllers\ZApiController;
 use App\Http\Controllers\ZApiWebHookController;
 use App\Models\Conversation;
 use App\Models\DialogsQuestion;
+use App\Models\Message;
+use App\Models\Notification;
 use App\Models\PrayerRequest;
 use App\Models\SideDishes;
 use App\Models\User;
@@ -45,11 +48,24 @@ class CheckHelp extends Command
      */
     public function handle()
     {
+        //uma função que a cada 2 min verifica se tem uma notificação do tipo (solicitação de atendimento).
+        //para que ela seja executada deve haver um voluntario disponivel.
+
+
+
+
+
+
+
+
+
+
+
         $conversations = Conversation::get();
         foreach ($conversations as $conversation) {
             # code...
-            $limitTime = Carbon::parse($conversation->created_at->toString())->addMinutes(5);
-            if($limitTime < Carbon::now()){
+            $limitTime = Carbon::parse($conversation->updated_at->toString())->addMinutes(5);
+            if ($limitTime < Carbon::now()) {
                 $conversation->status_conversation_id = 3;
                 $conversation->update();
             }
@@ -58,7 +74,7 @@ class CheckHelp extends Command
 
 
 
-        
+
         $prayerRequests = PrayerRequest::whereIn('status_id', [1, 2, 3, 6])->has('prayer')->has('voluntary')->get();
         foreach ($prayerRequests as $prayerRequest) {
             //envia a mensagem para o pastor que não foi atendida
@@ -201,5 +217,25 @@ class CheckHelp extends Command
         $message = str_replace("{{REQUESTER_NAME}}", $paramns['username'], $question);
         $message = str_replace("{{VOLUNTEER_NAME}}", $paramns['voluntaryname'], $message);
         return $message;
+    }
+
+    /**
+     * Verifica se tem algum chamado do tipo 1(solicitação de atendimento).
+     */
+    public function sendMessageInQueue()
+    {
+        //pega a primeira notificação na fila.
+        $firstNotification = Notification::where('status_notifications_id', 2)->where('type_notifications_id', 1)->first();
+        //pega a convereça
+        $conversation = Conversation::find($firstNotification->conversation_id);
+        //mendagem a ser enviada
+        $nextMessage = Message::where('template_id', 2)->where('priority', 1)->first();
+
+        $voluntaryController = new VoluntaryController();
+        $voluntaryController->sendMessageAllVoluntaries($nextMessage, $conversation);
+
+        //depois de enviado a mensagem fechar a notificação atual
+        $firstNotification->status_notifications_id = 1;
+        $firstNotification->update();
     }
 }
