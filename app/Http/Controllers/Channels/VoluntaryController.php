@@ -23,7 +23,7 @@ class VoluntaryController extends Controller
     /**
      * @param User $user Recebe o usuario
      */
-    public function __construct($user)
+    public function __construct($user = null)
     {
         $this->zApiController = new ZApiController();
         $this->user = $user;
@@ -72,7 +72,7 @@ class VoluntaryController extends Controller
 
     /**
      * @param Message $message a mensagem a ser enviada
-     * @param Conversation $question  recebe uma questão opcional
+     * @param Conversation $conversation é a converça da qual partiu o chamado
      */
     public function sendMessageAllVoluntaries($message, $conversation = null)
     {
@@ -93,7 +93,17 @@ class VoluntaryController extends Controller
                 // }
             }
         } else {
-            //cria uma notificação para executar depois caso não haja voluntarios disponiveis.
+            //verifica se essa notificação já existe.
+            $existTypeNotification = Notification::where('conversation_id',$conversation->id)
+            ->where('user_id',$conversation->user_id)
+            ->where('status_notifications_id',2)
+            ->where('type_notifications_id',1)
+            ->exists();
+
+            if($existTypeNotification){
+                return;
+            }
+
             $notification = new Notification();
             $notification->user_id = $conversation->user_id;
             $notification->conversation_id = $conversation->id;
