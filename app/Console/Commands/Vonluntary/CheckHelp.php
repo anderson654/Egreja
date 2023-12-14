@@ -219,7 +219,12 @@ class CheckHelp extends Command
     public function sendMessageInQueue()
     {
         //pega a primeira notificação na fila.
-        $firstNotification = Notification::where('status_notifications_id', 2)->where('type_notifications_id', 1)->first();
+        $firstNotification = Notification::where('status_notifications_id', 2)
+            ->where('type_notifications_id', 1)
+            ->has('pending_conversation')
+            ->with('conversation')
+            ->first();
+            
         if (!$firstNotification) {
             return;
         }
