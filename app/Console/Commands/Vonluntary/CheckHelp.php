@@ -264,9 +264,12 @@ class CheckHelp extends Command
 
         foreach ($notifications as $notification) {
             # code...
-            if ($notification->user_id !== 7) {
-                return;
-            }
+            //teste;
+            // if ($notification->user_id !== 7) {
+            //     return;
+            // }
+
+
             $isAttending = User::verifyUserInAttending($notification->user_id);
             if (!$isAttending) {
                 //boot abre uma converça
