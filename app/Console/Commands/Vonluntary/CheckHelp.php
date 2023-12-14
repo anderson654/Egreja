@@ -16,6 +16,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CheckHelp extends Command
 {
@@ -228,6 +229,8 @@ class CheckHelp extends Command
         if (!$firstNotification) {
             return;
         }
+
+        Log::info(json_encode($firstNotification->conversation));
 
         //pega a convereça
         $conversation = Conversation::find($firstNotification->conversation_id);
