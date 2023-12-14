@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Controllers\ZApiController;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -40,6 +41,11 @@ class Conversation extends Model
         return $this->hasOne(Message::class, 'id', 'messages_id');
     }
 
+    public function user()
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
+    }
+
     /**
      * Verifica se existe um voluntario na converça
      * @param int $conversationId id da converça
@@ -74,8 +80,23 @@ class Conversation extends Model
         $conversation->update();
     }
 
-    public function user()
+    /**
+     * Faz o boot abrir uma converça
+     * @param int $userId
+     * @param int $templateId
+     * @param int $reference
+     * @param int userAcceptedId
+     * @return void
+     */
+    public static function openConversation($userId, $templateId, $reference = null, $userAcceptedId = null)
     {
-        return $this->hasOne(User::class, 'id', 'user_id');
+        $message = Message::where('template_id', $templateId)->where('priority', 1)->first();
+        $conversation = new Conversation();
+        $conversation->user_id = $userId;
+        $conversation->messages_id = $message->id;
+        $conversation->status_conversation_id = 1;
+        $conversation->reference_conversation_id = $reference;
+        $conversation->user_accepted = $userAcceptedId;
+        $conversation->save();
     }
 }

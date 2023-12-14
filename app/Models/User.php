@@ -130,4 +130,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Conversation::class);
     }
+
+    /**
+     * Verifica se o user esta em alguma converça
+     * @param int $userId
+     * @return bool
+     */
+    public static function verifyUserInAttending($userId)
+    {
+        return Conversation::where('user_id', $userId)->where('status_conversation_id', 1)->exists();
+    }
 }

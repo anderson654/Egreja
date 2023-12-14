@@ -21,6 +21,11 @@ class Notification extends Model
         return $this->hasOne(Conversation::class, 'id', 'conversation_id');
     }
 
+    public function user()
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
+    }
+
     /**
      * Abre uma notificação do tipo questionario
      * @param int $userId user que vai receber o questionario
@@ -37,5 +42,16 @@ class Notification extends Model
         $notifications->save();
 
         return $notifications;
+    }
+
+    /**
+     * esta função atualiza o status da notificação para aceito.
+     * @param Notification $notification
+     * @return void
+     */
+    public static function aceptedNotification($notification)
+    {
+        $notification->status_notifications_id = 1;
+        $notification->update();
     }
 }

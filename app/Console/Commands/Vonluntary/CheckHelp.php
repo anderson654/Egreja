@@ -13,9 +13,11 @@ use App\Models\Notification;
 use App\Models\PrayerRequest;
 use App\Models\SideDishes;
 use App\Models\User;
+use App\Utils\Utils;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class CheckHelp extends Command
@@ -49,9 +51,14 @@ class CheckHelp extends Command
      */
     public function handle()
     {
-        //uma função que a cada 2 min verifica se tem uma notificação do tipo (solicitação de atendimento).
-        //para que ela seja executada deve haver um voluntario disponivel.
+        //envia a chamada que esta na fila para os voluntarios.
         $this->sendMessageInQueue();
+
+
+        //envia o questionario para os voluntarios.
+
+
+        //envia o questionario para os usuarios.
 
 
 
@@ -243,5 +250,73 @@ class CheckHelp extends Command
         //depois de enviado a mensagem fechar a notificação atual
         $firstNotification->status_notifications_id = 1;
         $firstNotification->update();
+    }
+
+
+    public function sendQuestionaryVoluntary()
+    {
+        DB::beginTransaction();
+
+        try {
+            //code...
+            $notifications = Notification::where('type_notifications_id', 2)
+                ->where('status_notifications_id', 2)
+                ->whereHas('user', function ($query) {
+                    $query->where('role_id', 3);
+                })->get();
+
+            foreach ($notifications as $notification) {
+                # code...
+                if ($notification->user_id !== 7) {
+                    return;
+                }
+                $isAttending = User::verifyUserInAttending($notification->user_id);
+                if (!$isAttending) {
+                    //boot abre uma converça
+                    Conversation::openConversation($notification->user_id, 3, $notification->conversation_id);
+                    //envia a primeira mensagem
+                    $data = [
+                        'username' => $notification->conversation->user->username,
+                        'voluntaryname' => $notification->user->username
+                    ];
+                    $this->sendInitialMessage($data, 3, $notification->user->getRawOriginal('phone'));
+                    //fecha a notificação
+                    Notification::aceptedNotification($notification);
+                }
+            }
+
+            DB::commit();
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+        }
+    }
+
+    // public function sendQuestionaryVoluntary()
+    // {
+
+    //     $notifications = Notification::where('type_notifications_id', 2)
+    //         ->where('status_notifications_id', 2)
+    //         ->with('user')->get();
+    //     dd($notifications);
+    //     // ->with(['user' => function ($query) {
+    //     //     $query->where('role_id', 4);
+    //     // }])->get();
+
+    //     foreach ($notifications as $notification) {
+    //         # code...
+    //         $isAttending = User::verifyUserInAttending($notification->user_id);
+    //         if (!$isAttending) {
+    //             //boot abre uma converça
+    //         }
+    //     }
+    // }
+
+
+    public function sendInitialMessage($paramns, $templateId, $phone)
+    {
+        $message = Message::where('template_id', $templateId)->where('priority', 1)->first();
+        $message = Utils::setDefaultNames($paramns, $message->message);
+        $this->zApiController->sendMessage($phone, str_replace('\n', "\n", $message));
     }
 }
