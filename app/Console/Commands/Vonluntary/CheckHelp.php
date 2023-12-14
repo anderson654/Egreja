@@ -224,7 +224,7 @@ class CheckHelp extends Command
             ->has('pending_conversation')
             ->with('conversation')
             ->first();
-            
+
         if (!$firstNotification) {
             return;
         }
@@ -234,7 +234,7 @@ class CheckHelp extends Command
         //mendagem a ser enviada
         $nextMessage = Message::where('template_id', 2)->where('priority', 1)->first();
 
-        $voluntaryController = new VoluntaryController();
+        $voluntaryController = new VoluntaryController($conversation->user);
         $voluntaryController->sendMessageAllVoluntaries($nextMessage, $conversation);
 
         //depois de enviado a mensagem fechar a notificação atual

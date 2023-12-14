@@ -56,7 +56,8 @@ class Conversation extends Model
      * @param Conversation $conversationId id da converça
      * @return void
      */
-    public static function finishConversation($conversation){
+    public static function finishConversation($conversation)
+    {
         $conversation->status_conversation_id = 3;
         $conversation->update();
     }
@@ -67,8 +68,14 @@ class Conversation extends Model
      * @param int $userId
      * @return void
      */
-    public static function setUserAcept($conversation,$userId){
+    public static function setUserAcept($conversation, $userId)
+    {
         $conversation->user_accepted = $userId;
         $conversation->update();
+    }
+
+    public function user()
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
     }
 }

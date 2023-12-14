@@ -23,7 +23,7 @@ class VoluntaryController extends Controller
     /**
      * @param User $user Recebe o usuario
      */
-    public function __construct($user = null)
+    public function __construct($user)
     {
         $this->zApiController = new ZApiController();
         $this->user = $user;
