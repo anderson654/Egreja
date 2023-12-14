@@ -409,7 +409,7 @@ class DefaultFunctionsController extends Controller
 
     public function recusePrayer()
     {
-        $this->manualyNextQuestion(2);
+        $this->manualyNextQuestion(3);
         $this->closePrayerRequest();
     }
 
