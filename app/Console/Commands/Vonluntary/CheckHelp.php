@@ -50,13 +50,7 @@ class CheckHelp extends Command
     {
         //uma função que a cada 2 min verifica se tem uma notificação do tipo (solicitação de atendimento).
         //para que ela seja executada deve haver um voluntario disponivel.
-
-
-
-
-
-
-
+        $this->sendMessageInQueue();
 
 
 
@@ -226,6 +220,10 @@ class CheckHelp extends Command
     {
         //pega a primeira notificação na fila.
         $firstNotification = Notification::where('status_notifications_id', 2)->where('type_notifications_id', 1)->first();
+        if (!$firstNotification) {
+            return;
+        }
+
         //pega a convereça
         $conversation = Conversation::find($firstNotification->conversation_id);
         //mendagem a ser enviada
