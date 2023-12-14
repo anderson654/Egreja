@@ -8,6 +8,7 @@ use App\Models\Conversation;
 use App\Models\DialogsQuestion;
 use App\Models\GroupQuestionsResponse;
 use App\Models\Message;
+use App\Models\Notification;
 use App\Models\PrayerRequest;
 use App\Models\ResponsesToGroup;
 use App\Models\SideDishes;
@@ -188,7 +189,7 @@ class DefaultFunctionsController extends Controller
         $nextMessage = Message::where('template_id', $this->question->template_id)->where('priority', $priority)->first();
         $message = $nextMessage->message;
         if ($this->paramns) {
-           $message = Utils::setDefaultNames($this->paramns, $message);
+            $message = Utils::setDefaultNames($this->paramns, $message);
         }
         $this->zApiController->sendMessage($this->user->phone, str_replace('\n', "\n", $message));
         return $nextMessage;
@@ -249,7 +250,7 @@ class DefaultFunctionsController extends Controller
         //quem solicitou o atendimento.
         $prayer = User::find($conversationPrayer->user_id);
         //seta quem aceitou na chamada;
-        Conversation::setUserAcept($conversationPrayer,$this->conversation->user_id);
+        Conversation::setUserAcept($conversationPrayer, $this->conversation->user_id);
 
         //fecha todas as abertas quando alguem aceita menos a de quem aceitou;
         Conversation::where('reference_conversation_id',  $conversationPrayer->id)->where('user_id', '!=', $this->conversation->user_id)->update(['status_conversation_id' => 3]);
@@ -262,27 +263,10 @@ class DefaultFunctionsController extends Controller
         $this->nextQuestion();
 
 
-        // Utils::setDefaultNames();
-        // dd('aqui');
-
-
-
-
-        // foreach ($closeRequests as $request) {
-        //     $request->status_id = 3;
-        //     $request->save();
-        // }
-
-
-        // $this->zApiController->sendMessage($phone, str_replace('\n', "\n", "Você aceitou atender ao pedido de oração.\nLigue para $prayer->username\nTelefone: $prayer->phone"));
-
-        // $payerRequeest->voluntary_id = $this->user->id;
-        // $payerRequeest->status_id = 2;
-        // $payerRequeest->save();
-
-
-
-        // $this->finishPrayerRequest($this->conversation);
+        //abre um questionario para o user
+        Notification::openQuestionaryUser($prayer->id, $conversationPrayer->id);
+        //abre um questionario para o voluntario
+        Notification::openQuestionaryUser($this->conversation->user_id, $conversationPrayer->id);
     }
 
 
@@ -417,7 +401,8 @@ class DefaultFunctionsController extends Controller
     {
         $this->sendNextMessage(4);
     }
-    public function waitCloseRequest(){
+    public function waitCloseRequest()
+    {
         //esta é a referencia
         $conversationPrayer = Conversation::find($this->conversation->reference_conversation_id);
         //quem solicitou o atendimento.

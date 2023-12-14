@@ -20,4 +20,22 @@ class Notification extends Model
     {
         return $this->hasOne(Conversation::class, 'id', 'conversation_id');
     }
+
+    /**
+     * Abre uma notificação do tipo questionario
+     * @param int $userId user que vai receber o questionario
+     * @param int $conversationId id da converça 
+     * @return bool
+     */
+    public static function openQuestionaryUser($userId, $conversationId)
+    {
+        $notifications = new Notification;
+        $notifications->user_id = $userId;
+        $notifications->conversation_id = $conversationId;
+        $notifications->status_notifications_id = 2;
+        $notifications->type_notifications_id = 2;
+        $notifications->save();
+
+        return $notifications;
+    }
 }
