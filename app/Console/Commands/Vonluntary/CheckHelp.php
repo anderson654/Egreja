@@ -40,6 +40,7 @@ class CheckHelp extends Command
     private $broterId;
     private $timeQuestionaryVoluntary;
     private $timeQuestionaryUser;
+    private $userPastor;
 
     public function __construct()
     {
@@ -49,6 +50,8 @@ class CheckHelp extends Command
 
         $this->timeQuestionaryVoluntary = 2; //minutos
         $this->timeQuestionaryUser = 5; //minutos
+
+        $this->userPastor = User::find(96);
     }
 
     /**
@@ -65,6 +68,9 @@ class CheckHelp extends Command
 
         //envia o questionario para os usuarios.
         $this->sendQuestionaryUser();
+
+        //verifica as notificaçoes do pastor
+        $this->sendPastorNotifications();
 
 
 
@@ -328,5 +334,35 @@ class CheckHelp extends Command
         $message = Message::where('template_id', $templateId)->where('priority', 1)->first();
         $message = Utils::setDefaultNames($paramns, $message->message);
         $this->zApiController->sendMessage($phone, str_replace('\n', "\n", $message));
+    }
+
+    /**
+     * Verifica se existe notificaçoes para o pastor e envia para ele.
+     */
+    public function sendPastorNotifications()
+    {
+        //verifica se o pastor tem alguma chama em aberto antes de iniciar uma nova converça.
+        $isAttending = User::verifyUserInAttending($this->userPastor->id);
+
+        $notification = Notification::where('user_id', $this->userPastor)
+            ->where('type_notifications_id', 3)
+            ->where('status_notifications_id', 2)
+            ->first();
+
+        if ($isAttending || !$notification) {
+            return;
+        }
+
+        //boot abre uma converça
+        Conversation::openConversation($this->userPastor, 6, $notification->conversation_id);
+
+        $data = [
+            'username' => $notification->conversation->user->username,
+            'voluntaryname' => $this->userPastor->username
+        ];
+
+        $this->sendInitialMessage($data, 3, $notification->user->getRawOriginal('phone'));
+        //fecha a notificação
+        Notification::aceptedNotification($notification);
     }
 }

@@ -264,7 +264,7 @@ class DefaultFunctionsController extends Controller
         Notification::openQuestionaryUser($this->conversation->user_id, $conversationPrayer->id);
     }
 
-
+    //ajustar para criar uma nova notificação de pedido de ajuda.
     public function forceAceptVoluntary()
     {
         if (in_array($this->date['text']['message'], ['Atender demanda', 1])) {

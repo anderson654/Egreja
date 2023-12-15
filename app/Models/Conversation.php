@@ -83,19 +83,19 @@ class Conversation extends Model
     /**
      * Faz o boot abrir uma converça
      * @param int $userId
-     * @param int $templateId
-     * @param int $reference
-     * @param int userAcceptedId
+     * @param int $templateId id do template
+     * @param int $referenceId  referencia caso queira colocar(id da converça que inicio esse evento)
+     * @param int $userAcceptedId apenas para converça de template 1(inicio de converça user)
      * @return void
      */
-    public static function openConversation($userId, $templateId, $reference = null, $userAcceptedId = null)
+    public static function openConversation($userId, $templateId, $referenceId = null, $userAcceptedId = null)
     {
         $message = Message::where('template_id', $templateId)->where('priority', 1)->first();
         $conversation = new Conversation();
         $conversation->user_id = $userId;
         $conversation->messages_id = $message->id;
         $conversation->status_conversation_id = 1;
-        $conversation->reference_conversation_id = $reference;
+        $conversation->reference_conversation_id = $referenceId;
         $conversation->user_accepted = $userAcceptedId;
         $conversation->save();
     }
