@@ -46,7 +46,7 @@ class DefaultFunctionsController extends Controller
         }
         //mapeia os métodos
         $this->mapedFunctions();
-        $this->userPastor = User::find(96);
+        $this->userPastor = User::find(65);
     }
 
     /**

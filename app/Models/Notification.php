@@ -14,7 +14,7 @@ class Notification extends Model
 
     public function __construct()
     {
-        $this->userPastor = User::find(96);
+        $this->userPastor = User::find(65);
     }
 
 

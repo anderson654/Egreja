@@ -51,7 +51,7 @@ class CheckHelp extends Command
         $this->timeQuestionaryVoluntary = 2; //minutos
         $this->timeQuestionaryUser = 5; //minutos
 
-        $this->userPastor = User::find(96);
+        $this->userPastor = User::find(65);
     }
 
     /**
