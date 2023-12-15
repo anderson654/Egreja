@@ -7,7 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Notification extends Model
 {
+
     use HasFactory;
+
+    private $userPastor;
+
+    public function __construct()
+    {
+        $this->userPastor = User::find(96);
+    }
+
+
     /**
      * Pega apenas a que esta com status pendente.
      */
@@ -53,5 +63,36 @@ class Notification extends Model
     {
         $notification->status_notifications_id = 1;
         $notification->update();
+    }
+
+
+    /**
+     * Cria uma nova notificação.
+     * @param  User $user
+     * @param  Conversation $conversation
+     * @param  int $type
+     * @param  int $status Opicional: Valorpadrão é 2
+     * @return void
+     */
+    public static function openNotification($user, $conversation, $type, $status = 2)
+    {
+        $notification = new Notification();
+        $notification->user_id = $user->id;
+        $notification->conversation_id = $conversation->id;
+        $notification->status_notifications_id = $status;
+        $notification->type_notifications_id = $type;
+        $notification->save();
+    }
+
+    /**
+     * Cria uma nova notificação para o pastor, referente a acompanhamento
+     * @param Conversation $conversation
+     * @return void
+     */
+    public static function openNotificationReception($conversation)
+    {
+        //selecionar o pastor responsavel
+        $notification = new  Notification();
+        $notification->openNotification($notification->userPastor, $conversation, 3);
     }
 }

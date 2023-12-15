@@ -197,12 +197,7 @@ class DefaultFunctionsController extends Controller
 
     public function createNewSideDishers()
     {
-        //logica de acolhimento
-        $sideDishes = new SideDishes();
-        $sideDishes->user_id = $this->conversation->user_id;
-        //id do responsavel
-        $sideDishes->responsible_user_id = 65;
-        $sideDishes->save();
+        Notification::openNotificationReception($this->conversation);
     }
 
     //fim metodos default;

@@ -38,12 +38,17 @@ class CheckHelp extends Command
 
     private $zApiController;
     private $broterId;
+    private $timeQuestionaryVoluntary;
+    private $timeQuestionaryUser;
 
     public function __construct()
     {
         parent::__construct();
         $this->zApiController = new ZApiController();
         $this->broterId = 65;
+
+        $this->timeQuestionaryVoluntary = 2; //minutos
+        $this->timeQuestionaryUser = 5; //minutos
     }
 
     /**
@@ -59,7 +64,7 @@ class CheckHelp extends Command
 
 
         //envia o questionario para os usuarios.
-
+        $this->sendQuestionaryUser();
 
 
 
@@ -253,6 +258,8 @@ class CheckHelp extends Command
     }
 
 
+
+    //colocar o tempo minimo para acontecer o envio dos formularios.
     public function sendQuestionaryVoluntary()
     {
         //code...
@@ -260,7 +267,9 @@ class CheckHelp extends Command
             ->where('status_notifications_id', 2)
             ->whereHas('user', function ($query) {
                 $query->where('role_id', 3);
-            })->get();
+            })
+            ->whereDate('created_at', '<=', Carbon::now()->subMinutes($this->timeQuestionaryVoluntary))
+            ->get();
 
         foreach ($notifications as $notification) {
             # code...
@@ -286,25 +295,32 @@ class CheckHelp extends Command
         }
     }
 
-    // public function sendQuestionaryVoluntary()
-    // {
+    public function sendQuestionaryUser()
+    {
 
-    //     $notifications = Notification::where('type_notifications_id', 2)
-    //         ->where('status_notifications_id', 2)
-    //         ->with('user')->get();
-    //     dd($notifications);
-    //     // ->with(['user' => function ($query) {
-    //     //     $query->where('role_id', 4);
-    //     // }])->get();
-
-    //     foreach ($notifications as $notification) {
-    //         # code...
-    //         $isAttending = User::verifyUserInAttending($notification->user_id);
-    //         if (!$isAttending) {
-    //             //boot abre uma converça
-    //         }
-    //     }
-    // }
+        $notifications = Notification::where('type_notifications_id', 2)
+            ->where('status_notifications_id', 2)
+            ->whereHas('user', function ($query) {
+                $query->where('role_id', 4);
+            })
+            ->whereDate('created_at', '<=', Carbon::now()->subMinutes($this->timeQuestionaryUser))
+            ->get();
+        foreach ($notifications as $notification) {
+            # code...
+            $isAttending = User::verifyUserInAttending($notification->user_id);
+            if (!$isAttending) {
+                //boot abre uma converça
+                Conversation::openConversation($notification->user_id, 4, $notification->conversation_id);
+                //envia a primeira mensagem
+                $data = [
+                    'username' => $notification->user->username,
+                ];
+                $this->sendInitialMessage($data, 4, $notification->user->getRawOriginal('phone'));
+                //fecha a notificação
+                Notification::aceptedNotification($notification);
+            }
+        }
+    }
 
 
     public function sendInitialMessage($paramns, $templateId, $phone)
