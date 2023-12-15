@@ -361,7 +361,7 @@ class CheckHelp extends Command
             'voluntaryname' => $this->userPastor->username
         ];
 
-        $this->sendInitialMessage($data, 3, $notification->user->getRawOriginal('phone'));
+        $this->sendInitialMessage($data, 6, $notification->user->getRawOriginal('phone'));
         //fecha a notificação
         Notification::aceptedNotification($notification);
     }
