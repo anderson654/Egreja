@@ -26,6 +26,7 @@ class DefaultFunctionsController extends Controller
     private $question;
     private $methods;
     private $paramns;
+    private $userPastor;
 
 
     /**
@@ -45,6 +46,7 @@ class DefaultFunctionsController extends Controller
         }
         //mapeia os métodos
         $this->mapedFunctions();
+        $this->userPastor = User::find(96);
     }
 
     /**
@@ -198,6 +200,7 @@ class DefaultFunctionsController extends Controller
     public function createNewSideDishers()
     {
         Notification::openNotificationReception($this->conversation);
+        SideDishes::createNewSideDishes($this->conversation->user->id,$this->userPastor->id,$this->conversation->id);
     }
 
     //fim metodos default;
