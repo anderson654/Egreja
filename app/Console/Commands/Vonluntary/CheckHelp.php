@@ -344,7 +344,7 @@ class CheckHelp extends Command
         //verifica se o pastor tem alguma chama em aberto antes de iniciar uma nova converça.
         $isAttending = User::verifyUserInAttending($this->userPastor->id);
 
-        $notification = Notification::where('user_id', $this->userPastor)
+        $notification = Notification::where('user_id', $this->userPastor->id)
             ->where('type_notifications_id', 3)
             ->where('status_notifications_id', 2)
             ->first();
