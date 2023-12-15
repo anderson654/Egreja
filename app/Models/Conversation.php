@@ -18,8 +18,8 @@ class Conversation extends Model
     /**
      * @param User
      * @param Message $message mensagen.
-     * @param int $reference id da converça que fez abrir o chamado
-     * @param int $statusId status que deve iniciar a converça.
+     * @param int $reference id da conversa que fez abrir o chamado
+     * @param int $statusId status que deve iniciar a conversa.
      * - 1 ativa.
      * - 2 pendente.
      * - 3 encerrada.
@@ -47,8 +47,8 @@ class Conversation extends Model
     }
 
     /**
-     * Verifica se existe um voluntario na converça
-     * @param int $conversationId id da converça
+     * Verifica se existe um voluntario na conversa
+     * @param int $conversationId id da conversa
      * @return bool
      */
     public static function existUserInConversation($conversationId)
@@ -58,8 +58,8 @@ class Conversation extends Model
     }
 
     /**
-     * Verifica se existe um voluntario na converça
-     * @param Conversation $conversationId id da converça
+     * Verifica se existe um voluntario na conversa
+     * @param Conversation $conversationId id da conversa
      * @return void
      */
     public static function finishConversation($conversation)
@@ -69,7 +69,7 @@ class Conversation extends Model
     }
 
     /**
-     * Seta o voluntario que aceitou o pedido na converça
+     * Seta o voluntario que aceitou o pedido na conversa
      * @param Conversation $conversation
      * @param int $userId
      * @return void
@@ -81,11 +81,11 @@ class Conversation extends Model
     }
 
     /**
-     * Faz o boot abrir uma converça
+     * Faz o boot abrir uma conversa
      * @param int $userId
      * @param int $templateId id do template
-     * @param int $referenceId  referencia caso queira colocar(id da converça que inicio esse evento)
-     * @param int $userAcceptedId apenas para converça de template 1(inicio de converça user)
+     * @param int $referenceId  referencia caso queira colocar(id da conversa que inicio esse evento)
+     * @param int $userAcceptedId apenas para conversa de template 1(inicio de conversa user)
      * @return void
      */
     public static function openConversation($userId, $templateId, $referenceId = null, $userAcceptedId = null)

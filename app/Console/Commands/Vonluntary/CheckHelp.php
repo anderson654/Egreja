@@ -141,7 +141,7 @@ class CheckHelp extends Command
 
             $isAttending = User::verifyUserInAttending($notification->user_id);
             if (!$isAttending) {
-                //boot abre uma converça
+                //boot abre uma conversa
                 Conversation::openConversation($notification->user_id, 3, $notification->conversation_id);
                 //envia a primeira mensagem
                 $data = [
@@ -169,7 +169,7 @@ class CheckHelp extends Command
             # code...
             $isAttending = User::verifyUserInAttending($notification->user_id);
             if (!$isAttending) {
-                //boot abre uma converça
+                //boot abre uma conversa
                 Conversation::openConversation($notification->user_id, 4, $notification->conversation_id);
                 //envia a primeira mensagem
                 $data = [
@@ -187,7 +187,7 @@ class CheckHelp extends Command
      */
     public function sendPastorNotifications()
     {
-        //verifica se o pastor tem alguma chama em aberto antes de iniciar uma nova converça.
+        //verifica se o pastor tem alguma chama em aberto antes de iniciar uma nova conversa.
         $isAttending = User::verifyUserInAttending($this->userPastor->id);
 
         $notification = Notification::where('user_id', $this->userPastor->id)
@@ -199,7 +199,7 @@ class CheckHelp extends Command
             return;
         }
 
-        //boot abre uma converça
+        //boot abre uma conversa
         Conversation::openConversation($this->userPastor->id, 6, $notification->conversation_id);
 
         $data = [

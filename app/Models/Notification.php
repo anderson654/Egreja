@@ -39,7 +39,7 @@ class Notification extends Model
     /**
      * Abre uma notificação do tipo questionario
      * @param int $userId user que vai receber o questionario
-     * @param int $conversationId id da converça 
+     * @param int $conversationId id da conversa 
      * @return bool
      */
     public static function openQuestionaryUser($userId, $conversationId)

@@ -42,7 +42,7 @@ class VoluntaryController extends Controller
      */
     public function initChanelVoluntary($date)
     {
-        //se existe uma converça aberta continua se não avisa que não tem chhamados em aberto.
+        //se existe uma conversa aberta continua se não avisa que não tem chhamados em aberto.
         // dd($this->conversation);
         // $isAttending = $this->checkIsAttending();
 
@@ -72,7 +72,7 @@ class VoluntaryController extends Controller
 
     /**
      * @param Message $message a mensagem a ser enviada
-     * @param Conversation $conversation é a converça da qual partiu o chamado
+     * @param Conversation $conversation é a conversa da qual partiu o chamado
      */
     public function sendMessageAllVoluntaries($message, $conversation = null)
     {
@@ -114,7 +114,7 @@ class VoluntaryController extends Controller
     }
 
     /**
-     * Verifica  se o voluntario esta em um atendimento ou esta em uma converça;
+     * Verifica  se o voluntario esta em um atendimento ou esta em uma conversa;
      * @return  Conversation
      */
     public function checkIsAttending()

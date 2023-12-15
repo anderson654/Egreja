@@ -132,7 +132,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Verifica se o user esta em alguma converça
+     * Verifica se o user esta em alguma conversa
      * @param int $userId
      * @return bool
      */
