@@ -345,7 +345,7 @@ class DefaultFunctionsController extends Controller
     }
     public function problemPrayer()
     {
-        if ($this->date['text']['message']  ==  7) {
+        if (in_array($this->date['text']['message'],[7,'outros','Outros'])) {
             $this->manualyNextQuestion(7);
             return;
         }
