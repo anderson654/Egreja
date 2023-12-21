@@ -57,7 +57,7 @@ a.style-none {
     background-position: 0% 50%;
     background-repeat: no-repeat;
     background-size: cover;
-    background-image: url('/img/perssona1.jpg');
+    /* background-image: url('/img/perssona1.jpg'); */
     border-radius: 20px;
 }
 

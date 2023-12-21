@@ -128,7 +128,7 @@
     <section class="container py-5 my-5">
         <div class="row">
             <div class="col-md-6 px-md-5">
-                <x-images.image-container-one height="450px"></x-images.image-container-one>
+                <x-images.image-container-one path="/img/perssona2.jpg" height="450px"></x-images.image-container-one>
             </div>
             <div class="col-md-6 px-md-5">
                 <div class="w-100 h-100 d-flex flex-column justify-content-center">
