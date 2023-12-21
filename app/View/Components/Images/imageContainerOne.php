@@ -15,7 +15,7 @@ class imageContainerOne extends Component
     public string $height;
     public string $path;
 
-    public function __construct($height,$path = '/img/perssona1.jpg')
+    public function __construct($height, $path = '/img/perssona1.jpg')
     {
         //
         $this->height = $height;
