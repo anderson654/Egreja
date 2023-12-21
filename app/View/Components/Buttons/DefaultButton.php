@@ -8,12 +8,17 @@ use Illuminate\View\Component;
 
 class DefaultButton extends Component
 {
+
+    public string $title;
+
+
     /**
      * Create a new component instance.
      */
-    public function __construct()
+    public function __construct($title = "clique aqui")
     {
         //
+        $this->title = $title;
     }
 
     /**
