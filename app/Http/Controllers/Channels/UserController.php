@@ -78,8 +78,11 @@ class UserController extends Controller
     {
         $selectTemplateQuestions = DialogsTemplate::where('title', 'Egreja')->first();
         $message = Message::where('template_id', $selectTemplateQuestions->id)->where('priority', 1)->first();
-        Conversation::newConversation($this->user, $message);
+        $conversation = Conversation::newConversation($this->user, $message);
         $this->zApiController->sendMessage($date['phone'], str_replace('\n', "\n", $message->message));
+        
+        //criar uma reeferencia para prayer_requests para metrica.
+        $this->newPrayerRequest($conversation->id);
     }
 
 
@@ -90,5 +93,11 @@ class UserController extends Controller
     public function getConversationToStatus($statusConversationId)
     {
         return Conversation::where('user_id', $this->user->id)->where('status_conversation_id', $statusConversationId)->first();
+    }
+
+    public function newPrayerRequest($conversationId){
+        $prayerRequest = new PrayerRequest();
+        $prayerRequest->user_id = $this->user->id;
+        $prayerRequest->reference = $conversationId;
     }
 }
