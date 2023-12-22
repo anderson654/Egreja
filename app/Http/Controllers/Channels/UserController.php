@@ -52,7 +52,7 @@ class UserController extends Controller
             return;
         }
 
-        // $this->openRequest($date);
+        $this->openRequest($date);
 
 
 
