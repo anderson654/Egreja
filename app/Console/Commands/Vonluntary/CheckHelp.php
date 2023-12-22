@@ -48,10 +48,10 @@ class CheckHelp extends Command
         $this->zApiController = new ZApiController();
         $this->broterId = 65;
 
-        // $this->timeQuestionaryVoluntary = 10; //minutos
-        // $this->timeQuestionaryUser = (60*24)*2; //minutos
-        $this->timeQuestionaryVoluntary = 5; //minutos
-        $this->timeQuestionaryUser = 5; //minutos
+        $this->timeQuestionaryVoluntary = 10; //minutos
+        $this->timeQuestionaryUser = (60*24)*2; //minutos
+        // $this->timeQuestionaryVoluntary = 5; //minutos
+        // $this->timeQuestionaryUser = 5; //minutos
 
         $this->userPastor = User::find(65);
     }
@@ -79,7 +79,7 @@ class CheckHelp extends Command
         $conversations = Conversation::get();
         foreach ($conversations as $conversation) {
             # code...
-            $limitTime = Carbon::parse($conversation->updated_at->toString())->addMinutes(5);
+            $limitTime = Carbon::parse($conversation->updated_at->toString())->addMinutes(10);
             if ($limitTime < Carbon::now()) {
                 $conversation->status_conversation_id = 3;
                 $conversation->update();
