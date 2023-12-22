@@ -226,8 +226,9 @@ class DefaultFunctionsController extends Controller
 
         $voluntaryController =  new VoluntaryController($this->user);
         $nextMessage = Message::where('template_id', 2)->where('priority', 1)->first();
-        $voluntaryController->sendMessageAllVoluntaries($nextMessage, $this->conversation);
         $this->nextQuestion();
+        
+        $voluntaryController->sendMessageAllVoluntaries($nextMessage, $this->conversation);
     }
 
     public function aceptRequestVoluntary()
