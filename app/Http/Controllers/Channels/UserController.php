@@ -99,5 +99,6 @@ class UserController extends Controller
         $prayerRequest = new PrayerRequest();
         $prayerRequest->user_id = $this->user->id;
         $prayerRequest->reference = $conversationId;
+        $prayerRequest->save();
     }
 }
