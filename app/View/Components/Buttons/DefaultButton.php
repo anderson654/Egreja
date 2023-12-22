@@ -10,15 +10,17 @@ class DefaultButton extends Component
 {
 
     public string $title;
+    public string $link;
 
 
     /**
      * Create a new component instance.
      */
-    public function __construct($title = "clique aqui")
+    public function __construct($link = '', $title = "clique aqui")
     {
         //
         $this->title = $title;
+        $this->link = $link;
     }
 
     /**

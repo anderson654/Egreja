@@ -12,7 +12,7 @@
                     <h1 class="text-uppercase custom-size-title-h1" style="font-weight: 900">A oração</h1>
                     <h2 class="text-uppercase fs-1 mb-4" style="font-weight: 500">Que você precisa<br><span
                             style="font-weight: 800">a um click de distância.</span></h2>
-                    <x-buttons.default-button title="PRECISA DE UMA ORAÇÃO AGORA?"></x-buttons.default-button>
+                    <x-buttons.default-button link="https://wa.me/554184003554" title="PRECISA DE UMA ORAÇÃO AGORA?"></x-buttons.default-button>
                 </div>
             </div>
         </div>
@@ -33,7 +33,7 @@
                             Dias difíceis e inesperados acontecem, mas você não está só.
                         </p>
                         <div class="my-4">
-                            <x-buttons.default-button></x-buttons.default-button>
+                            <x-buttons.default-button link="https://wa.me/554184003554"></x-buttons.default-button>
                         </div>
                     </div>
                 </div>
@@ -120,7 +120,7 @@
                     população, criamos o projeto e-greja. Uma iniciativa de oração online para aliviar a dor que muitos
                     cidadãos enfrentam ao nosso redor.</p>
                 <div class="my-4">
-                    <x-buttons.default-button title="PRECISA DE UMA ORAÇÃO AGORA?"></x-buttons.default-button>
+                    <x-buttons.default-button link="https://wa.me/554184003554" title="PRECISA DE UMA ORAÇÃO AGORA?"></x-buttons.default-button>
                 </div>
             </div>
         </div>
@@ -152,7 +152,7 @@
 
                     <div class="my-4 d-flex" style="flex-wrap: wrap;">
                         <x-buttons.values-two :value="'R$ 10,00'"></x-buttons.values-two>
-                        <x-buttons.default-button title="seja um voluntário"></x-buttons.default-button>
+                        <x-buttons.default-button link="https://egreja.online/register-voluntary" title="seja um voluntário"></x-buttons.default-button>
                     </div>
                 </div>
             </div>
