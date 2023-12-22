@@ -16,6 +16,7 @@ use App\Models\User;
 use App\Utils\Utils;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class DefaultFunctionsController extends Controller
 {
@@ -227,7 +228,7 @@ class DefaultFunctionsController extends Controller
         $voluntaryController =  new VoluntaryController($this->user);
         $nextMessage = Message::where('template_id', 2)->where('priority', 1)->first();
         $this->nextQuestion();
-        
+
         $voluntaryController->sendMessageAllVoluntaries($nextMessage, $this->conversation);
     }
 
@@ -398,7 +399,10 @@ class DefaultFunctionsController extends Controller
 
     public function wait()
     {
-        $this->sendNextMessage(4);
+        Log::info($this->date['text']['message']);
+        if($this->date['text']['message'] !== ''){
+            $this->sendNextMessage(4);
+        }
     }
     public function waitCloseRequest()
     {
