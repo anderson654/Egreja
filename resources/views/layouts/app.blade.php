@@ -60,6 +60,13 @@
             font-feature-settings: 'liga';
             color: #344767;
         }
+        .dataTable-selector{
+            border-color: #e9ecef;
+            border-radius: 0.25rem;
+            text-transform: none;
+            word-wrap: normal;
+            padding: 6px
+        }
     </style>
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 </head>
@@ -170,6 +177,8 @@
         }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/choices.js@9.0.1/public/assets/scripts/choices.min.js"></script>
+
+    <script src="{{ asset('assets/js/plugins/datatables.min.js') }}"></script>
     @yield('script')
 </body>
 
