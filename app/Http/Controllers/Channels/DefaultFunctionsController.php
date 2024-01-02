@@ -249,7 +249,7 @@ class DefaultFunctionsController extends Controller
         $conversationPrayer = Conversation::find($this->conversation->reference_conversation_id);
         //quem solicitou o atendimento.
         $prayer = User::find($conversationPrayer->user_id);
-        //seta quem aceitou na chamada;
+        //seta quem aceitou na chamada; //aqui tem que ser ajustado verificar e setar.
         Conversation::setUserAcept($conversationPrayer, $this->conversation->user_id);
 
         //fecha todas as abertas quando alguem aceita menos a de quem aceitou;
