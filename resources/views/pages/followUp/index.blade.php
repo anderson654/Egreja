@@ -202,7 +202,8 @@
                 lengthChange: false,
                 dom: '',
                 // searching: false,
-                pageLength: 10
+                pageLength: 10,
+                "order": [[3, 'desc']]
             });
 
             $(document).ready(function() {
