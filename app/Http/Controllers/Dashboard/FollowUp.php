@@ -14,7 +14,7 @@ class FollowUp extends Controller
     public function index()
     {
         //
-        $sideDidhes = SideDishes::get();
+        $sideDidhes = SideDishes::whereNotNull('created_at')->get();
         return view('pages.followUp.index',compact('sideDidhes'));
     }
 
