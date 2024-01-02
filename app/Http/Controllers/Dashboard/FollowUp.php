@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\PrayerRequests;
+namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
-use App\Models\PrayerRequest;
-use App\Models\User;
+use App\Models\SideDishes;
 use Illuminate\Http\Request;
 
-class PrayerRequestController extends Controller
+class FollowUp extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,9 +14,8 @@ class PrayerRequestController extends Controller
     public function index()
     {
         //
-        $prayerRequests = PrayerRequest::with('user')->orderBy('created_at','desc')->paginate(10);
-
-        return view('pages.prayerRequests.index',compact('prayerRequests'));
+        $sideDidhes = SideDishes::orderBy('created_at', 'desc')->paginate(10);
+        return view('pages.followUp.index',compact('sideDidhes'));
     }
 
     /**

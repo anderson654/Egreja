@@ -24,6 +24,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\ResetPassword;
 use App\Http\Controllers\ChangePassword;
+use App\Http\Controllers\Dashboard\FollowUp;
 use App\Http\Controllers\PrayerRequests\PrayerRequestController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\UserVoluntary\VolunteerRegistrationController;
@@ -77,7 +78,8 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
 		'dialog-questions-watsapp' => DialogsQuestionsController::class,
 		'group-responses' => GroupsResponsesController::class,
 		'responses' => ResponsesToGroupsController::class,
-		'group-to-questions' => GroupQuestionsResponsesController::class
+		'group-to-questions' => GroupQuestionsResponsesController::class,
+		'acompanhamentos' => FollowUp::class
 	]);
 	Route::get('aprove-voluntary-index', [VolunteerRegistrationController::class, 'index'])->name('register.voluntary.index');
 	Route::get('aprove-voluntary-show/{id}', [VolunteerRegistrationController::class, 'show'])->name('register.voluntary.show');

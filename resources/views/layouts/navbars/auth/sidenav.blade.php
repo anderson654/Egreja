@@ -57,7 +57,19 @@
                             support
                         </span>
                     </div>
-                    <span class="nav-link-text ms-1">Pedido de ajuda</span>
+                    <span class="nav-link-text ms-1">Pedidos de ajuda</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ str_contains(request()->url(), 'tables') == true ? 'active' : '' }}"
+                    href="{{ route('prayerRequests.index') }}">
+                    <div
+                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                        <span class="material-icons">
+                            groups
+                        </span>
+                    </div>
+                    <span class="nav-link-text ms-1">Acompanhamentos</span>
                 </a>
             </li>
             <li class="nav-item">
