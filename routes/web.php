@@ -42,6 +42,9 @@ Route::get('/enviarMensagem', [WhatsAppController::class, 'enviarMensagemPersona
 Route::get('/', function () {
 	return view('pages.site.home.index');
 });
+Route::get('/index', function () {
+	return redirect('/');
+});
 
 Route::get('/register', [RegisterController::class, 'create'])->middleware('guest')->name('register');
 Route::get('/register-voluntary', [VolunteerRegistrationController::class, 'create'])->middleware('guest');
