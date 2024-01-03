@@ -13,6 +13,7 @@
                     <div class="dataTable-top">
                         <div class="mx-4">
                             <label><select class="dataTable-selector me-2" id="selectTotalPerPage">
+                                    <option value="2">2</option>
                                     <option value="5">5</option>
                                     <option value="10" selected="">10</option>
                                     <option value="15">15</option>
@@ -154,29 +155,46 @@
                                 <div class="pagination-container d-flex justify-content-center align-items-center">
                                     <ul class="pagination pagination-secondary">
                                         <li class="page-item">
+                                            <a class="page-link" href="javascript:;" aria-label="Previous" id="primerItem">
+                                                <span aria-hidden="true"><i class="fa fa-angle-double-left"
+                                                        aria-hidden="true"></i></span>
+                                            </a>
+                                        </li>
+                                        <li class="page-item">
                                             <a class="page-link" href="javascript:;" aria-label="Previous" id="previous">
                                                 <span aria-hidden="true"><i class="fa fa-angle-left"
                                                         aria-hidden="true"></i></span>
                                             </a>
                                         </li>
-                                        <li class="page-item">
-                                            <a class="page-link" href="javascript:;">1</a>
-                                        </li>
-                                        <li class="page-item">
-                                            <a class="page-link" href="javascript:;">2</a>
-                                        </li>
-                                        <li class="page-item">
-                                            <a class="page-link" href="javascript:;">3</a>
-                                        </li>
-                                        <li class="page-item">
-                                            <a class="page-link" href="javascript:;">4</a>
-                                        </li>
-                                        <li class="page-item active">
-                                            <a class="page-link" href="javascript:;">5</a>
-                                        </li>
+
+                                        <div class="d-flex" id="paginate">
+                                            {{-- <li class="page-item">
+                                                <a class="page-link" href="javascript:;" data-idx=1>1</a>
+                                            </li>
+                                            <li class="page-item">
+                                                <a class="page-link" href="javascript:;" data-idx=2>2</a>
+                                            </li>
+                                            <li class="page-item">
+                                                <a class="page-link" href="javascript:;" data-idx=3>3</a>
+                                            </li>
+                                            <li class="page-item">
+                                                <a class="page-link" href="javascript:;" data-idx=4>4</a>
+                                            </li>
+                                            <li class="page-item active">
+                                                <a class="page-link" href="javascript:;" data-idx=5>5</a>
+                                            </li> --}}
+                                        </div>
+
                                         <li class="page-item">
                                             <a class="page-link" href="javascript:;" aria-label="Next" id="next">
                                                 <span aria-hidden="true"><i class="fa fa-angle-right"
+                                                        aria-hidden="true"></i></span>
+                                            </a>
+                                        </li>
+
+                                        <li class="page-item">
+                                            <a class="page-link" href="javascript:;" aria-label="Next" id="ultimateItem">
+                                                <span aria-hidden="true"><i class="fa fa-angle-double-right"
                                                         aria-hidden="true"></i></span>
                                             </a>
                                         </li>
@@ -192,42 +210,107 @@
     @endsection
 
     @section('script')
+        {{-- //definir os valores para  o uso em qualquer tabela --}}
+
+        {{-- 1.seletor do select pages --}}
+        {{-- 2.seletor da tabela --}}
+        {{-- 3.seletor da pesquisa --}}
+        {{-- 5.seletor da next --}}
+        {{-- 6.seletor da prev --}}
+
         <script>
-            const table = new DataTable('.table', {
-                language: {
-                    lengthMenu: "Mostrar _MENU_ registros por página",
-                    "info": "Mostrando _START_ até _END_ de _TOTAL_ entradas"
-                    // Outras configurações de idioma...
-                },
-                lengthChange: false,
-                dom: '',
-                // searching: false,
-                pageLength: 10,
-                "order": [[3, 'desc']]
-            });
+            function CustomDataTables(selectTotalPerPage) {
+                this.selectTotalPerPage = $(selectTotalPerPage);
 
-            $(document).ready(function() {
-                $("#selectTotalPerPage").on("change", function() {
-                    // Atualiza o número de itens por página com base na seleção
-                    var novoTamanho = $(this).val();
-                    console.log(novoTamanho);
-                    table.page.len(novoTamanho).draw();
+
+                const table = new DataTable('.table', {
+                    language: {
+                        lengthMenu: "Mostrar _MENU_ registros por página",
+                        "info": "Mostrando _START_ até _END_ de _TOTAL_ entradas"
+                        // Outras configurações de idioma...
+                    },
+                    lengthChange: false,
+                    dom: '',
+                    // searching: false,
+                    pageLength: 10,
+                    "order": [
+                        [3, 'desc']
+                    ]
                 });
-            });
 
-            $("#search").on("keyup", function() {
-                console.log(table.search($(this).val()));
-                table.search($(this).val()).draw();
-                // console.log("Itens exibidos: " + table.page.info().end - table.page.info().start + 1);
-            });
+                $(document).ready(function() {
+                    $("#selectTotalPerPage").on("change", function() {
+                        var novoTamanho = $(this).val();
+                        table.page.len(novoTamanho).draw();
+                        definePages((table.page.info().page + 1));
+                    });
+                });
 
-            $('#next').on('click', function() {
-                table.page('next').draw('page');
-            });
+                $("#search").on("keyup", function() {
+                    table.search($(this).val()).draw();
+                });
 
-            $('#previous').on('click', function() {
-                table.page('previous').draw('page');
-            });
+                $('#next').on('click', function() {
+                    table.page('next').draw('page');
+                    definePages(table.page() + 1);
+                });
 
+                $('#previous').on('click', function() {
+                    table.page('previous').draw('page');
+                    definePages(table.page() + 1);
+                });
+
+                function setPages(array, selectPage = 1) {
+                    const elements = [];
+                    const totalPages = table.page.info().pages;
+
+                    $("#paginate").empty();
+                    const pages = array.map((value) => {
+                        const element = $(`<li class="page-item ${selectPage == value?'active':''}">
+                                    <a class="page-link" href="#">${value}</a>
+                                </li>`);
+                        element.on('click', function() {
+                            definePages(value);
+                        })
+                        $("#paginate").append(element);
+                    });
+                }
+
+
+                function definePages(selectPage) {
+                    table.page((selectPage - 1)).draw('page');
+                    // console.log(selectPage);
+                    const maxPages = 5;
+                    const totalPages = table.page.info().pages;
+
+                    if (maxPages >= totalPages) {
+                        const finalArray = Array(totalPages).fill().map((_, index) => index + 1);
+                        setPages(finalArray, selectPage);
+                        return;
+                    } else {
+                        const verifyExistPagesIndex = (maxPages - 1) / 2;
+                        const finalArray = [];
+                        finalArray.push(selectPage);
+                        const totalArrayPages = Array(totalPages).fill().map((_, index) => index + 1);
+
+                        let count = 1;
+                        while (finalArray.length != maxPages && count != maxPages) {
+                            const nextElement = totalArrayPages[(selectPage - 1) + count];
+                            nextElement && finalArray.push(nextElement);
+
+                            const prevElement = totalArrayPages[(selectPage - 1) - count];
+                            prevElement && finalArray.unshift(prevElement);
+                            count++;
+                        }
+
+                        setPages(finalArray, selectPage);
+                        return;
+                    }
+                }
+                definePages(1);
+            }
+
+            const teste = new CustomDataTables();
+            
         </script>
     @endsection
