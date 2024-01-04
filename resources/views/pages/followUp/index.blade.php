@@ -82,76 +82,9 @@
                                                 </td>
                                             </tr>
                                         @endforeach
-                                        {{-- <tr>
-                                        <td>
-                                            <div class="d-flex px-3 py-1">
-                                                <div>
-                                                    <img src="./img/team-3.jpg" class="avatar me-3" alt="image">
-                                                </div>
-                                                <div class="d-flex flex-column justify-content-center">
-                                                    <h6 class="mb-0 text-sm">Member</h6>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <p class="text-sm font-weight-bold mb-0">Member</p>
-                                        </td>
-                                        <td class="align-middle text-center text-sm">
-                                            <p class="text-sm font-weight-bold mb-0">22/03/2022</p>
-                                        </td>
-                                        <td class="align-middle text-end">
-                                            <div class="d-flex px-3 py-1 justify-content-center align-items-center">
-                                                <p class="text-sm font-weight-bold mb-0 cursor-pointer">Edit</p>
-                                                <p class="text-sm font-weight-bold mb-0 ps-2 cursor-pointer">Delete</p>
-                                            </div>
-                                        </td>
-                                    </tr> --}}
                                     </tbody>
                                 </table>
-                                {{-- <div class="d-flex justify-content-center">
-                                    <ul class="pagination pagination-secondary">
-                                        <li class="page-item">
-                                            <a class="page-link" href="{{ $sideDidhes->url(1) }}" aria-label="Anterior">
-                                                <span aria-hidden="true"><i class="fa fa-angle-double-left"
-                                                        aria-hidden="true"></i></span>
-                                            </a>
-                                        </li>
-                                        <li class="page-item">
-                                            <a class="page-link" href="{{ $sideDidhes->previousPageUrl() }}"
-                                                aria-label="Previous">
-                                                <span aria-hidden="true"><i class="fa fa-angle-left"
-                                                        aria-hidden="true"></i></span>
-                                            </a>
-                                        </li>
-
-                                        @php
-                                            $start = max(1, $sideDidhes->currentPage() - 2);
-                                            $end = min($sideDidhes->lastPage(), $start + 4);
-                                        @endphp
-
-                                        @for ($i = $start; $i <= $end; $i++)
-                                            <li class="page-item {{ $sideDidhes->currentPage() == $i ? 'active' : '' }}">
-                                                <a class="page-link"
-                                                    href="{{ $sideDidhes->url($i) }}">{{ $i }}</a>
-                                            </li>
-                                        @endfor
-
-                                        <li class="page-item">
-                                            <a class="page-link" href="{{ $sideDidhes->nextPageUrl() }}" aria-label="Next">
-                                                <span aria-hidden="true"><i class="fa fa-angle-right"
-                                                        aria-hidden="true"></i></span>
-                                            </a>
-                                        </li>
-                                        <li class="page-item">
-                                            <a class="page-link" href="{{ $sideDidhes->url($sideDidhes->lastPage()) }}"
-                                                aria-label="Próximo">
-                                                <span aria-hidden="true"><i class="fa fa-angle-double-right"
-                                                        aria-hidden="true"></i></span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div> --}}
-
+                                
                                 <div class="pagination-container d-flex justify-content-center align-items-center">
                                     <ul class="pagination pagination-secondary">
                                         <li class="page-item">
@@ -168,21 +101,6 @@
                                         </li>
 
                                         <div class="d-flex" id="paginate">
-                                            {{-- <li class="page-item">
-                                                <a class="page-link" href="javascript:;" data-idx=1>1</a>
-                                            </li>
-                                            <li class="page-item">
-                                                <a class="page-link" href="javascript:;" data-idx=2>2</a>
-                                            </li>
-                                            <li class="page-item">
-                                                <a class="page-link" href="javascript:;" data-idx=3>3</a>
-                                            </li>
-                                            <li class="page-item">
-                                                <a class="page-link" href="javascript:;" data-idx=4>4</a>
-                                            </li>
-                                            <li class="page-item active">
-                                                <a class="page-link" href="javascript:;" data-idx=5>5</a>
-                                            </li> --}}
                                         </div>
 
                                         <li class="page-item">
