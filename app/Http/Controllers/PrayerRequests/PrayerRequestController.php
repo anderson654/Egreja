@@ -15,7 +15,7 @@ class PrayerRequestController extends Controller
     public function index()
     {
         //
-        $prayerRequests = PrayerRequest::with('user')->orderBy('created_at','desc')->paginate(10);
+        $prayerRequests = PrayerRequest::with('user')->get();
 
         return view('pages.prayerRequests.index',compact('prayerRequests'));
     }
