@@ -5,7 +5,8 @@ function CustomDataTables({
     elementNext,
     elementPrevious,
     elementFistPage,
-    elementLastPage
+    elementLastPage,
+    configDataTables
 }) {
 
     this.elementoTable = elementTable;
@@ -14,6 +15,7 @@ function CustomDataTables({
     this.elementPrevious = $(elementPrevious);
     this.elementFistPage = $(elementFistPage);
     this.elementLastPage = $(elementLastPage);
+    this.configDataTables = configDataTables;
 
     const table = new DataTable(elementTable, {
         language: {
@@ -25,9 +27,10 @@ function CustomDataTables({
         dom: '',
         // searching: false,
         pageLength: 10,
-        "order": [
-            [3, 'desc']
-        ]
+        ...this.configDataTables
+        // "order": [
+        //     [3, 'desc']
+        // ]
     });
 
     $(document).ready(function() {

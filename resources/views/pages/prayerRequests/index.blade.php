@@ -141,7 +141,12 @@
             elementNext: '#next',
             elementPrevious: '#previous',
             elementFistPage: '#primerItem',
-            elementLastPage: '#ultimateItem'
+            elementLastPage: '#ultimateItem',
+            configDataTables: {
+                order: [
+                    [3, 'desc']
+                ]
+            }
         });
     </script>
 @endsection

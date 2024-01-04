@@ -84,7 +84,7 @@
                                         @endforeach
                                     </tbody>
                                 </table>
-                                
+
                                 <div class="pagination-container d-flex justify-content-center align-items-center">
                                     <ul class="pagination pagination-secondary">
                                         <li class="page-item">
@@ -136,7 +136,12 @@
                 elementNext: '#next',
                 elementPrevious: '#previous',
                 elementFistPage: '#primerItem',
-                elementLastPage: '#ultimateItem'
+                elementLastPage: '#ultimateItem',
+                configDataTables: {
+                    order: [
+                        [3, 'desc']
+                    ]
+                }
             });
         </script>
     @endsection

@@ -10,6 +10,18 @@
                         <div class="d-flex justify-content-between">
                             <h6>Aguardando aprovação</h6>
                         </div>
+
+                        <label><select class="dataTable-selector me-2" id="selectTotalPerPage">
+                                <option value="2">2</option>
+                                <option value="5">5</option>
+                                <option value="10" selected="">10</option>
+                                <option value="15">15</option>
+                                <option value="20">20</option>
+                                <option value="25">25</option>
+                            </select><span style="vertical-align: inherit;"><span
+                                    style="vertical-align: inherit;color:#8392ab;font-weight:400">entradas
+                                    por página</span></span></label>
+
                     </div>
                     <div class="card-body px-0 pt-0 pb-2">
                         <div class="table-responsive p-0">
@@ -62,6 +74,42 @@
                                     @endforeach
                                 </tbody>
                             </table>
+
+                            <div class="pagination-container d-flex justify-content-center align-items-center">
+                                <ul class="pagination pagination-secondary">
+                                    <li class="page-item">
+                                        <a class="page-link" href="javascript:;" aria-label="Previous" id="primerItem">
+                                            <span aria-hidden="true"><i class="fa fa-angle-double-left"
+                                                    aria-hidden="true"></i></span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="javascript:;" aria-label="Previous" id="previous">
+                                            <span aria-hidden="true"><i class="fa fa-angle-left"
+                                                    aria-hidden="true"></i></span>
+                                        </a>
+                                    </li>
+
+                                    <div class="d-flex" id="paginate">
+                                    </div>
+
+                                    <li class="page-item">
+                                        <a class="page-link" href="javascript:;" aria-label="Next" id="next">
+                                            <span aria-hidden="true"><i class="fa fa-angle-right"
+                                                    aria-hidden="true"></i></span>
+                                        </a>
+                                    </li>
+
+                                    <li class="page-item">
+                                        <a class="page-link" href="javascript:;" aria-label="Next" id="ultimateItem">
+                                            <span aria-hidden="true"><i class="fa fa-angle-double-right"
+                                                    aria-hidden="true"></i></span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+
+
                         </div>
                     </div>
                 </div>
@@ -72,6 +120,23 @@
 @endsection
 
 @section('script')
+    <script>
+        const teste = new CustomDataTables({
+            elementTable: '.table',
+            elemetTotalPerPage: '#selectTotalPerPage',
+            elementSearch: '#search',
+            elementNext: '#next',
+            elementPrevious: '#previous',
+            elementFistPage: '#primerItem',
+            elementLastPage: '#ultimateItem',
+            configDataTables: {
+                order: [
+                    [1, 'desc']
+                ]
+            }
+        });
+    </script>
+
     <script>
         $(document).ready(function() {
             const elements = $('[data-update]');
