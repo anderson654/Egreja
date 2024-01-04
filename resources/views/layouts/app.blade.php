@@ -179,6 +179,7 @@
     <script src="https://cdn.jsdelivr.net/npm/choices.js@9.0.1/public/assets/scripts/choices.min.js"></script>
 
     <script src="{{ asset('assets/js/plugins/datatables.min.js') }}"></script>
+    <script src="{{ asset('assets/js/customPlugins/custom-datatables.js') }}"></script>
     @yield('script')
 </body>
 

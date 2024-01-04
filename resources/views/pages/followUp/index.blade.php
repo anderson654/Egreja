@@ -210,107 +210,15 @@
     @endsection
 
     @section('script')
-        {{-- //definir os valores para  o uso em qualquer tabela --}}
-
-        {{-- 1.seletor do select pages --}}
-        {{-- 2.seletor da tabela --}}
-        {{-- 3.seletor da pesquisa --}}
-        {{-- 5.seletor da next --}}
-        {{-- 6.seletor da prev --}}
-
         <script>
-            function CustomDataTables(selectTotalPerPage) {
-                this.selectTotalPerPage = $(selectTotalPerPage);
-
-
-                const table = new DataTable('.table', {
-                    language: {
-                        lengthMenu: "Mostrar _MENU_ registros por página",
-                        "info": "Mostrando _START_ até _END_ de _TOTAL_ entradas"
-                        // Outras configurações de idioma...
-                    },
-                    lengthChange: false,
-                    dom: '',
-                    // searching: false,
-                    pageLength: 10,
-                    "order": [
-                        [3, 'desc']
-                    ]
-                });
-
-                $(document).ready(function() {
-                    $("#selectTotalPerPage").on("change", function() {
-                        var novoTamanho = $(this).val();
-                        table.page.len(novoTamanho).draw();
-                        definePages((table.page.info().page + 1));
-                    });
-                });
-
-                $("#search").on("keyup", function() {
-                    table.search($(this).val()).draw();
-                });
-
-                $('#next').on('click', function() {
-                    table.page('next').draw('page');
-                    definePages(table.page() + 1);
-                });
-
-                $('#previous').on('click', function() {
-                    table.page('previous').draw('page');
-                    definePages(table.page() + 1);
-                });
-
-                function setPages(array, selectPage = 1) {
-                    const elements = [];
-                    const totalPages = table.page.info().pages;
-
-                    $("#paginate").empty();
-                    const pages = array.map((value) => {
-                        const element = $(`<li class="page-item ${selectPage == value?'active':''}">
-                                    <a class="page-link" href="#">${value}</a>
-                                </li>`);
-                        element.on('click', function() {
-                            definePages(value);
-                        })
-                        $("#paginate").append(element);
-                    });
-                }
-
-
-                function definePages(selectPage) {
-                    table.page((selectPage - 1)).draw('page');
-                    // console.log(selectPage);
-                    const maxPages = 5;
-                    const totalPages = table.page.info().pages;
-
-                    if (maxPages >= totalPages) {
-                        const finalArray = Array(totalPages).fill().map((_, index) => index + 1);
-                        setPages(finalArray, selectPage);
-                        return;
-                    } else {
-                        const verifyExistPagesIndex = (maxPages - 1) / 2;
-                        const finalArray = [];
-                        finalArray.push(selectPage);
-                        const totalArrayPages = Array(totalPages).fill().map((_, index) => index + 1);
-
-                        let count = 1;
-                        while (finalArray.length != maxPages && count != maxPages) {
-                            const nextElement = totalArrayPages[(selectPage - 1) + count];
-                            nextElement && finalArray.push(nextElement);
-
-                            const prevElement = totalArrayPages[(selectPage - 1) - count];
-                            prevElement && finalArray.unshift(prevElement);
-                            count++;
-                        }
-
-                        setPages(finalArray, selectPage);
-                        return;
-                    }
-                }
-                definePages(1);
-            }
-
-            const teste = new CustomDataTables();
-            
+            const teste = new CustomDataTables({
+                elemetTotalPerPage: '#selectTotalPerPage',
+                elementTable: '.table',
+                elementSearch: '#search',
+                elementNext: '#next',
+                elementPrevious: '#previous',
+                elementFistPage: '#primerItem',
+                elementLastPage: '#ultimateItem'
+            });
         </script>
     @endsection
