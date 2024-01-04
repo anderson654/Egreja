@@ -40,6 +40,7 @@ function CustomDataTables({
 
     this.elementSearch.on("keyup", function() {
         table.search($(this).val()).draw();
+        definePages(table.page() + 1);
     });
 
     this.elementNext.on('click', function() {
