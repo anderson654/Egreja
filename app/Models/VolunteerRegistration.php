@@ -26,13 +26,22 @@ class VolunteerRegistration extends Model
         'is_aproved'
     ];
 
+    public function user()
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
+    }
+
 
     public function setPhoneAttribute($value)
     {
         $limpaString = preg_replace("/[^0-9]/", "", $value);
+        if (substr($limpaString, 0, 2) === '55') {
+            $limpaString = substr($limpaString, 2);
+        }
         $limpaString = str_replace(" ", "", $limpaString);
         $this->attributes['phone'] = $limpaString;
     }
+
     public function getNameAttribute()
     {
         $name = $this->attributes['name'];

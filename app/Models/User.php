@@ -91,11 +91,21 @@ class User extends Authenticatable
         return $phone;
     }
 
+    public function setPhoneAttribute($value)
+    {
+        $limpaString = preg_replace("/[^0-9]/", "", $value);
+        if (substr($limpaString, 0, 2) === '55') {
+            $limpaString = substr($limpaString, 2);
+        }
+        $limpaString = str_replace(" ", "", $limpaString);
+        $this->attributes['phone'] = $limpaString;
+    }
+
 
     public static function createNewUserZapi($phone, $dados)
     {
         $user = User::where('phone', $phone)->first();
-        if(!$user){
+        if (!$user) {
             $numeroString = substr_replace($phone, '9', 4, 0);
             $user = User::where('phone', $numeroString)->first();
         }
