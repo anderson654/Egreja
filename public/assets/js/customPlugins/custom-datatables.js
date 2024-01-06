@@ -28,10 +28,10 @@ function CustomDataTables({
         // searching: false,
         pageLength: 10,
         order: [],
-        ...this.configDataTables
-        // "order": [
-        //     [3, 'desc']
-        // ]
+        ...this.configDataTables,
+        "order": [
+            [3, 'desc']
+        ]
     });
 
     $(document).ready(function () {
