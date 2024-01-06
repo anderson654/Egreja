@@ -104,12 +104,8 @@ class User extends Authenticatable
 
     public static function createNewUserZapi($phone, $dados)
     {
-        $user = User::where('phone', $phone)->first();
-        if (!$user) {
-            $numeroString = substr_replace($phone, '9', 4, 0);
-            $user = User::where('phone', $numeroString)->first();
-        }
-
+        $user = User::where('phone','like', "%".substr($phone, -8))->first();
+        
         if (!$user) {
             $newUser = new User();
             $newUser->phone = $phone;
