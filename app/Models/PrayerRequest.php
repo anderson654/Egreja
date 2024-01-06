@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -56,5 +57,12 @@ class PrayerRequest extends Model
         $prayerRequest->save();
 
         return $prayerRequest;
+    }
+
+    public function getCreatedAtAttribute()
+    {
+        $newDataCarbom = Carbon::parse($this->attributes['created_at']);
+        $dataFormat = $newDataCarbom->format('d/m/Y');
+        return $dataFormat;
     }
 }

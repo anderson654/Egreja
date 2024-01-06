@@ -73,7 +73,7 @@
                                             </td>
                                             <td class="align-middle text-center text-sm">
                                                 <p class="text-sm font-weight-bold mb-0">
-                                                    {{ $prayerRequest->user->created_at }}</p>
+                                                    {{ $prayerRequest->created_at }}</p>
                                             </td>
                                             <td class="align-middle text-end">
                                                 <div class="d-flex px-3 py-1 justify-content-center align-items-center">
@@ -141,12 +141,7 @@
             elementNext: '#next',
             elementPrevious: '#previous',
             elementFistPage: '#primerItem',
-            elementLastPage: '#ultimateItem',
-            configDataTables: {
-                order: [
-                    [3, 'desc']
-                ]
-            }
+            elementLastPage: '#ultimateItem'
         });
     </script>
 @endsection

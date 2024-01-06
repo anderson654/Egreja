@@ -27,41 +27,42 @@ function CustomDataTables({
         dom: '',
         // searching: false,
         pageLength: 10,
+        order: [],
         ...this.configDataTables
         // "order": [
         //     [3, 'desc']
         // ]
     });
 
-    $(document).ready(function() {
-        $(elemetTotalPerPage).on("change", function() {
+    $(document).ready(function () {
+        $(elemetTotalPerPage).on("change", function () {
             var novoTamanho = $(this).val();
             table.page.len(novoTamanho).draw();
             definePages((table.page.info().page + 1));
         });
     });
 
-    this.elementSearch.on("keyup", function() {
+    this.elementSearch.on("keyup", function () {
         table.search($(this).val()).draw();
         definePages(table.page() + 1);
     });
 
-    this.elementNext.on('click', function() {
+    this.elementNext.on('click', function () {
         table.page('next').draw('page');
         definePages(table.page() + 1);
     });
 
-    this.elementPrevious.on('click', function() {
+    this.elementPrevious.on('click', function () {
         table.page('previous').draw('page');
         definePages(table.page() + 1);
     });
 
-    this.elementFistPage.on('click', function() {
+    this.elementFistPage.on('click', function () {
         table.page(0).draw('page');
         definePages(table.page() + 1);
     });
 
-    this.elementLastPage.on('click', function() {
+    this.elementLastPage.on('click', function () {
         table.page('last').draw('page');
         definePages(table.page() + 1);
     });
@@ -72,10 +73,10 @@ function CustomDataTables({
 
         $("#paginate").empty();
         const pages = array.map((value) => {
-            const element = $(`<li class="page-item ${selectPage == value?'active':''}">
+            const element = $(`<li class="page-item ${selectPage == value ? 'active' : ''}">
                         <a class="page-link" href="#">${value}</a>
                     </li>`);
-            element.on('click', function() {
+            element.on('click', function () {
                 definePages(value);
             })
             $("#paginate").append(element);
