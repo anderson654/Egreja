@@ -36,12 +36,11 @@ class NotifyPrayerRequest extends Command
             $query->where('messages_id', 2)->where('status_conversation_id', 1)->whereNull('user_accepted');
         })->first();
 
-       
-        // $user = User::find($prayerRequest->user_id);
+        $user = User::find($prayerRequest->user_id);
 
-        // $voluntaryController = new VoluntaryController($user);
+        $voluntaryController = new VoluntaryController($user);
 
-        // $voluntaryController->resendMessageAllVoluntaries($prayerRequest->conversation->id);
+        $voluntaryController->resendMessageAllVoluntaries($prayerRequest->conversation->id);
 
         Log::channel('notify_prayer_request')->info(json_encode($prayerRequest));
     }

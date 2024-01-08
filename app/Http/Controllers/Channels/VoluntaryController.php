@@ -85,7 +85,7 @@ class VoluntaryController extends Controller
 
             //soma +1 no envio de notificação do prayer request
             if (isset(($conversation->prayer_request))) {
-                $conversation->prayer_request->number_of_notifications .= 1;
+                $conversation->prayer_request->number_of_notifications += 1;
                 $conversation->prayer_request->save();
             }
         } else {
@@ -125,9 +125,10 @@ class VoluntaryController extends Controller
     public function resendMessageAllVoluntaries($referenceId)
     {
         $conversations = Conversation::where('reference_conversation_id', $referenceId)
-            ->where('status_id', 1)
+            ->where('status_conversation_id', 1)
             ->where('messages_id', 4)
             ->with('user')
+            ->with('prayer_request')
             ->has('user')
             ->get();
 
@@ -139,13 +140,14 @@ class VoluntaryController extends Controller
             return;
         }
 
+
         $message = Message::find(4);
         foreach ($conversations as $key => $conversation) {
             # code...
             $this->zApiController->sendMessage($conversation->user->phone, str_replace('\n', "\n", $message->message));
         }
 
-        $conversations[0]->prayer_request->number_of_notifications .= 1;
+        $conversations[0]->prayer_request->number_of_notifications += 1;
         $conversation->prayer_request->save();
 
         Log::channel('notify_prayer_request')->info('Passou aqui');
