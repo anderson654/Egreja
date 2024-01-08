@@ -126,6 +126,11 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
+        'notify_prayer_request' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/notify-prayer-request.log'),
+            'level' => 'info'
+        ]
     ],
 
 ];
