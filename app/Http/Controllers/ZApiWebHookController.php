@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Channels\UserController;
 use App\Http\Controllers\Channels\VoluntaryController;
+use App\Models\Conversation;
 use App\Models\DialogsQuestion;
 use App\Models\DialogsTemplate;
 use App\Models\GroupQuestionsResponse;

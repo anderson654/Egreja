@@ -68,6 +68,6 @@ class PrayerRequest extends Model
 
     public function conversation()
     {
-        return $this->hasOne(Conversation::class, 'id', 'reference');
+        return $this->hasOne(Conversation::class, 'reference', 'id');
     }
 }

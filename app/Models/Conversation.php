@@ -102,6 +102,11 @@ class Conversation extends Model
 
     public function prayer_request()
     {
+        return $this->hasOne(PrayerRequest::class, 'reference', 'id');
+    }
+
+    public function prayer_request_reference()
+    {
         return $this->hasOne(PrayerRequest::class, 'reference', 'reference_conversation_id');
     }
 }

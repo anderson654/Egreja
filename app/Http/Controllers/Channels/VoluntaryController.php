@@ -128,15 +128,15 @@ class VoluntaryController extends Controller
             ->where('status_conversation_id', 1)
             ->where('messages_id', 4)
             ->with('user')
-            ->with('prayer_request')
+            ->with('prayer_request_reference')
             ->has('user')
             ->get();
 
-        if (!isset($conversations[0]->prayer_request)) {
+        if (!isset($conversations[0]->prayer_request_reference)) {
             return;
         }
 
-        if ($conversations[0]->prayer_request->number_of_notifications == 3) {
+        if ($conversations[0]->prayer_request_reference->number_of_notifications == 3) {
             return;
         }
 
@@ -147,8 +147,8 @@ class VoluntaryController extends Controller
             $this->zApiController->sendMessage($conversation->user->phone, str_replace('\n', "\n", $message->message));
         }
 
-        $conversations[0]->prayer_request->number_of_notifications += 1;
-        $conversation->prayer_request->save();
+        $conversations[0]->prayer_request_reference->number_of_notifications += 1;
+        $conversation->prayer_request_reference->save();
 
         Log::channel('notify_prayer_request')->info('Passou aqui');
     }
