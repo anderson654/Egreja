@@ -27,6 +27,6 @@ class NotifyPrayerRequest extends Command
     public function handle()
     {
         //
-        Log::info('Heello');
+        Log::channel('notify_prayer')->info('Notificação de oração enviada com sucesso.');
     }
 }
