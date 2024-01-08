@@ -36,7 +36,7 @@ class NotifyPrayerRequest extends Command
             $query->where('messages_id', 2)->where('status_conversation_id', 1)->whereNull('user_accepted');
         })->first();
 
-        if (isset($prayerRequest)) {
+        if (!isset($prayerRequest)) {
             return;
         }
 
