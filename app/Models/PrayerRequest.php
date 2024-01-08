@@ -21,7 +21,7 @@ class PrayerRequest extends Model
     {
         return $this->hasOne(User::class, 'id', 'user_id')->where('role_id', 4);
     }
-   
+
     public static function getCountByMonth()
     {
         $results = DB::table('prayer_requests')
@@ -47,7 +47,7 @@ class PrayerRequest extends Model
      */
 
     //cria uma linha de registro na tabela prayer_requests
-    public static function newPrayerRequest($user, $message, $reference = null,$statusId = null)
+    public static function newPrayerRequest($user, $message, $reference = null, $statusId = null)
     {
         $prayerRequest = new PrayerRequest();
         $prayerRequest->user_id = $user->id;
@@ -64,5 +64,10 @@ class PrayerRequest extends Model
         $newDataCarbom = Carbon::parse($this->attributes['created_at']);
         $dataFormat = $newDataCarbom->format('d/m/Y');
         return $dataFormat;
+    }
+
+    public function conversation()
+    {
+        return $this->hasOne(Conversation::class, 'id', 'reference');
     }
 }

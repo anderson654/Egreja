@@ -230,6 +230,9 @@ class DefaultFunctionsController extends Controller
         $this->nextQuestion();
 
         $voluntaryController->sendMessageAllVoluntaries($nextMessage, $this->conversation);
+        //trocar o status da converça
+        $this->conversation->prayer_request->status_id = 5;
+        $this->conversation->prayer_request->save();
     }
 
     public function aceptRequestVoluntary()

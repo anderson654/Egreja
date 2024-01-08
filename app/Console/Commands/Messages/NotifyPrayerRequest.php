@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands\Messages;
 
+use App\Models\Conversation;
+use App\Models\PrayerRequest;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
@@ -26,7 +28,12 @@ class NotifyPrayerRequest extends Command
      */
     public function handle()
     {
-        //
-        Log::channel('notify_prayer_request')->info('Notificação de oração enviada com sucesso.');
+        //foi atendida?
+        //maximo de notificaçoes 3;
+        $prayerRequest = PrayerRequest::where('status_id', 5)->whereHas('conversation', function ($query) {
+            $query->where('message_id', 2)->where('status_conversation_id', 1)->whereNull('user_accepted');
+        })->first();
+
+        Log::channel('notify_prayer_request')->info(json_encode($prayerRequest));
     }
 }

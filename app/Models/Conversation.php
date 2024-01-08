@@ -99,4 +99,9 @@ class Conversation extends Model
         $conversation->user_accepted = $userAcceptedId;
         $conversation->save();
     }
+
+    public function prayer_request()
+    {
+        return $this->hasOne(PrayerRequest::class, 'reference', 'id');
+    }
 }
