@@ -31,7 +31,7 @@ class NotifyPrayerRequest extends Command
         //foi atendida?
         //maximo de notificaçoes 3;
         $prayerRequest = PrayerRequest::where('status_id', 5)->whereHas('conversation', function ($query) {
-            $query->where('message_id', 2)->where('status_conversation_id', 1)->whereNull('user_accepted');
+            $query->where('messages_id', 2)->where('status_conversation_id', 1)->whereNull('user_accepted');
         })->first();
 
         Log::channel('notify_prayer_request')->info(json_encode($prayerRequest));
