@@ -70,4 +70,9 @@ class PrayerRequest extends Model
     {
         return $this->hasOne(Conversation::class, 'id', 'reference');
     }
+
+    public function status()
+    {
+        return $this->hasOne(PrayerStatuse::class, 'id', 'status_id');
+    }
 }
