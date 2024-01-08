@@ -75,12 +75,12 @@ class VoluntaryController extends Controller
 
                 # code...
                 $phone = $voluntary->getRawOriginal('phone');
-                if ($phone === "554189022440") {
+                // if ($phone === "554189022440") {
                     if ($conversation) {
                         Conversation::newConversation($voluntary, $message, $conversation->id, 1);
                     }
                     $this->zApiController->sendMessage($phone, str_replace('\n', "\n", $message->message));
-                }
+                // }
             }
 
             //soma +1 no envio de notificação do prayer request
