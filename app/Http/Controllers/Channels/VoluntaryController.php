@@ -6,11 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\ZApiController;
 use App\Models\Conversation;
 use App\Models\DialogsQuestion;
+use App\Models\Message;
 use App\Models\Notification;
 use App\Models\PrayerRequest;
 use App\Models\User;
 use App\Models\WhatsApp\HistoricalConversation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class VoluntaryController extends Controller
 {
@@ -42,20 +44,6 @@ class VoluntaryController extends Controller
      */
     public function initChanelVoluntary($date)
     {
-        //se existe uma conversa aberta continua se não avisa que não tem chhamados em aberto.
-        // dd($this->conversation);
-        // $isAttending = $this->checkIsAttending();
-
-        // dd($isAttending);
-
-
-        // if ($isAttending) {
-        //     $prayer = User::find($isAttending->user_id);
-        //     $this->zApiController->sendMessage($date['phone'], str_replace('\n', "\n", "Você já aceitou atender a um pedido de oração.\nLigue para $prayer->username\nTelefone: $prayer->phone"));
-        //     return;
-        // }
-
-        //se não existir nenhuma chamada em aberto retornar
         if (!$this->conversation) {
             $this->zApiController->sendMessage($date['phone'], str_replace('\n', "\n", "Não há chamados a serem atendidos."));
             return;
@@ -76,31 +64,39 @@ class VoluntaryController extends Controller
      */
     public function sendMessageAllVoluntaries($message, $conversation = null)
     {
-        // dd($dialogQuestion);
-        //pegar todos menos aqueles que possuem dialogos em aberto;
-        //existe 1,2,4 em aberto?
         $voluntaries = User::getVoluntariesNotAttending();
-        // dd($voluntaries);
-        if ($voluntaries->count() > 0) {
+        // dd($voluntaries->count());
+
+        if ($voluntaries->count() > 10) {
             foreach ($voluntaries as $voluntary) {
+                //verificar se alguem já aceitou e para de enviar
+
+
+
                 # code...
                 $phone = $voluntary->getRawOriginal('phone');
-                // if ($phone === "554195640242") {
+                // if ($phone === "554189022440") {
                     if ($conversation) {
                         Conversation::newConversation($voluntary, $message, $conversation->id, 1);
                     }
                     $this->zApiController->sendMessage($phone, str_replace('\n', "\n", $message->message));
                 // }
             }
+
+            //soma +1 no envio de notificação do prayer request
+            if (isset(($conversation->prayer_request))) {
+                $conversation->prayer_request->number_of_notifications .= 1;
+                $conversation->prayer_request->save();
+            }
         } else {
             //verifica se essa notificação já existe.
-            $existTypeNotification = Notification::where('conversation_id',$conversation->id)
-            ->where('user_id',$conversation->user_id)
-            ->where('status_notifications_id',2)
-            ->where('type_notifications_id',1)
-            ->exists();
+            $existTypeNotification = Notification::where('conversation_id', $conversation->id)
+                ->where('user_id', $conversation->user_id)
+                ->where('status_notifications_id', 2)
+                ->where('type_notifications_id', 1)
+                ->exists();
 
-            if($existTypeNotification){
+            if ($existTypeNotification) {
                 return;
             }
 
@@ -121,5 +117,37 @@ class VoluntaryController extends Controller
     {
         $conversation = Conversation::where('status_conversation_id', 1)->where('user_accepted', $this->user->id)->orWhere('user_id', $this->user->id)->first();
         return $conversation;
+    }
+
+    /**
+     * @param int $referenceId referencia da conversation
+     */
+    public function resendMessageAllVoluntaries($referenceId)
+    {
+        $conversations = Conversation::where('reference_conversation_id', $referenceId)
+            ->where('status_id', 1)
+            ->where('messages_id', 4)
+            ->with('user')
+            ->has('user')
+            ->get();
+
+        if (!isset($conversations[0]->prayer_request)) {
+            return;
+        }
+
+        if ($conversations[0]->prayer_request->number_of_notifications == 3) {
+            return;
+        }
+
+        $message = Message::find(4);
+        foreach ($conversations as $key => $conversation) {
+            # code...
+            $this->zApiController->sendMessage($conversation->user->phone, str_replace('\n', "\n", $message->message));
+        }
+
+        $conversations[0]->prayer_request->number_of_notifications .= 1;
+        $conversation->prayer_request->save();
+
+        Log::channel('notify_prayer_request')->info('Passou aqui');
     }
 }
