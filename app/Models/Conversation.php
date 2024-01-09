@@ -109,4 +109,9 @@ class Conversation extends Model
     {
         return $this->hasOne(PrayerRequest::class, 'reference', 'reference_conversation_id');
     }
+
+    public function voluntary()
+    {
+        return $this->hasOne(User::class, 'id', 'user_accepted');
+    }
 }

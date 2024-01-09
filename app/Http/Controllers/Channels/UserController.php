@@ -80,9 +80,6 @@ class UserController extends Controller
         $message = Message::where('template_id', $selectTemplateQuestions->id)->where('priority', 1)->first();
         $conversation = Conversation::newConversation($this->user, $message);
         $this->zApiController->sendMessage($date['phone'], str_replace('\n', "\n", $message->message));
-        
-        //criar uma reeferencia para prayer_requests para metrica.
-        $this->newPrayerRequest($conversation->id);
     }
 
 
@@ -99,7 +96,7 @@ class UserController extends Controller
         $prayerRequest = new PrayerRequest();
         $prayerRequest->user_id = $this->user->id;
         $prayerRequest->reference = $conversationId;
-        $prayerRequest->status_id = 1;
+        $prayerRequest->status_id = 5;
         $prayerRequest->save();
     }
 }

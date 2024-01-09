@@ -222,17 +222,18 @@ class DefaultFunctionsController extends Controller
      */
     public function sendMessageToVolunteers()
     {
-        //abrir uma notofocação na tabela
 
-
+        $this->nextQuestion();
+        
         $voluntaryController =  new VoluntaryController($this->user);
         $nextMessage = Message::where('template_id', 2)->where('priority', 1)->first();
-        $this->nextQuestion();
 
         $voluntaryController->sendMessageAllVoluntaries($nextMessage, $this->conversation);
         //trocar o status da converça
-        $this->conversation->prayer_request->status_id = 5;
-        $this->conversation->prayer_request->save();
+
+        //abrir uma notificação na tabela
+        $userController = new UserController($this->user);
+        $userController->newPrayerRequest($this->conversation->id);
     }
 
     public function aceptRequestVoluntary()
@@ -270,6 +271,9 @@ class DefaultFunctionsController extends Controller
         Notification::openQuestionaryUser($prayer->id, $conversationPrayer->id);
         //abre um questionario para o voluntario
         Notification::openQuestionaryUser($this->conversation->user_id, $conversationPrayer->id);
+        //atualiza o status do atendimento
+        
+
     }
 
     //ajustar para criar uma nova notificação de pedido de ajuda.
