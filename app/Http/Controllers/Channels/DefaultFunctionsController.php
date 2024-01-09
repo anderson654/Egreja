@@ -201,7 +201,7 @@ class DefaultFunctionsController extends Controller
     public function createNewSideDishers()
     {
         Notification::openNotificationReception($this->conversation);
-        SideDishes::createNewSideDishes($this->conversation->user->id,$this->userPastor->id,$this->conversation->id);
+        SideDishes::createNewSideDishes($this->conversation->user->id, $this->userPastor->id, $this->conversation->id);
     }
 
     //fim metodos default;
@@ -224,7 +224,7 @@ class DefaultFunctionsController extends Controller
     {
 
         $this->nextQuestion();
-        
+
         $voluntaryController =  new VoluntaryController($this->user);
         $nextMessage = Message::where('template_id', 2)->where('priority', 1)->first();
 
@@ -271,9 +271,8 @@ class DefaultFunctionsController extends Controller
         Notification::openQuestionaryUser($prayer->id, $conversationPrayer->id);
         //abre um questionario para o voluntario
         Notification::openQuestionaryUser($this->conversation->user_id, $conversationPrayer->id);
-        //atualiza o status do atendimento
-        
-
+        //atualiza o status do prayer_reequest
+        $this->conversation->prayer_request_reference->status_id = 3;
     }
 
     //ajustar para criar uma nova notificação de pedido de ajuda.
@@ -354,7 +353,7 @@ class DefaultFunctionsController extends Controller
     }
     public function problemPrayer()
     {
-        if (in_array($this->date['text']['message'],[7,'outros','Outros'])) {
+        if (in_array($this->date['text']['message'], [7, 'outros', 'Outros'])) {
             $this->manualyNextQuestion(7);
             return;
         }
@@ -407,7 +406,7 @@ class DefaultFunctionsController extends Controller
     public function wait()
     {
         Log::info($this->date['text']['message']);
-        if($this->date['text']['message'] !== ''){
+        if ($this->date['text']['message'] !== '') {
             $this->sendNextMessage(4);
         }
     }
