@@ -15,7 +15,9 @@ class PrayerRequestController extends Controller
     public function index()
     {
         //
-        $prayerRequests = PrayerRequest::with('user')->with('status:id,title')->orderBy('id', 'desc')->get();
+        $prayerRequests = PrayerRequest::with('user')->with('status:id,title')->whereHas('conversation', function ($query) {
+            $query->where('messages_id', 2);
+        })->orderBy('id', 'desc')->get();
 
         return view('pages.prayerRequests.index', compact('prayerRequests'));
     }
