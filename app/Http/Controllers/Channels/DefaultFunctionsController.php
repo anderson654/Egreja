@@ -273,6 +273,7 @@ class DefaultFunctionsController extends Controller
         Notification::openQuestionaryUser($this->conversation->user_id, $conversationPrayer->id);
         //atualiza o status do prayer_reequest
         $this->conversation->prayer_request_reference->status_id = 3;
+        $this->conversation->prayer_request_reference->save();
     }
 
     //ajustar para criar uma nova notificação de pedido de ajuda.

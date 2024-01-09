@@ -69,10 +69,6 @@ class VoluntaryController extends Controller
 
         if ($voluntaries->count() > 10) {
             foreach ($voluntaries as $voluntary) {
-                //verificar se alguem já aceitou e para de enviar
-
-
-
                 # code...
                 $phone = $voluntary->getRawOriginal('phone');
                 // if ($phone === "554189022440") {
@@ -83,11 +79,6 @@ class VoluntaryController extends Controller
                 // }
             }
 
-            //soma +1 no envio de notificação do prayer request
-            if (isset(($conversation->prayer_request))) {
-                $conversation->prayer_request->number_of_notifications += 1;
-                $conversation->prayer_request->save();
-            }
         } else {
             //verifica se essa notificação já existe.
             $existTypeNotification = Notification::where('conversation_id', $conversation->id)

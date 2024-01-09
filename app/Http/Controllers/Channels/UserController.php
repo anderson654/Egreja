@@ -97,6 +97,7 @@ class UserController extends Controller
         $prayerRequest->user_id = $this->user->id;
         $prayerRequest->reference = $conversationId;
         $prayerRequest->status_id = 5;
+        $prayerRequest->number_of_notifications = 1;
         $prayerRequest->save();
     }
 }
