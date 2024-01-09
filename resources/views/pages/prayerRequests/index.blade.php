@@ -69,7 +69,7 @@
                                             </td>
                                             <td>
                                                 <p class="text-sm font-weight-bold mb-0">
-                                                    {{-- {{ $prayerRequest->status->title ?? 'N/A' }}</p> --}}
+                                                    {{ $prayerRequest->status->title ?? 'N/A' }}</p>
                                             </td>
                                             <td class="align-middle text-center text-sm">
                                                 <p class="text-sm font-weight-bold mb-0">
