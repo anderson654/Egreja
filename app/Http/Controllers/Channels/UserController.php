@@ -92,12 +92,20 @@ class UserController extends Controller
         return Conversation::where('user_id', $this->user->id)->where('status_conversation_id', $statusConversationId)->first();
     }
 
-    public function newPrayerRequest($conversationId){
+    /**
+     * @return PrayerRequest
+     */
+
+    public function newPrayerRequest($conversationId)
+    {
         $prayerRequest = new PrayerRequest();
         $prayerRequest->user_id = $this->user->id;
         $prayerRequest->reference = $conversationId;
         $prayerRequest->status_id = 5;
         $prayerRequest->number_of_notifications = 1;
-        $prayerRequest->save();
+        if (!$prayerRequest->save()) {
+            return null;
+        }
+        return $prayerRequest;
     }
 }

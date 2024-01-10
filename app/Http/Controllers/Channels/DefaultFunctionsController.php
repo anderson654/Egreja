@@ -222,18 +222,27 @@ class DefaultFunctionsController extends Controller
      */
     public function sendMessageToVolunteers()
     {
-
         $this->nextQuestion();
 
         $voluntaryController =  new VoluntaryController($this->user);
         $nextMessage = Message::where('template_id', 2)->where('priority', 1)->first();
 
-        $voluntaryController->sendMessageAllVoluntaries($nextMessage, $this->conversation);
-        //trocar o status da converça
-
         //abrir uma notificação na tabela
         $userController = new UserController($this->user);
-        $userController->newPrayerRequest($this->conversation->id);
+        $payerRequest = $userController->newPrayerRequest($this->conversation->id);
+
+        $this->paramns = [
+            "id" => $payerRequest->id,
+            "datetime" => $payerRequest->created_at
+        ];
+
+        //seta atributos na mensagem
+        if ($this->paramns) {
+            $nextMessage->message = Utils::setDefaultNames($this->paramns, $nextMessage->message);
+        }
+        
+        $voluntaryController->sendMessageAllVoluntaries($nextMessage, $this->conversation);
+
     }
 
     public function aceptRequestVoluntary()
