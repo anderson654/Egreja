@@ -64,7 +64,7 @@ class PrayerRequest extends Model
     public function getCreatedAtAttribute()
     {
         $newDataCarbom = Carbon::parse($this->attributes['created_at']);
-        $dataFormat = $newDataCarbom->format('d/m/Y');
+        $dataFormat = $newDataCarbom->format('d/m/Y H:m');
         return $dataFormat;
     }
 
