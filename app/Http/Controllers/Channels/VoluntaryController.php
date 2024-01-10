@@ -72,12 +72,12 @@ class VoluntaryController extends Controller
             foreach ($voluntaries as $voluntary) {
                 # code...
                 $phone = $voluntary->getRawOriginal('phone');
-                if ($phone === "554189022440") {
+                // if ($phone === "554189022440") {
                     if ($conversation) {
                         Conversation::newConversation($voluntary, $message, $conversation->id, 1);
                     }
                     $this->zApiController->sendMessage($phone, str_replace('\n', "\n", $message->message));
-                }
+                // }
             }
 
         } else {
@@ -139,7 +139,7 @@ class VoluntaryController extends Controller
         if ($params) {
             $message->message = Utils::setDefaultNames($params, $message->message);
         }
-        
+
         foreach ($conversations as $key => $conversation) {
             # code...
             $this->zApiController->sendMessage($conversation->user->phone, str_replace('\n', "\n", $message->message));
