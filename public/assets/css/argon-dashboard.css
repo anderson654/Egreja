@@ -22172,3 +22172,17 @@ pre[class*=language-] {
     overflow: auto !important;
   }
 }
+
+.card-wats {
+  border-bottom: 1px solid #f0ebe3;
+}
+
+.fs-6{
+  font-size: 0.8rem !important;
+}
+.backgound-whats{
+  height:80vh;
+  background: #f0ebe3;
+  background-image: url('/img/backwhats.png');
+  overflow: auto;
+}

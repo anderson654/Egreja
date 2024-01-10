@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Http\Controllers\ZApiController;
+use App\Models\WhatsApp\HistoricalConversation;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -113,5 +114,10 @@ class Conversation extends Model
     public function voluntary()
     {
         return $this->hasOne(User::class, 'id', 'user_accepted');
+    }
+
+    public function historical_conversation()
+    {
+        return $this->hasMany(HistoricalConversation::class, 'conversation_id', 'id');
     }
 }

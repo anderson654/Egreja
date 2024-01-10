@@ -2,8 +2,11 @@
 
 namespace App\Models\WhatsApp;
 
+use App\Models\Message;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class HistoricalConversation extends Model
 {
@@ -13,6 +16,10 @@ class HistoricalConversation extends Model
         'conversation_id',
         'messages_id',
         'response'
+    ];
+
+    protected $append = [
+        'simple_date'
     ];
 
     /**
@@ -28,5 +35,16 @@ class HistoricalConversation extends Model
             'messages_id' => $conversation->message->id,
             'response' => $response
         ]);
+    }
+    public function message()
+    {
+        return $this->hasOne(Message::class, 'id', 'messages_id');
+    }
+    
+    public function getSimpleDateAttribute()
+    {
+        $newDataCarbom = Carbon::parse($this->attributes['created_at']);
+        $dataFormat = $newDataCarbom->subHours(3)->format('d/m/Y H:i');
+        return $dataFormat;
     }
 }
