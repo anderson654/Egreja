@@ -11,6 +11,7 @@ use App\Models\Notification;
 use App\Models\PrayerRequest;
 use App\Models\User;
 use App\Models\WhatsApp\HistoricalConversation;
+use App\Utils\Utils;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -71,12 +72,12 @@ class VoluntaryController extends Controller
             foreach ($voluntaries as $voluntary) {
                 # code...
                 $phone = $voluntary->getRawOriginal('phone');
-                // if ($phone === "554189022440") {
+                if ($phone === "554189022440") {
                     if ($conversation) {
                         Conversation::newConversation($voluntary, $message, $conversation->id, 1);
                     }
                     $this->zApiController->sendMessage($phone, str_replace('\n', "\n", $message->message));
-                // }
+                }
             }
 
         } else {
@@ -112,8 +113,9 @@ class VoluntaryController extends Controller
 
     /**
      * @param int $referenceId referencia da conversation
+     * @param array $params um array de parametros para ser setado na mensagem
      */
-    public function resendMessageAllVoluntaries($referenceId)
+    public function resendMessageAllVoluntaries($referenceId, $params)
     {
         $conversations = Conversation::where('reference_conversation_id', $referenceId)
             ->where('status_conversation_id', 1)
@@ -133,6 +135,11 @@ class VoluntaryController extends Controller
 
 
         $message = Message::find(4);
+        //setar parametros
+        if ($params) {
+            $message->message = Utils::setDefaultNames($params, $message->message);
+        }
+        
         foreach ($conversations as $key => $conversation) {
             # code...
             $this->zApiController->sendMessage($conversation->user->phone, str_replace('\n', "\n", $message->message));

@@ -6,6 +6,7 @@ use App\Http\Controllers\Channels\VoluntaryController;
 use App\Models\Conversation;
 use App\Models\PrayerRequest;
 use App\Models\User;
+use App\Utils\Utils;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
@@ -44,7 +45,13 @@ class NotifyPrayerRequest extends Command
 
         $voluntaryController = new VoluntaryController($user);
 
-        $voluntaryController->resendMessageAllVoluntaries($prayerRequest->conversation->id);
+        //setar os parametros;
+        $paramns = [
+            "id" => $prayerRequest->id,
+            "datetime" => $prayerRequest->created_at
+        ];
+        
+        $voluntaryController->resendMessageAllVoluntaries($prayerRequest->conversation->id, $paramns);
 
         Log::channel('notify_prayer_request')->info(json_encode($prayerRequest));
     }
