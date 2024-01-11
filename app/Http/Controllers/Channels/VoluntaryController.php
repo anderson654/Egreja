@@ -9,6 +9,7 @@ use App\Models\DialogsQuestion;
 use App\Models\Message;
 use App\Models\Notification;
 use App\Models\PrayerRequest;
+use App\Models\Test;
 use App\Models\User;
 use App\Models\WhatsApp\HistoricalConversation;
 use App\Utils\Utils;
@@ -63,23 +64,35 @@ class VoluntaryController extends Controller
      * @param Message $message a mensagem a ser enviada
      * @param Conversation $conversation é a conversa da qual partiu o chamado
      */
-    public function sendMessageAllVoluntaries($message, $conversation = null)
+    public function sendMessageAllVoluntaries($message, $conversation = null, $test = false)
     {
         $voluntaries = User::getVoluntariesNotAttending();
-        // dd($voluntaries->count());
 
         if ($voluntaries->count() > 10) {
-            foreach ($voluntaries as $voluntary) {
-                # code...
-                $phone = $voluntary->getRawOriginal('phone');
-                // if ($phone === "554189022440") {
+            $testPhones = Utils::getNumbersTest();
+
+            if ($test) {
+                foreach ($voluntaries as $voluntary) {
+                    # code...
+                    $phone = $voluntary->getRawOriginal('phone');
+
+                    if (in_array($phone, $testPhones)) {
+                        if ($conversation) {
+                            Conversation::newConversation($voluntary, $message, $conversation->id, 1);
+                        }
+                        $this->zApiController->sendMessage($phone, str_replace('\n', "\n", $message->message));
+                    }
+                }
+            } else {
+                foreach ($voluntaries as $voluntary) {
+                    # code...
+                    $phone = $voluntary->getRawOriginal('phone');
                     if ($conversation) {
                         Conversation::newConversation($voluntary, $message, $conversation->id, 1);
                     }
                     $this->zApiController->sendMessage($phone, str_replace('\n', "\n", $message->message));
-                // }
+                }
             }
-
         } else {
             //verifica se essa notificação já existe.
             $existTypeNotification = Notification::where('conversation_id', $conversation->id)

@@ -240,9 +240,8 @@ class DefaultFunctionsController extends Controller
         if ($this->paramns) {
             $nextMessage->message = Utils::setDefaultNames($this->paramns, $nextMessage->message);
         }
-        
-        $voluntaryController->sendMessageAllVoluntaries($nextMessage, $this->conversation);
 
+        $voluntaryController->sendMessageAllVoluntaries($nextMessage, $this->conversation, $this->user->tester);
     }
 
     public function aceptRequestVoluntary()
@@ -335,7 +334,7 @@ class DefaultFunctionsController extends Controller
         $voluntaryController =  new VoluntaryController($payerRequeest->user);
         $payerRequeest->status_id = 4;
         $dialogQuestion = DialogsQuestion::where('dialog_template_id', 2)->where('priority', 1)->first();
-        $voluntaryController->sendMessageAllVoluntaries($dialogQuestion->question, $dialogQuestion);
+        $voluntaryController->sendMessageAllVoluntaries($dialogQuestion->question, $dialogQuestion, $this->user->tester);
         $this->manualyNextQuestion(3);
 
         $this->finishPrayerRequest($this->conversation);

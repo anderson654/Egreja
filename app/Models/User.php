@@ -35,6 +35,10 @@ class User extends Authenticatable
         'phone'
     ];
 
+    protected $appends = [
+        'tester'
+    ];
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -104,8 +108,8 @@ class User extends Authenticatable
 
     public static function createNewUserZapi($phone, $dados)
     {
-        $user = User::where('phone','like', "%".substr($phone, -8))->first();
-        
+        $user = User::where('phone', 'like', "%" . substr($phone, -8))->first();
+
         if (!$user) {
             $newUser = new User();
             $newUser->phone = $phone;
@@ -150,5 +154,20 @@ class User extends Authenticatable
     public static function verifyUserInAttending($userId)
     {
         return Conversation::where('user_id', $userId)->where('status_conversation_id', 1)->exists();
+    }
+
+    public function getPhoneOriginalAttribute()
+    {
+        return $this->attributes['phone'];
+    }
+
+    public function users_tests()
+    {
+        return $this->hasOne(UsersTest::class, 'user_id', 'id');
+    }
+
+    public function getTesterAttribute()
+    {
+        return $this->users_tests()->exists();
     }
 }

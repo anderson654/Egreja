@@ -5,6 +5,9 @@ namespace App\Console\Commands;
 use App\Console\Commands\Messages\NotifyPrayerRequest;
 use App\Console\Commands\Vonluntary\CheckHelp;
 use App\Models\PrayerRequest;
+use App\Models\User;
+use App\Models\UsersTest;
+use App\Utils\Utils;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
@@ -29,7 +32,7 @@ class Teste extends Command
      */
     public function handle()
     {
-
+        $this->getUsers();
     }
 
 
@@ -50,6 +53,15 @@ class Teste extends Command
             $query->where('messages_id', 1)->where('status_conversation_id', 3);
         });
         $prayerRequests->delete();
+    }
 
+    public function checkIsNumberTest()
+    {
+        dd(Utils::getNumbersTest());
+    }
+
+    public function getUsers()
+    {
+        dd(User::find(7)->tester);
     }
 }

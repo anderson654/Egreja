@@ -2,6 +2,9 @@
 
 namespace App\Utils;
 
+use App\Models\User;
+use App\Models\UsersTest;
+
 class Utils
 {
     /**
@@ -19,16 +22,17 @@ class Utils
         $util = new Self();
         foreach ($paramns as $key => $value) {
             # code...
-            $finalMessage = $util->setParan($key,$value,$finalMessage);
+            $finalMessage = $util->setParan($key, $value, $finalMessage);
         }
 
         return $finalMessage;
     }
 
-    public function setParan($key,$value,$message){
+    public function setParan($key, $value, $message)
+    {
         switch ($key) {
             case 'username':
-               return str_replace("{{REQUESTER_NAME}}", $value, $message);
+                return str_replace("{{REQUESTER_NAME}}", $value, $message);
             case 'voluntaryname':
                 # code...
                 return str_replace("{{VOLUNTEER_NAME}}", $value, $message);
@@ -45,5 +49,16 @@ class Utils
                 # code...
                 break;
         }
+    }
+
+    /**
+     * Esta função retorna o numero de telefone dos uses test sem o mutator aplicado.
+     * @return array 
+     */
+    public static function getNumbersTest()
+    {
+        $idUsers = UsersTest::pluck('user_id');
+        $arrayPhones = User::whereIn('id', $idUsers)->get()->append('phone_original')->pluck('phone_original')->toArray();
+        return $arrayPhones;
     }
 }
