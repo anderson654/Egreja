@@ -52,7 +52,7 @@ class VoluntaryController extends Controller
         }
         $this->date = $date;
         //salva a mensagem no historico.
-        HistoricalConversation::saveMessage($this->conversation, $this->date['text']['message']);
+        HistoricalConversation::saveMessage($this->conversation, $this->date['text']['message'], false);
 
         //inicias as funçoes padrão
         $defaultFunctionsController = new DefaultFunctionsController($this->user, $this->date, $this->conversation);
@@ -78,7 +78,8 @@ class VoluntaryController extends Controller
 
                     if (in_array($phone, $testPhones)) {
                         if ($conversation) {
-                            Conversation::newConversation($voluntary, $message, $conversation->id, 1);
+                            $newConversation = Conversation::newConversation($voluntary, $message, $conversation->id, 1);
+                            HistoricalConversation::saveMessage($newConversation, $message->message, true);
                         }
                         $this->zApiController->sendMessage($phone, str_replace('\n', "\n", $message->message));
                     }
@@ -88,7 +89,8 @@ class VoluntaryController extends Controller
                     # code...
                     $phone = $voluntary->getRawOriginal('phone');
                     if ($conversation) {
-                        Conversation::newConversation($voluntary, $message, $conversation->id, 1);
+                        $newConversation = Conversation::newConversation($voluntary, $message, $conversation->id, 1);
+                        HistoricalConversation::saveMessage($newConversation, $message->message, true);
                     }
                     $this->zApiController->sendMessage($phone, str_replace('\n', "\n", $message->message));
                 }
@@ -156,6 +158,7 @@ class VoluntaryController extends Controller
         foreach ($conversations as $key => $conversation) {
             # code...
             $this->zApiController->sendMessage($conversation->user->phone, str_replace('\n', "\n", $message->message));
+            HistoricalConversation::saveMessage($conversation, $message->message, true);
         }
 
         $conversations[0]->prayer_request_reference->number_of_notifications += 1;
