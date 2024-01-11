@@ -13,6 +13,7 @@ use App\Models\PrayerRequest;
 use App\Models\ResponsesToGroup;
 use App\Models\SideDishes;
 use App\Models\User;
+use App\Models\WhatsApp\HistoricalConversation;
 use App\Utils\Utils;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -160,6 +161,7 @@ class DefaultFunctionsController extends Controller
     public function notIdentifyResponse()
     {
         $this->zApiController->sendMessage($this->user->phone, str_replace('\n', "\n", "Não foi possível identificar a resposta."));
+        HistoricalConversation::saveMessage($this->conversation, "Não foi possível identificar a resposta.", true);
     }
 
     public function closePrayerRequest()
@@ -195,6 +197,7 @@ class DefaultFunctionsController extends Controller
             $message = Utils::setDefaultNames($this->paramns, $message);
         }
         $this->zApiController->sendMessage($this->user->phone, str_replace('\n', "\n", $message));
+        HistoricalConversation::saveMessage($this->conversation, $message, true);
         return $nextMessage;
     }
 
@@ -253,6 +256,7 @@ class DefaultFunctionsController extends Controller
         // dd($this->user->getRawOriginal('phone'));
         if ($existVoluntary) {
             $this->zApiController->sendMessage($phone, str_replace('\n', "\n", "Este atendimento ja foi aceito por outro voluntário. \nObrigado."));
+            HistoricalConversation::saveMessage($this->conversation, 'Este atendimento ja foi aceito por outro voluntário. \nObrigado.', true);
             Conversation::finishConversation($this->conversation);
             return;
         }
@@ -298,6 +302,7 @@ class DefaultFunctionsController extends Controller
             $phone =  $payerRequeest->user->phone;
 
             $this->zApiController->sendMessage($user->phone, str_replace('\n', "\n", "Voce aceitou atender ao pedido de oração.\nLigue para $username\nTelefone: $phone"));
+            HistoricalConversation::saveMessage($this->conversation, 'Voce aceitou atender ao pedido de oração.\nLigue para ' . "$username" . '\nTelefone: ' . "$phone", true);
             //close current PrayerRequest
             $this->conversation->status_id = 3;
 

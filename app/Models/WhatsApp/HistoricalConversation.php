@@ -15,7 +15,8 @@ class HistoricalConversation extends Model
     protected $fillable = [
         'conversation_id',
         'messages_id',
-        'response'
+        'response',
+        'is_boot'
     ];
 
     protected $append = [
@@ -28,19 +29,20 @@ class HistoricalConversation extends Model
      * @return void
      */
 
-    public static function saveMessage($conversation, $response)
+    public static function saveMessage($conversation, $response, $isBoot)
     {
         HistoricalConversation::create([
             'conversation_id' => $conversation->id,
-            'messages_id' => $conversation->message->id,
-            'response' => $response
+            'messages_id' => null,
+            'response' => $response,
+            'is_boot' => $isBoot
         ]);
     }
     public function message()
     {
         return $this->hasOne(Message::class, 'id', 'messages_id');
     }
-    
+
     public function getSimpleDateAttribute()
     {
         $newDataCarbom = Carbon::parse($this->attributes['created_at']);

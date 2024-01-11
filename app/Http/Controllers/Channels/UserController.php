@@ -40,7 +40,7 @@ class UserController extends Controller
         //Ativa
         if ($this->getConversationToStatus(1)) {
             $currentConversation = $this->getConversationToStatus(1);
-            HistoricalConversation::saveMessage($currentConversation, $date['text']['message']);
+            HistoricalConversation::saveMessage($currentConversation, $date['text']['message'],false);
 
             $defaultFunctionsController = new DefaultFunctionsController($this->user, $date, $currentConversation);
             $defaultFunctionsController->nextDialogQuestion();
@@ -79,7 +79,11 @@ class UserController extends Controller
         $selectTemplateQuestions = DialogsTemplate::where('title', 'Egreja')->first();
         $message = Message::where('template_id', $selectTemplateQuestions->id)->where('priority', 1)->first();
         $conversation = Conversation::newConversation($this->user, $message);
+        //salva a mensagem do user
+        HistoricalConversation::saveMessage($conversation, $date['text']['message'], false);
+        //salva a mensagem do boot na converça
         $this->zApiController->sendMessage($date['phone'], str_replace('\n', "\n", $message->message));
+        HistoricalConversation::saveMessage($conversation, $message->message, true);
     }
 
 
