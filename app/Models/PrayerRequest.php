@@ -77,4 +77,9 @@ class PrayerRequest extends Model
     {
         return $this->hasOne(PrayerStatuse::class, 'id', 'status_id');
     }
+
+    public function reference_conversations()
+    {
+        return $this->hasMany(Conversation::class, 'reference_conversation_id', 'reference');
+    }
 }

@@ -43,7 +43,16 @@ class PrayerRequestController extends Controller
      */
     public function show(string $id)
     {
-        $prayerRequest = PrayerRequest::with('conversation.historical_conversation.message')->find($id);
+        $prayerRequest = PrayerRequest::with('conversation.historical_conversation.message')
+        ->with('conversation.voluntary')
+        ->with('conversation.user')
+        ->with('reference_conversations.user')
+        ->with('reference_conversations.historical_conversation')
+        ->find($id);
+
+
+
+        // dd($prayerRequest);
         return view('pages.prayerRequests.show', compact('prayerRequest'));
     }
 

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Http\Controllers\ZApiController;
 use App\Models\WhatsApp\HistoricalConversation;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -119,5 +120,12 @@ class Conversation extends Model
     public function historical_conversation()
     {
         return $this->hasMany(HistoricalConversation::class, 'conversation_id', 'id');
+    }
+
+    public function getCreatedAtAttribute()
+    {
+        $newDataCarbom = Carbon::parse($this->attributes['created_at']);
+        $dataFormat = $newDataCarbom->subHours(3)->format('d/m/Y H:i:s');
+        return $dataFormat;
     }
 }

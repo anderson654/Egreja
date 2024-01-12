@@ -22173,10 +22173,6 @@ pre[class*=language-] {
   }
 }
 
-.card-wats {
-  border-bottom: 1px solid #f0ebe3;
-}
-
 .fs-6{
   font-size: 0.8rem !important;
 }
@@ -22185,4 +22181,16 @@ pre[class*=language-] {
   background: #f0ebe3;
   background-image: url('/img/backwhats.png');
   overflow: auto;
+}
+.fs-7{
+  font-size: 0.6rem !important;
+}
+
+.card-wats {
+  border-bottom: 1px solid #f0ebe3;
+  transition: background-color 0.1s ease;
+  cursor: pointer;
+}
+.card-wats:hover{
+  background-color: #f5f6f6;
 }

@@ -31,6 +31,10 @@
                             <table class="table align-items-center mb-0">
                                 <thead>
                                     <tr>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                        </th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Id
+                                        </th>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nome
                                         </th>
                                         <th
@@ -54,10 +58,16 @@
                                     @foreach ($prayerRequests as $prayerRequest)
                                         <tr>
                                             <td>
+                                                <div class="ms-2">
+                                                    <img src="/img/team-2.jpg" class="avatar me-3" alt="image">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <p class="text-sm font-weight-bold mb-0">
+                                                    {{ $prayerRequest->id ?? 'N/A' }}</p>
+                                            </td>
+                                            <td>
                                                 <div class="d-flex px-3 py-1">
-                                                    <div>
-                                                        <img src="/img/team-2.jpg" class="avatar me-3" alt="image">
-                                                    </div>
                                                     <div class="d-flex flex-column justify-content-center">
                                                         <h6 class="mb-0 text-sm">{{ $prayerRequest->user->username }}</h6>
                                                     </div>
@@ -77,7 +87,8 @@
                                             </td>
                                             <td class="align-middle text-end">
                                                 <div class="d-flex px-3 py-1 justify-content-center align-items-center">
-                                                    <a href="{{ url('admin/prayerRequests', ['id' => $prayerRequest->id]) }}">
+                                                    <a
+                                                        href="{{ url('admin/prayerRequests', ['id' => $prayerRequest->id]) }}">
                                                         <p class="text-sm font-weight-bold mb-0">Detalhes</p>
                                                     </a>
                                                 </div>

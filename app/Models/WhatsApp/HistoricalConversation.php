@@ -49,4 +49,11 @@ class HistoricalConversation extends Model
         $dataFormat = $newDataCarbom->subHours(3)->format('d/m/Y H:i');
         return $dataFormat;
     }
+
+    public function getCreatedAtAttribute()
+    {
+        $newDataCarbom = Carbon::parse($this->attributes['created_at']);
+        $dataFormat = $newDataCarbom->subHours(3)->format('d/m/Y H:i:s');
+        return $dataFormat;
+    }
 }
