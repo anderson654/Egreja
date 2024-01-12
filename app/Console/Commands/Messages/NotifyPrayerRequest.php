@@ -48,7 +48,8 @@ class NotifyPrayerRequest extends Command
         //setar os parametros;
         $paramns = [
             "id" => $prayerRequest->id,
-            "datetime" => $prayerRequest->created_at
+            "datetime" => $prayerRequest->created_at,
+            "number_notification" => $prayerRequest->number_of_notifications + 1
         ];
         
         $voluntaryController->resendMessageAllVoluntaries($prayerRequest->conversation->id, $paramns);

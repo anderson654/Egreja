@@ -236,7 +236,8 @@ class DefaultFunctionsController extends Controller
 
         $this->paramns = [
             "id" => $payerRequest->id,
-            "datetime" => $payerRequest->created_at
+            "datetime" => $payerRequest->created_at,
+            "number_notification" => 1
         ];
 
         //seta atributos na mensagem

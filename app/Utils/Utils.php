@@ -45,6 +45,9 @@ class Utils
             case 'datetime':
                 # code...
                 return str_replace("{{DATETIME}}", $value, $message);
+            case 'number_notification':
+                # code...
+                return str_replace("{{NUMBER_NOTIFICATION}}", $value, $message);
             default:
                 # code...
                 break;
