@@ -6,6 +6,7 @@ use App\Models\PrayerRequest;
 use App\Models\UsersTest;
 use App\Utils\Utils;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class RemovePrayerRequestTests extends Command
 {
@@ -28,6 +29,7 @@ class RemovePrayerRequestTests extends Command
      */
     public function handle()
     {
+        Log::info('esta executando asdkljsadkasdaskjdh');
         $usersId = UsersTest::get()->pluck('user_id')->toArray();
         PrayerRequest::whereIn('user_id', $usersId)->delete();
     }

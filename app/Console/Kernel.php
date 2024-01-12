@@ -13,9 +13,9 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->command('app:check-help')->everyMinute();
-        $schedule->command('app:notify-prayer-request')->everyMinute();
-        $schedule->command('app:remove-prayer-request-tests')->everyThirtyMinutes();
+        $schedule->command('app:check-help')->everyMinute()->runInBackground();
+        $schedule->command('app:notify-prayer-request')->everyMinute()->runInBackground();
+        $schedule->command('app:remove-prayer-request-tests')->everyThirtyMinutes()->runInBackground();
     }
 
     /**
