@@ -15,7 +15,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
         $schedule->command('app:check-help')->everyMinute()->runInBackground();
         $schedule->command('app:notify-prayer-request')->everyTwoMinutes()->runInBackground();
-        $schedule->command('app:remove-prayer-request-tests')->everyThirtyMinutes()->runInBackground();
+        $schedule->command('app:remove-prayer-request-tests')->hourly()->runInBackground();
     }
 
     /**
