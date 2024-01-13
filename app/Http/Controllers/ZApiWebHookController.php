@@ -27,7 +27,6 @@ class ZApiWebHookController extends Controller
 
     public function __construct(Request $request)
     {
-        Log::info('Passou aqui tenho certeza');
         $this->date = $request->all();
         $this->phone = $request->phone;
     }
