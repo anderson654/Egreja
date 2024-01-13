@@ -130,7 +130,8 @@ return [
             'driver' => 'daily',
             'path' => storage_path('logs/notify-prayer-request.log'),
             'level' => env('LOG_LEVEL', 'debug'),
-            'replace_placeholders' => true
+            'replace_placeholders' => true,
+            'permission' => 0664
         ]
     ],
 
