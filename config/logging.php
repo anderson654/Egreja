@@ -131,7 +131,7 @@ return [
             'path' => storage_path('logs/notify-prayer-request.log'),
             'level' => env('LOG_LEVEL', 'debug'),
             'replace_placeholders' => true,
-            'permission' => 0664
+            'permission' => 0777
         ]
     ],
 
