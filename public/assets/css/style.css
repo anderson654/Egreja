@@ -74,3 +74,51 @@ a.style-none {
     color: #017dc3;
     text-transform: uppercase;
 }
+.custom-section-one{
+    width: 50%;
+}
+
+
+
+/* Estilos para telas extra pequenas (extra small) */
+@media (max-width: 575.98px) {
+    /* Adicione seus estilos para telas extra pequenas aqui */
+    .custom-size-title-h1{
+        font-size: 3rem;
+    }
+    .custom-section-one{
+        width: 100%;
+    }
+    .section-one{
+        background-position: 0% 50%;
+    }
+}
+
+/* Estilos para telas pequenas (small) */
+@media (min-width: 576px) and (max-width: 767.98px) {
+    /* Adicione seus estilos para telas pequenas aqui */
+    .custom-size-title-h1{
+        font-size: 3rem;
+    }
+    .custom-section-one{
+        width: 100%;
+    }
+    .section-one{
+        background-position: 0% 50%;
+    }
+}
+
+/* Estilos para telas médias (medium) */
+@media (min-width: 768px) and (max-width: 991.98px) {
+    /* Adicione seus estilos para telas médias aqui */
+}
+
+/* Estilos para telas grandes (large) */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    /* Adicione seus estilos para telas grandes aqui */
+}
+
+/* Estilos para telas extra grandes (extra large) */
+@media (min-width: 1200px) {
+    /* Adicione seus estilos para telas extra grandes aqui */
+}

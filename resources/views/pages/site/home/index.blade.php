@@ -3,8 +3,8 @@
 
 @section('content')
     <section class="vh-100 container-fluid p-0 section-one" style="overflow: unset;">
-        <div class="container-fluid vh-100 d-flex justify-content-end">
-            <div class="w-50 vh-100 d-flex justify-content-center align-items-center flex-column">
+        <div class="container-fluid vh-100 d-flex justify-content-end  px-4">
+            <div class="vh-100 d-flex justify-content-center align-items-center flex-column custom-section-one">
                 <div>
                     <div class="mb-4">
                         <img src="{{ asset('img/logos/weblogo.png') }}" alt="" width="300px">
@@ -38,73 +38,6 @@
                     </div>
                 </div>
             </div>
-
-
-            {{-- //segunda parte 2 section --}}
-            {{-- <div class="d-flex flex-column align-items-center py-3">
-                <p class="kristi p-0 m-0" style="font-size: 8rem;color: #626262;letter-spacing: 1px;">Lorem ipsum dolor sit
-                </p>
-            </div>
-
-            <div class="row mb-md-5">
-                <div class="col-md-4 px-md-3">
-                    <x-images.image-container-one height="350px">
-                        <p class="text-center fs-5 mt-5" style="font-weight: bold;color: #626262;line-height: 1.4;">Lorem
-                            ipsum dolor sit amet consectetur adipisicing elit?</p>
-                        <p class="text-center" style="color: #626262;line-height: 1.4;">Lorem ipsum dolor, sit amet
-                            consectetur adipisicing elit. Distinctio ad rem eius libero ex delectus sit corporis
-                            perferendis.</p>
-                    </x-images.image-container-one>
-                </div>
-                <div class="col-md-4 px-md-3">
-                    <x-images.image-container-one height="350px">
-                        <p class="text-center fs-5 mt-5" style="font-weight: bold;color: #626262;line-height: 1.4;">Lorem
-                            ipsum dolor sit amet consectetur adipisicing elit?</p>
-                        <p class="text-center" style="color: #626262;line-height: 1.4;">Lorem ipsum dolor, sit amet
-                            consectetur adipisicing elit. Distinctio ad rem eius libero ex delectus sit corporis
-                            perferendis.</p>
-                    </x-images.image-container-one>
-                </div>
-                <div class="col-md-4 px-md-3">
-                    <x-images.image-container-one height="350px">
-                        <p class="text-center fs-5 mt-5" style="font-weight: bold;color: #626262;line-height: 1.4;">Lorem
-                            ipsum dolor sit amet consectetur adipisicing elit?</p>
-                        <p class="text-center" style="color: #626262;line-height: 1.4;">Lorem ipsum dolor, sit amet
-                            consectetur adipisicing elit. Distinctio ad rem eius libero ex delectus sit corporis
-                            perferendis.</p>
-                    </x-images.image-container-one>
-                </div>
-            </div>
-
-            <div class="row mb-md-5">
-                <div class="col-md-4 px-md-3">
-                    <x-images.image-container-one height="350px">
-                        <p class="text-center fs-5 mt-5" style="font-weight: bold;color: #626262;line-height: 1.4;">Lorem
-                            ipsum dolor sit amet consectetur adipisicing elit?</p>
-                        <p class="text-center" style="color: #626262;line-height: 1.4;">Lorem ipsum dolor, sit amet
-                            consectetur adipisicing elit. Distinctio ad rem eius libero ex delectus sit corporis
-                            perferendis.</p>
-                    </x-images.image-container-one>
-                </div>
-                <div class="col-md-4 px-md-3">
-                    <x-images.image-container-one height="350px">
-                        <p class="text-center fs-5 mt-5" style="font-weight: bold;color: #626262;line-height: 1.4;">Lorem
-                            ipsum dolor sit amet consectetur adipisicing elit?</p>
-                        <p class="text-center" style="color: #626262;line-height: 1.4;">Lorem ipsum dolor, sit amet
-                            consectetur adipisicing elit. Distinctio ad rem eius libero ex delectus sit corporis
-                            perferendis.</p>
-                    </x-images.image-container-one>
-                </div>
-                <div class="col-md-4 px-md-3">
-                    <x-images.image-container-one height="350px">
-                        <p class="text-center fs-5 mt-5" style="font-weight: bold;color: #626262;line-height: 1.4;">Lorem
-                            ipsum dolor sit amet consectetur adipisicing elit?</p>
-                        <p class="text-center" style="color: #626262;line-height: 1.4;">Lorem ipsum dolor, sit amet
-                            consectetur adipisicing elit. Distinctio ad rem eius libero ex delectus sit corporis
-                            perferendis.</p>
-                    </x-images.image-container-one>
-                </div>
-            </div> --}}
         </div>
     </section>
     <section class="container-fluid p-0 section-tree d-flex align-items-center" style="overflow: unset;min-height: 70vh">
