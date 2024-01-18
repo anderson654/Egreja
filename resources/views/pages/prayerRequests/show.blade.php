@@ -62,7 +62,7 @@
                                                 <div class="card-wats p-2"
                                                     data-conversation={{ $reference_conversatio->id }}>
                                                     <div class="d-flex justify-content-between">
-                                                        <p style="color: black">{{ $reference_conversatio->user->username }}
+                                                        <p style="color: black">{{ $reference_conversatio->user->username ?? 'N/A'}}
                                                         </p>
                                                         <div class="d-flex justify-content-end">
                                                             <p class="fs-6">data</p>
@@ -82,7 +82,7 @@
                                                 <div class="card-wats p-2"
                                                     data-conversation={{ $reference_conversatio->id }}>
                                                     <div class="d-flex justify-content-between">
-                                                        <p style="color: black">{{ $reference_conversatio->user->username }}
+                                                        <p style="color: black">{{ $reference_conversatio->user->username ?? 'N/A'}}
                                                         </p>
                                                         <div class="d-flex justify-content-end">
                                                             <p class="fs-6">data</p>
@@ -93,7 +93,7 @@
                                         @else
                                             <div class="card-wats p-2" data-conversation={{ $reference_conversatio->id }}>
                                                 <div class="d-flex justify-content-between">
-                                                    <p style="color: black">{{ $reference_conversatio->user->username }}
+                                                    <p style="color: black">{{ $reference_conversatio->user->username ?? 'N/A'}}
                                                     </p>
                                                     <div class="d-flex justify-content-end">
                                                         <p class="fs-6">data</p>
