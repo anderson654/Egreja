@@ -302,14 +302,16 @@ class DefaultFunctionsController extends Controller
             $this->nextQuestion();
 
             //pega o prayerRequest de referencia
-            $payerRequest = PrayerRequest::where('reference', $this->conversation->reference);
+            $payerRequest = PrayerRequest::where('reference', $this->conversation->reference)->first();
             $payerRequest->status_id = 10;
             $payerRequest->save();
 
             //criar um novo prayer request adicionando o pastor
             $message = Message::find(21);
             PrayerRequest::newPrayerRequest($user, $message, $this->conversation->reference, 3);
-
+            $this->conversation->status_conversation_id = 3;
+            $this->conversation->save();
+            
         } else if (in_array($this->date['text']['message'], ['Redirecionar', 2])) {
             $this->forceAceptAllVoluntaries();
         }
