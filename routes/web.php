@@ -28,6 +28,7 @@ use App\Http\Controllers\Dashboard\FollowUp;
 use App\Http\Controllers\PrayerRequests\PrayerRequestController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\UserVoluntary\VolunteerRegistrationController;
+use App\Http\Controllers\Voluntary\DateTimeController;
 use App\Http\Controllers\Voluntary\VoluntaryController;
 use App\Http\Controllers\WhatsApp\DialogsQuestionsController;
 use App\Http\Controllers\WhatsApp\DialogsTemplatesController;
@@ -58,7 +59,9 @@ Route::post('/reset-password', [ResetPassword::class, 'send'])->middleware('gues
 Route::get('/change-password', [ChangePassword::class, 'show'])->middleware('guest')->name('change-password');
 Route::post('/change-password', [ChangePassword::class, 'update'])->middleware('guest')->name('change.perform');
 Route::get('/dashboard', [HomeController::class, 'index'])->name('home')->middleware('auth');
-Route::group(['middleware' => 'auth'], function () {
+
+//só precisa estar logado
+Route::group(['middleware' => ['auth','can:define-access-user']], function () {
 	Route::get('/virtual-reality', [PageController::class, 'vr'])->name('virtual-reality');
 	Route::get('/profile', [UserProfileController::class, 'show'])->name('profile');
 	Route::post('/profile', [UserProfileController::class, 'update'])->name('profile.update');
@@ -69,21 +72,41 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 });
 
-Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
-	Route::resources([
-		'voluntary' => VoluntaryController::class,
-		'user' => UserController::class,
-		'prayerRequests' => PrayerRequestController::class,
-		'dialog-whatsapp' => DialogsTemplatesController::class,
-		'dialog-questions-watsapp' => DialogsQuestionsController::class,
-		'group-responses' => GroupsResponsesController::class,
-		'responses' => ResponsesToGroupsController::class,
-		'group-to-questions' => GroupQuestionsResponsesController::class,
-		'acompanhamentos' => FollowUp::class
-	]);
-	Route::get('aprove-voluntary-index', [VolunteerRegistrationController::class, 'index'])->name('register.voluntary.index');
-	Route::get('aprove-voluntary-show/{id}', [VolunteerRegistrationController::class, 'show'])->name('register.voluntary.show');
-	Route::put('aprove-voluntary-update/{id}', [VolunteerRegistrationController::class, 'update'])->name('register.voluntary.update');
-	Route::post('voluntary/{id}/aprove', [VoluntaryController::class, 'aprove'])->name('voluntary.aprove');
-	Route::put('dialog-questions-watsapp/{id}/updateorder', [DialogsQuestionsController::class, 'updateOrder'])->name('dialog-questions-watsapp.updateorder');
+//separar a rota por acesso
+Route::group(['prefix' => 'admin'], function () {
+	Route::group(['middleware' => ['auth', 'can:define-access-admin']], function () {
+		Route::resources([
+			'dialog-whatsapp' => DialogsTemplatesController::class
+		]);
+	});
+});
+
+//separar a rota por acesso
+Route::group(['prefix' => 'admin'], function () {
+	Route::group(['middleware' => ['auth', 'can:define-access-pastor']], function () {
+		Route::resources([
+			'voluntary' => VoluntaryController::class,
+			'user' => UserController::class,
+			'prayerRequests' => PrayerRequestController::class,
+			'dialog-questions-watsapp' => DialogsQuestionsController::class,
+			'group-responses' => GroupsResponsesController::class,
+			'responses' => ResponsesToGroupsController::class,
+			'group-to-questions' => GroupQuestionsResponsesController::class,
+			'acompanhamentos' => FollowUp::class
+		]);
+		Route::get('aprove-voluntary-index', [VolunteerRegistrationController::class, 'index'])->name('register.voluntary.index');
+		Route::get('aprove-voluntary-show/{id}', [VolunteerRegistrationController::class, 'show'])->name('register.voluntary.show');
+		Route::put('aprove-voluntary-update/{id}', [VolunteerRegistrationController::class, 'update'])->name('register.voluntary.update');
+		Route::post('voluntary/{id}/aprove', [VoluntaryController::class, 'aprove'])->name('voluntary.aprove');
+		Route::put('dialog-questions-watsapp/{id}/updateorder', [DialogsQuestionsController::class, 'updateOrder'])->name('dialog-questions-watsapp.updateorder');
+	});
+});
+
+//separar a rota por acesso
+Route::group(['prefix' => 'admin'], function () {
+	Route::group(['middleware' => ['auth', 'can:define-access-voluntary']], function () {
+		Route::resources([
+			'datetime' => DateTimeController::class
+		]);
+	});
 });

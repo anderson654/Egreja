@@ -4,12 +4,16 @@ namespace App\Console\Commands;
 
 use App\Console\Commands\Messages\NotifyPrayerRequest;
 use App\Console\Commands\Vonluntary\CheckHelp;
+use App\Models\Daysofweek;
 use App\Models\PrayerRequest;
+use App\Models\SelectDaysHour;
+use App\Models\Time;
 use App\Models\User;
 use App\Models\UsersTest;
 use App\Utils\Utils;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class Teste extends Command
 {
@@ -32,7 +36,7 @@ class Teste extends Command
      */
     public function handle()
     {
-        $this->getUsers();
+        $this->createDefaultDaysOfWeek();
     }
 
 
@@ -63,5 +67,39 @@ class Teste extends Command
     public function getUsers()
     {
         dd(User::find(7)->tester);
+    }
+
+    public function createDefaultDaysOfWeek()
+    {
+
+        $voluntaries = User::where('role_id', 3)->get();
+
+        foreach ($voluntaries as $key => $voluntary) {
+            Log::info("User" . $voluntary->id);
+            # code...
+            // dd(SelectDaysHour::count());
+            $userId = $voluntary->id;
+            $days = Daysofweek::get();
+            $times = Time::get();
+
+            foreach ($days as $key => $day) {
+                # code...
+                foreach ($times as $key => $time) {
+                    # code...
+                    // se já existir não cria
+                    $dayExist = SelectDaysHour::where('user_id', $userId)->where('daysofweeks_id', $day->id)->where('times_id', $time->id)->exists();
+                    if (!$dayExist) {
+                        $selectDaysHour = new SelectDaysHour();
+                        $selectDaysHour->user_id = $userId;
+                        $selectDaysHour->daysofweeks_id = $day->id;
+                        $selectDaysHour->times_id = $time->id;
+                        $selectDaysHour->active = true;
+                        $selectDaysHour->save();
+                    }
+                }
+            }
+        }
+
+        dd('final');
     }
 }

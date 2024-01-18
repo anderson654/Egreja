@@ -95,4 +95,26 @@ class Notification extends Model
         $notification = new  Notification();
         $notification->openNotification($notification->userPastor, $conversation, 3);
     }
+
+    /**
+     * esta função atualiza o status da notificação para aceito.
+     * @param Notification $notification
+     * @return void
+     */
+    public static function closeNotification($notification)
+    {
+        $notification->status_notifications_id = 2;
+        $notification->update();
+    }
+
+    /**
+     * esta função atualiza o status para falha.
+     * @param Notification $notification
+     * @return void
+     */
+    public static function failNotification($notification)
+    {
+        $notification->status_notifications_id = 4;
+        $notification->update();
+    }
 }

@@ -49,7 +49,7 @@ class PrayerRequest extends Model
      */
 
     //cria uma linha de registro na tabela prayer_requests
-    public static function newPrayerRequest($user, $message, $reference = null, $statusId = null)
+    public static function newPrayerRequest($user, $reference = null, $statusId = null)
     {
         $prayerRequest = new PrayerRequest();
         $prayerRequest->user_id = $user->id;

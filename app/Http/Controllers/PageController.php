@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PageController extends Controller
 {
@@ -30,7 +32,8 @@ class PageController extends Controller
 
     public function profile()
     {
-        return view("pages.profile-static");
+        $user = Auth::user();
+        return view("pages.profile-static",compact('user'));
     }
 
     public function signin()

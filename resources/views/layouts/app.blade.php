@@ -60,7 +60,8 @@
             font-feature-settings: 'liga';
             color: #344767;
         }
-        .dataTable-selector{
+
+        .dataTable-selector {
             border-color: #e9ecef;
             border-radius: 0.25rem;
             text-transform: none;
@@ -179,7 +180,9 @@
     <script src="https://cdn.jsdelivr.net/npm/choices.js@9.0.1/public/assets/scripts/choices.min.js"></script>
 
     <script src="{{ asset('assets/js/plugins/datatables.min.js') }}"></script>
-    <script src="{{ asset('assets/js/customPlugins/custom-datatables.js') }}?v={{rand()}}"></script>
+    <script src="{{ asset('assets/js/customPlugins/custom-datatables.js') }}?v={{ rand() }}"></script>
+    <script src="{{ asset('assets/js/plugins/nouislider.min.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/wNumb.min.js') }}"></script>
     @yield('script')
 </body>
 

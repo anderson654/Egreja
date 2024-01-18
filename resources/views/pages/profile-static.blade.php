@@ -13,14 +13,14 @@
                 <div class="col-auto my-auto">
                     <div class="h-100">
                         <h5 class="mb-1">
-                            Sayo Kravits
+                            {{ $user->username ?? 'N/A' }}
                         </h5>
                         <p class="mb-0 font-weight-bold text-sm">
                             Public Relations
                         </p>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6 my-sm-auto ms-sm-auto me-sm-0 mx-auto mt-3">
+                {{-- <div class="col-lg-4 col-md-6 my-sm-auto ms-sm-auto me-sm-0 mx-auto mt-3">
                     <div class="nav-wrapper position-relative end-0">
                         <ul class="nav nav-pills nav-fill p-1" role="tablist">
                             <li class="nav-item">
@@ -46,7 +46,7 @@
                             </li>
                         </ul>
                     </div>
-                </div>
+                </div> --}}
             </div>
         </div>
     </div>
@@ -61,21 +61,21 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <p class="text-uppercase text-sm">User Information</p>
+                        <p class="text-uppercase text-sm">informação do usuário</p>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="example-text-input" class="form-control-label">Username</label>
-                                    <input class="form-control" type="text" value="lucky.jesse">
+                                    <label for="example-text-input" class="form-control-label">Nome de usuário</label>
+                                    <input class="form-control" type="text" value="{{ $user->username ?? 'N/A' }}">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="example-text-input" class="form-control-label">Email address</label>
-                                    <input class="form-control" type="email" value="jesse@example.com">
+                                    <input class="form-control" type="email" value="{{ $user->email ?? 'N/A' }}">
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            {{-- <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="example-text-input" class="form-control-label">First name</label>
                                     <input class="form-control" type="text" value="Jesse">
@@ -86,38 +86,43 @@
                                     <label for="example-text-input" class="form-control-label">Last name</label>
                                     <input class="form-control" type="text" value="Lucky">
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
                         <hr class="horizontal dark">
-                        <p class="text-uppercase text-sm">Contact Information</p>
+                        <p class="text-uppercase text-sm">INFORMAÇÕES DE CONTATO</p>
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="example-text-input" class="form-control-label">Address</label>
-                                    <input class="form-control" type="text"
-                                        value="Bld Mihail Kogalniceanu, nr. 8 Bl 1, Sc 1, Ap 09">
+                                    <label for="example-text-input" class="form-control-label">Endereço</label>
+                                    <input class="form-control" type="text" value="{{ $user->address ?? 'N/A' }}">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="example-text-input" class="form-control-label">City</label>
-                                    <input class="form-control" type="text" value="New York">
+                                    <label for="example-text-input" class="form-control-label">Cidade</label>
+                                    <input class="form-control" type="text" value="{{ $user->city ?? 'N/A' }}">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="example-text-input" class="form-control-label">Country</label>
-                                    <input class="form-control" type="text" value="United States">
+                                    <label for="example-text-input" class="form-control-label">País</label>
+                                    <input class="form-control" type="text" value="{{ $user->country ?? 'N/A' }}">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="example-text-input" class="form-control-label">Postal code</label>
-                                    <input class="form-control" type="text" value="437300">
+                                    <label for="example-text-input" class="form-control-label">Código postal</label>
+                                    <input class="form-control" type="text" value="{{ $user->postal ?? 'N/A' }}">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="example-text-input" class="form-control-label">Telefone</label>
+                                    <input class="form-control" type="text" value="{{ $user->phone ?? 'N/A' }}">
                                 </div>
                             </div>
                         </div>
-                        <hr class="horizontal dark">
+                        {{-- <hr class="horizontal dark">
                         <p class="text-uppercase text-sm">About me</p>
                         <div class="row">
                             <div class="col-md-12">
@@ -127,7 +132,7 @@
                                         value="A beautiful Dashboard for Bootstrap 5. It is Free and Open Source.">
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>
@@ -176,7 +181,7 @@
                         </div>
                         <div class="text-center mt-4">
                             <h5>
-                                Mark Davis<span class="font-weight-light">, 35</span>
+                                {{$user->username ?? 'N/A'}}<span class="font-weight-light">, 35</span>
                             </h5>
                             <div class="h6 font-weight-300">
                                 <i class="ni location_pin mr-2"></i>Bucharest, Romania
@@ -194,4 +199,8 @@
         </div>
         @include('layouts.footers.auth.footer')
     </div>
+@endsection
+
+@section('script')
+    {{-- <script src="{{ asset('assets/js/plugins/multistep-form.js') }}"></script> --}}
 @endsection
