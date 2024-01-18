@@ -91,18 +91,20 @@ class SendQuestionaryVoluntary extends Command
         $conversations = Conversation::where('messages_id', 9)
             ->where('status_conversation_id', 1)
             ->where('number_of_notifications', '<', 3)
-            ->with('user')
-            ->with('voluntary')
             ->get();
 
         foreach ($conversations as $conversation) {
+            $referenceConversation = Conversation::where('id', $conversation->reference_conversation_id)
+                ->with('user')
+                ->with('voluntary')
+                ->first();
             # code...
             $data = [
-                'username' => $conversation->user->username,
-                'voluntaryname' => $conversation->voluntary->username
+                'username' => $referenceConversation->user->username ?? 'N/A',
+                'voluntaryname' => $referenceConversation->voluntary->username ?? 'N/A'
             ];
 
-            $this->sendInitialMessage($data, 3, $conversation->voluntary->getRawOriginal('phone'));
+            $this->sendInitialMessage($data, 3, $referenceConversation->voluntary->getRawOriginal('phone'));
             $conversation->increment('number_of_notifications');
             $conversation->save();
         }
