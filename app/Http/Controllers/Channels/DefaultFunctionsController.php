@@ -289,30 +289,36 @@ class DefaultFunctionsController extends Controller
         $this->conversation->prayer_request_reference->save();
     }
 
-    //ajustar para criar uma nova notificação de pedido de ajuda.
     public function forceAceptVoluntary()
     {
         if (in_array($this->date['text']['message'], ['Atender demanda', 1])) {
             //pegar o user
-            $userId = 7;
+            $userId = env('PASTOR_ID');
             $user = User::find($userId);
+            $this->paramns = [
+                'username' => $this->conversation->reference->user->username,
+                'phone' => $this->conversation->reference->user->phone
+            ];
+            $this->nextQuestion();
 
-            $payerRequeest = PrayerRequest::find($this->conversation->reference);
 
-            $username =  $payerRequeest->user->username;
-            $phone =  $payerRequeest->user->phone;
+            // //mudar essa parte do código
+            // $payerRequeest = PrayerRequest::find($this->conversation->reference);
 
-            $this->zApiController->sendMessage($user->phone, str_replace('\n', "\n", "Voce aceitou atender ao pedido de oração.\nLigue para $username\nTelefone: $phone"));
-            HistoricalConversation::saveMessage($this->conversation, 'Voce aceitou atender ao pedido de oração.\nLigue para ' . "$username" . '\nTelefone: ' . "$phone", true);
-            //close current PrayerRequest
-            $this->conversation->status_id = 3;
+            // $username =  $payerRequeest->user->username;
+            // $phone =  $payerRequeest->user->getRawOriginal('phone');
 
-            $payerRequeest->voluntary_id = $userId;
-            $payerRequeest->status_id = 3;
-            $payerRequeest->created_at = Carbon::now();
-            $payerRequeest->update();
+            // $this->zApiController->sendMessage($user->phone, str_replace('\n', "\n", "Voce aceitou atender ao pedido de oração.\nLigue para $username\nTelefone: $phone"));
+            // HistoricalConversation::saveMessage($this->conversation, 'Voce aceitou atender ao pedido de oração.\nLigue para ' . "$username" . '\nTelefone: ' . "$phone", true);
+            // //close current PrayerRequest
+            // $this->conversation->status_id = 3;
 
-            $this->finishPrayerRequest($this->conversation);
+            // $payerRequeest->voluntary_id = $userId;
+            // $payerRequeest->status_id = 3;
+            // $payerRequeest->created_at = Carbon::now();
+            // $payerRequeest->update();
+
+            // $this->finishPrayerRequest($this->conversation);
         } else if (in_array($this->date['text']['message'], ['Redirecionar', 2])) {
             $this->forceAceptAllVoluntaries();
         }
