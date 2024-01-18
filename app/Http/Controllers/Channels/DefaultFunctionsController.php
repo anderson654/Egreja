@@ -308,7 +308,7 @@ class DefaultFunctionsController extends Controller
 
             //criar um novo prayer request adicionando o pastor
             $message = Message::find(21);
-            PrayerRequest::newPrayerRequest($user, $message, $this->conversation->reference, 3);
+            PrayerRequest::newPrayerRequest($this->conversation->reference_conversation->user, $this->conversation->reference_conversation, 3);
             $this->conversation->status_conversation_id = 3;
             $this->conversation->save();
         } else if (in_array($this->date['text']['message'], ['Redirecionar', 2])) {

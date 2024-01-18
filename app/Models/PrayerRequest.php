@@ -54,7 +54,6 @@ class PrayerRequest extends Model
         $prayerRequest = new PrayerRequest();
         $prayerRequest->user_id = $user->id;
         $prayerRequest->status_id = $statusId ?? 1;
-        $prayerRequest->current_dialog_question_id = $message->id;
         $prayerRequest->reference = $reference;
         $prayerRequest->save();
 
