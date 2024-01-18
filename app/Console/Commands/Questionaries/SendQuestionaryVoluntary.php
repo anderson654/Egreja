@@ -139,7 +139,7 @@ class SendQuestionaryVoluntary extends Command
             $defaultFunctionController = new DefaultFunctionsController($conversation->user, null, $conversation);
             $defaultFunctionController->manualyNextQuestion(6);
             $defaultFunctionController->closePrayerRequest();
-            Notification::openNotification($this->userPastor, $conversation, 4, 1);
+            Notification::openNotification($this->userPastor, $conversation->reference_conversation, 4, 1);
         }
     }
 }
