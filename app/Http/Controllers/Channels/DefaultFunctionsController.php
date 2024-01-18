@@ -302,7 +302,7 @@ class DefaultFunctionsController extends Controller
             $this->nextQuestion();
 
             //pega o prayerRequest de referencia
-            $payerRequest = PrayerRequest::where('reference', $this->conversation->reference)->first();
+            $payerRequest = PrayerRequest::where('reference', $this->conversation->reference_conversation_id)->first();
             $payerRequest->status_id = 10;
             $payerRequest->save();
 
@@ -311,7 +311,6 @@ class DefaultFunctionsController extends Controller
             PrayerRequest::newPrayerRequest($user, $message, $this->conversation->reference, 3);
             $this->conversation->status_conversation_id = 3;
             $this->conversation->save();
-            
         } else if (in_array($this->date['text']['message'], ['Redirecionar', 2])) {
             $this->forceAceptAllVoluntaries();
         }
