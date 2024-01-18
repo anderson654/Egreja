@@ -81,7 +81,7 @@ class SendQuestionaryVoluntary extends Command
                 //fecha a notificação
                 Notification::aceptedNotification($notification);
                 $conversation->number_of_notifications = 1;
-                $conversation->save();
+                $conversation->update();
             }
         }
     }
