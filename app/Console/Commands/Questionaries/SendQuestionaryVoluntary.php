@@ -88,7 +88,7 @@ class SendQuestionaryVoluntary extends Command
 
     public function resendQuestionaryVoluntary()
     {
-        $conversations = Conversation::where('message_id', 9)
+        $conversations = Conversation::where('messages_id', 9)
             ->where('status_id', 1)
             ->where('number_of_notifications', '<', 3)
             ->with('user')
