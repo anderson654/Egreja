@@ -296,8 +296,8 @@ class DefaultFunctionsController extends Controller
             $userId = env('PASTOR_ID');
             $user = User::find($userId);
             $this->paramns = [
-                'username' => $this->conversation->reference->user->username,
-                'phone' => $this->conversation->reference->user->phone
+                'username' => $this->conversation->reference_conversation->user->username,
+                'phone' => $this->conversation->reference_conversation->user->phone
             ];
             $this->nextQuestion();
 
