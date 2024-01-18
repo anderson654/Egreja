@@ -317,9 +317,9 @@ class DefaultFunctionsController extends Controller
             //uma nova conveça com quem aceitou a request
             $conversation = Conversation::openConversation($this->conversation->reference_conversation->user->id, 1, $this->conversation->reference_conversation_id, $userId);
             $conversation->messages_id = 2;
-            $conversation->status_conversation_id = 3;
+            $conversation->status_conversation_id = 1;
             $conversation->save();
-            
+
         } else if (in_array($this->date['text']['message'], ['Redirecionar', 2])) {
             $this->forceAceptAllVoluntaries();
         }
