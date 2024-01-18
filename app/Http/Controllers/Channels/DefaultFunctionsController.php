@@ -306,11 +306,6 @@ class DefaultFunctionsController extends Controller
             $payerRequest->status_id = 10;
             $payerRequest->save();
 
-            //criar um novo prayer request adicionando o pastor
-            $prayerRequeest = PrayerRequest::newPrayerRequest($this->conversation->reference_conversation->user, $this->conversation->reference_conversation, 3);
-            $prayerRequeest->status_id = 3;
-            $prayerRequeest->save();
-
             $this->conversation->status_conversation_id = 3;
             $this->conversation->save();
 
@@ -320,6 +315,10 @@ class DefaultFunctionsController extends Controller
             $conversation->status_conversation_id = 1;
             $conversation->save();
 
+            //criar um novo prayer request adicionando o pastor
+            $prayerRequeest = PrayerRequest::newPrayerRequest($this->conversation->reference_conversation->user, $this->conversation->reference_conversation, $conversation->id, 3);
+            $prayerRequeest->status_id = 3;
+            $prayerRequeest->save();
         } else if (in_array($this->date['text']['message'], ['Redirecionar', 2])) {
             $this->forceAceptAllVoluntaries();
         }
