@@ -88,7 +88,7 @@ class Conversation extends Model
      * @param int $templateId id do template
      * @param int $referenceId  referencia caso queira colocar(id da conversa que inicio esse evento)
      * @param int $userAcceptedId apenas para conversa de template 1(inicio de conversa user)
-     * @return void
+     * @return Conversation
      */
     public static function openConversation($userId, $templateId, $referenceId = null, $userAcceptedId = null)
     {
@@ -100,6 +100,8 @@ class Conversation extends Model
         $conversation->reference_conversation_id = $referenceId;
         $conversation->user_accepted = $userAcceptedId;
         $conversation->save();
+
+        return $conversation;
     }
 
     public function prayer_request()
