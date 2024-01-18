@@ -301,24 +301,15 @@ class DefaultFunctionsController extends Controller
             ];
             $this->nextQuestion();
 
+            //pega o prayerRequest de referencia
+            $payerRequest = PrayerRequest::where('reference', $this->conversation->reference);
+            $payerRequest->status_id = 10;
+            $payerRequest->save();
 
-            // //mudar essa parte do código
-            // $payerRequeest = PrayerRequest::find($this->conversation->reference);
+            //criar um novo prayer request adicionando o pastor
+            $message = Message::find(21);
+            PrayerRequest::newPrayerRequest($user, $message, $this->conversation->reference, 3);
 
-            // $username =  $payerRequeest->user->username;
-            // $phone =  $payerRequeest->user->getRawOriginal('phone');
-
-            // $this->zApiController->sendMessage($user->phone, str_replace('\n', "\n", "Voce aceitou atender ao pedido de oração.\nLigue para $username\nTelefone: $phone"));
-            // HistoricalConversation::saveMessage($this->conversation, 'Voce aceitou atender ao pedido de oração.\nLigue para ' . "$username" . '\nTelefone: ' . "$phone", true);
-            // //close current PrayerRequest
-            // $this->conversation->status_id = 3;
-
-            // $payerRequeest->voluntary_id = $userId;
-            // $payerRequeest->status_id = 3;
-            // $payerRequeest->created_at = Carbon::now();
-            // $payerRequeest->update();
-
-            // $this->finishPrayerRequest($this->conversation);
         } else if (in_array($this->date['text']['message'], ['Redirecionar', 2])) {
             $this->forceAceptAllVoluntaries();
         }
