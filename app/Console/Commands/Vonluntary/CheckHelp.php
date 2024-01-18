@@ -206,7 +206,8 @@ class CheckHelp extends Command
 
         $data = [
             'username' => $notification->conversation->user->username,
-            'voluntaryname' => $this->userPastor->username
+            'voluntaryname' => $this->userPastor->username,
+            'phone' =>  $notification->conversation->user->phone
         ];
 
         $this->sendInitialMessage($data, 6, $notification->user->getRawOriginal('phone'));
