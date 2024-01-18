@@ -310,8 +310,6 @@ class DefaultFunctionsController extends Controller
             $message = Message::find(21);
             PrayerRequest::newPrayerRequest($user, $message, $this->conversation->reference, 3);
 
-            $this->closePrayerRequest();
-
         } else if (in_array($this->date['text']['message'], ['Redirecionar', 2])) {
             $this->forceAceptAllVoluntaries();
         }
