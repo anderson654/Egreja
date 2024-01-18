@@ -307,10 +307,19 @@ class DefaultFunctionsController extends Controller
             $payerRequest->save();
 
             //criar um novo prayer request adicionando o pastor
-            $message = Message::find(21);
-            PrayerRequest::newPrayerRequest($this->conversation->reference_conversation->user, $this->conversation->reference_conversation, 3);
+            $prayerRequeest = PrayerRequest::newPrayerRequest($this->conversation->reference_conversation->user, $this->conversation->reference_conversation, 3);
+            $prayerRequeest->status_id = 3;
+            $prayerRequeest->save();
+
             $this->conversation->status_conversation_id = 3;
             $this->conversation->save();
+
+            //uma nova conveça com quem aceitou a request
+            $conversation = Conversation::openConversation($this->conversation->reference_conversation->user->id, 1, $this->conversation->reference_conversation_id, $userId);
+            $conversation->messages_id = 2;
+            $conversation->status_conversation_id = 3;
+            $conversation->save();
+            
         } else if (in_array($this->date['text']['message'], ['Redirecionar', 2])) {
             $this->forceAceptAllVoluntaries();
         }
