@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\Questionaries;
 
+use App\Http\Controllers\Channels\DefaultFunctionsController;
 use App\Http\Controllers\ZApiController;
 use App\Models\Conversation;
 use App\Models\Message;
@@ -48,9 +49,12 @@ class SendQuestionaryVoluntary extends Command
      */
     public function handle()
     {
-        //
+        //reenvia formulario para voluntario
         $this->resendQuestionaryVoluntary();
+        //envia formulario para voluntario
         $this->sendQuestionaryVoluntary();
+        //finaliza o formulario não respondido e envia para o pastor
+        $this->closeConversation();
     }
 
 
@@ -115,5 +119,27 @@ class SendQuestionaryVoluntary extends Command
         $message = Message::where('template_id', $templateId)->where('priority', 1)->first();
         $message = Utils::setDefaultNames($paramns, $message->message);
         $this->zApiController->sendMessage($phone, str_replace('\n', "\n", $message));
+    }
+
+    //fecha a converça porque não existiu uma resposta
+    public function closeConversation()
+    {
+        $conversations = Conversation::where('messages_id', 9)
+            ->where('status_conversation_id', 1)
+            ->where('number_of_notifications', 3)
+            ->whereDate('created_at', '<=', Carbon::now()->subMinutes($this->timeQuestionaryVoluntary))
+            ->get();
+
+        if (!$conversations) {
+            return;
+        }
+
+        foreach ($conversations as $conversation) {
+            //enviar a proxima e fechar a chamada
+            $defaultFunctionController = new DefaultFunctionsController($conversation->user, null, $conversation);
+            $defaultFunctionController->manualyNextQuestion(6);
+            $defaultFunctionController->closePrayerRequest();
+            Notification::openNotification($this->userPastor, $conversation, 4, 1);
+        }
     }
 }
