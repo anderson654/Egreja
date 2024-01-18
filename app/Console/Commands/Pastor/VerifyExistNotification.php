@@ -51,6 +51,7 @@ class VerifyExistNotification extends Command
 
     public function sendPastorNotifications()
     {
+        //code...
         //verifica se o pastor tem alguma chama em aberto antes de iniciar uma nova conversa.
         $isAttending = Conversation::verifyUserInConversation($this->userPastor);
 
@@ -63,18 +64,22 @@ class VerifyExistNotification extends Command
             return;
         }
 
+        try {
+            //boot abre uma conversa
+            Conversation::openConversation($this->userPastor->id, 5, $notification->conversation_id);
 
-        //boot abre uma conversa
-        Conversation::openConversation($this->userPastor->id, 5, $notification->conversation_id);
+            $data = [
+                'username' => $notification->conversation->user->username ?? 'N/A',
+                'voluntaryname' => $notification->conversation->voluntary->username ?? 'N/A'
+            ];
 
-        $data = [
-            'username' => $notification->conversation->user->username ?? 'N/A',
-            'voluntaryname' => $notification->conversation->voluntary->username ?? 'N/A'
-        ];
-
-        $this->sendInitialMessage($data, 5, $notification->user->getRawOriginal('phone'));
-        //fecha a notificação
-        Notification::closeNotification($notification);
+            $this->sendInitialMessage($data, 5, $notification->user->getRawOriginal('phone'));
+            //fecha a notificação
+            Notification::closeNotification($notification);
+        } catch (\Throwable $th) {
+            //throw $th;
+            Notification::failNotification($notification);
+        }
     }
 
     public function sendInitialMessage($paramns, $templateId, $phone)
