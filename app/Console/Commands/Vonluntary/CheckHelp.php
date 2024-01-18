@@ -49,7 +49,7 @@ class CheckHelp extends Command
         $this->broterId = 65;
 
         $this->timeQuestionaryVoluntary = 10; //minutos
-        $this->timeQuestionaryUser = (60*24)*2; //minutos
+        $this->timeQuestionaryUser = (60 * 24) * 2; //minutos
         // $this->timeQuestionaryVoluntary = 5; //minutos
         // $this->timeQuestionaryUser = 5; //minutos
 
@@ -76,7 +76,10 @@ class CheckHelp extends Command
 
 
 
-        $conversations = Conversation::get();
+        $conversations = Conversation::where('status_conversation_id', '!=', 3)
+            ->whereNotIn('messages_id', [9])
+            ->get();
+            
         foreach ($conversations as $conversation) {
             # code...
             $limitTime = Carbon::parse($conversation->updated_at->toString())->addMinutes(10);
