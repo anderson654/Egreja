@@ -130,4 +130,19 @@ class Conversation extends Model
         $dataFormat = $newDataCarbom->subHours(3)->format('d/m/Y H:i:s');
         return $dataFormat;
     }
+
+    /**
+     * Verifica se o user passado esta em uma converça em aberto.
+     * @param User $user recebe um usuario.
+     * @return bool
+     */
+    public static function verifyUserInConversation(User $user)
+    {
+        return Conversation::where('status_conversation_id', 1)->where('user_id', $user->id)->exists();
+    }
+
+    public function reference_conversation()
+    {
+        return $this->hasOne(Conversation::class, 'id', 'reference_conversation_id');
+    }
 }
