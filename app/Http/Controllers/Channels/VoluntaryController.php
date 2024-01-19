@@ -148,8 +148,10 @@ class VoluntaryController extends Controller
             return;
         }
 
-
         $message = Message::find(4);
+        if($conversations[0]->prayer_request_reference->number_of_notifications == 2){
+            $message->message = "Atenção! Está chamada já é a {{NUMBER_NOTIFICATION}}ª tentativa para este pedido.\nVocê pode atender um pedido de oração AGORA?\n1-Sim\n2-Não\n\n\nId do pedido:{{ID}}\nHorário que foi realizado o pedido de oração:{{DATETIME}}";
+        }
         //setar parametros
         if ($params) {
             $message->message = Utils::setDefaultNames($params, $message->message);
