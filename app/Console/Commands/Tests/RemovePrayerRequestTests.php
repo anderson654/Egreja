@@ -31,6 +31,6 @@ class RemovePrayerRequestTests extends Command
     {
         Log::info('esta executando asdkljsadkasdaskjdh');
         $usersId = UsersTest::get()->pluck('user_id')->toArray();
-        PrayerRequest::whereIn('user_id', $usersId)->delete();
+        PrayerRequest::whereIn('user_id', $usersId)->where('created_at','<',now()->subHour())->delete();
     }
 }
