@@ -301,6 +301,9 @@ class DefaultFunctionsController extends Controller
             ];
             $this->nextQuestion();
 
+
+
+            //o  problema já esta aqui.
             //pega o prayerRequest de referencia
             $payerRequest = PrayerRequest::where('reference', $this->conversation->reference_conversation_id)->first();
             $payerRequest->status_id = 10;
@@ -315,10 +318,10 @@ class DefaultFunctionsController extends Controller
             $conversation->status_conversation_id = 1;
             $conversation->save();
 
+            //não criou
             //criar um novo prayer request adicionando o pastor
-            $prayerRequeest = PrayerRequest::newPrayerRequest($this->conversation->reference_conversation->user, $this->conversation->reference_conversation, $conversation->id, 3);
-            $prayerRequeest->status_id = 3;
-            $prayerRequeest->save();
+            PrayerRequest::newPrayerRequest($this->conversation->reference_conversation->user, $this->conversation->reference_conversation, 3);
+            
         } else if (in_array($this->date['text']['message'], ['Redirecionar', 2])) {
             $this->forceAceptAllVoluntaries();
         }
