@@ -42,7 +42,6 @@ class PrayerRequest extends Model
 
     /**
      * @param User  $user recebe user
-     * @param Message $message recebe uma  questão
      * @param  int $reference recebe o id de uma questão opicional
      * @param  int $statusId estado inicial do prayer_requests
      * @return PrayerRequest
