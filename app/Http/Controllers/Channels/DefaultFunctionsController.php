@@ -319,7 +319,7 @@ class DefaultFunctionsController extends Controller
             $conversation->save();
 
             //criar um novo prayer request adicionando o pastor
-            PrayerRequest::newPrayerRequest($this->conversation->reference_conversation->user, $this->conversation->reference_conversation, 3);
+            PrayerRequest::newPrayerRequest($this->conversation->reference_conversation->user, $this->conversation->reference_conversation_id, 3);
             
         } else if (in_array($this->date['text']['message'], ['Redirecionar', 2])) {
             $this->forceAceptAllVoluntaries();
