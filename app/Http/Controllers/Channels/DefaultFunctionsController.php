@@ -318,7 +318,6 @@ class DefaultFunctionsController extends Controller
             $conversation->status_conversation_id = 1;
             $conversation->save();
 
-            //não criou
             //criar um novo prayer request adicionando o pastor
             PrayerRequest::newPrayerRequest($this->conversation->reference_conversation->user, $this->conversation->reference_conversation, 3);
             
