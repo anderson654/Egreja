@@ -100,7 +100,8 @@ a.style-none {
     .custom-qr-code {
         flex-direction: column;
     }
-    .section-tree{
+
+    .section-tree {
         background: #b0b0b028;
     }
 }
@@ -119,6 +120,14 @@ a.style-none {
 
     .section-one {
         background-position: 0% 50%;
+    }
+
+    .custom-qr-code {
+        flex-direction: column;
+    }
+
+    .section-tree {
+        background: #b0b0b028;
     }
 }
 
