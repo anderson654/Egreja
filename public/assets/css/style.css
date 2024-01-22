@@ -133,15 +133,7 @@ a.style-none {
 
 /* Estilos para telas médias (medium) */
 @media (min-width: 768px) and (max-width: 991.98px) {
-
     /* Adicione seus estilos para telas médias aqui */
-    .custom-qr-code {
-        flex-direction: column;
-    }
-
-    .section-tree {
-        background: #b0b0b028;
-    }
 }
 
 /* Estilos para telas grandes (large) */
