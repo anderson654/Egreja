@@ -71,11 +71,11 @@
                         este projeto
                     </p>
                     <p class="fs-5">Existe três maneiras de nos ajudar:</p>
-                    <p style="font-weight: 800">1 - Orar por nós
+                    <p style="font-weight: 800">1 - Orando por nós
                     </p>
                     <p style="font-weight: 800">2 - Sendo um parceiro de coração se tornando um voluntário
                     </p>
-                    <p style="font-weight: 800">3 - Enviando uma oração
+                    <p style="font-weight: 800">3 - Enviando uma doação
                     </p>
                     {{-- <div class="my-3 d-flex" style="flex-wrap: wrap;">
                         <x-buttons.values-one></x-buttons.values-one>
