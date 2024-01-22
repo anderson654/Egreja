@@ -90,7 +90,7 @@
                         <x-buttons.default-button link="https://egreja.online/register-voluntary"
                             title="seja um voluntário"></x-buttons.default-button>
                     </div>
-                    <div class="my-4 d-flex align-items-center">
+                    <div class="my-4 d-flex align-items-center custom-qr-code">
                         <img src="{{ asset('img\pixcode.jpg') }}" alt="pixcode">
                         <p class="ms-4 text-uppercase title-blue fs-5">pix cnpj: <span
                                 style="font-weight: 700">48.684.948/0001-84</span></p>

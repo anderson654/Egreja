@@ -74,7 +74,8 @@ a.style-none {
     color: #017dc3;
     text-transform: uppercase;
 }
-.custom-section-one{
+
+.custom-section-one {
     width: 50%;
 }
 
@@ -82,28 +83,41 @@ a.style-none {
 
 /* Estilos para telas extra pequenas (extra small) */
 @media (max-width: 575.98px) {
+
     /* Adicione seus estilos para telas extra pequenas aqui */
-    .custom-size-title-h1{
+    .custom-size-title-h1 {
         font-size: 3rem;
     }
-    .custom-section-one{
+
+    .custom-section-one {
         width: 100%;
     }
-    .section-one{
+
+    .section-one {
         background-position: 0% 50%;
+    }
+
+    .custom-qr-code {
+        flex-direction: column;
+    }
+    .section-tree{
+        background: #b0b0b028;
     }
 }
 
 /* Estilos para telas pequenas (small) */
 @media (min-width: 576px) and (max-width: 767.98px) {
+
     /* Adicione seus estilos para telas pequenas aqui */
-    .custom-size-title-h1{
+    .custom-size-title-h1 {
         font-size: 3rem;
     }
-    .custom-section-one{
+
+    .custom-section-one {
         width: 100%;
     }
-    .section-one{
+
+    .section-one {
         background-position: 0% 50%;
     }
 }
