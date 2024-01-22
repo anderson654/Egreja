@@ -157,8 +157,8 @@
                             </div> --}}
                     </div>
                 </div>
-                <div class="justify-content-end">
-                    <div class="mb-4 d-flex justify-content-end">
+                <div class="justify-content-center">
+                    <div class="mb-4 d-flex justify-content-center">
                         <img src="{{ asset('img/logos/weblogo.png') }}" alt="" width="200px">
                     </div>
                 </div>
