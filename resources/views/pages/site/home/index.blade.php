@@ -127,7 +127,7 @@
                             <div class="py-2 px-5" style="background: #fff;border-radius: 40px">
                                 <p class="mb-0 fs-4 text-center" style="color: #017dc3;font-weight: 700;">
                                     <i class="fa-brands fa-instagram p-2" style="background: #f7c237;border-radius: 20px"></i>
-                                    /@egreeja.online
+                                    /@egreja.online
                                 </p>
                             </div>
                         </a>
