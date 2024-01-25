@@ -9,6 +9,11 @@ class SelectDaysHour extends Model
 {
     use HasFactory;
 
+
+    protected $fillable = [
+        'active'
+    ];
+
     public function time()
     {
         return $this->hasOne(Time::class, 'id', 'times_id');

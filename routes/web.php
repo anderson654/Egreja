@@ -110,3 +110,9 @@ Route::group(['prefix' => 'admin'], function () {
 		]);
 	});
 });
+//todos tem acesso deve estar apenas autenticado
+Route::group(['prefix' => 'admin'], function () {
+	Route::group(['middleware' => ['auth']], function () {
+		Route::put('/update-password/{id}', [ResetPassword::class, 'setPrimaryPassword'])->name('password.update');
+	});
+});

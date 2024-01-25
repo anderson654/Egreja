@@ -37,7 +37,7 @@ class Teste extends Command
      */
     public function handle()
     {
-        $this->createDefaultDaysOfWeek();
+        $this->getVoluntariesNotAttending();
     }
 
 
@@ -114,8 +114,6 @@ class Teste extends Command
             ->has('answer_this_time')
             ->whereNotNull('phone')
             ->get();
-
-        dd($users->count());
         return $users;
     }
 }

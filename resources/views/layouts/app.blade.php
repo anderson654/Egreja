@@ -90,6 +90,10 @@
     </div>
     {{-- fim modal --}}
 
+    @include('layouts.modalresetpassword.modalresetpassword')
+
+    @yield('modals')
+
 
 
 
@@ -152,6 +156,18 @@
     <script src="/assets/js/argon-dashboard.js"></script>
     @stack('js');
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
+    @auth
+        <script>
+            //modal password
+            var myModal = new bootstrap.Modal($('#modal-form'));
+            if (!'{{ Auth::user()->first_access }}') {
+                myModal.show();
+            }
+        </script>
+    @endauth
+
+
     <script>
         $(document).ready(function() {
             if ($('.alert')) {

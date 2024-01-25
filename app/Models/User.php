@@ -32,7 +32,8 @@ class User extends Authenticatable
         'about',
         'is_active',
         'role_id',
-        'phone'
+        'phone',
+        'first_access'
     ];
 
     protected $appends = [
@@ -135,6 +136,7 @@ class User extends Authenticatable
             ->whereDoesntHave('conversations', function ($query) {
                 $query->whereIn('status_conversation_id', [1, 2]);
             })
+            ->has('answer_this_time')
             ->whereNotNull('phone')
             ->get();
 

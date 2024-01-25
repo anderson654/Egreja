@@ -18,7 +18,8 @@ class DateTimeController extends Controller
         //
         $days = Daysofweek::get();
         $hours = SelectDaysHour::with('time')->where('user_id', Auth::user()->id)->get();
-        return view('pages.voluntary.datetime.index',compact('days','hours'));
+        $voluntary = Auth::user();
+        return view('pages.voluntary.datetime.index', compact('days', 'hours', 'voluntary'));
     }
 
     /**
@@ -58,7 +59,10 @@ class DateTimeController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $hours = $request->all()['hours'];
+        SelectDaysHour::where('user_id', $id)->update(['active' => false]);
+        SelectDaysHour::whereIn('id', $hours)->where('user_id', $id)->update(['active' => true]);
+        return back()->with('success', 'Recurso atualizado com sucesso');
     }
 
     /**
