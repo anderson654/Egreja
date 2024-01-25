@@ -170,4 +170,13 @@ class User extends Authenticatable
     {
         return $this->users_tests()->exists();
     }
+
+
+    public function answer_this_time()
+    {
+        return $this->hasMany(SelectDaysHour::class, 'user_id', 'id')->where('active', 1)->where('daysofweeks_id', Carbon::now()->dayOfWeek)->whereHas('time', function ($query) { {
+                $query->where('title', Carbon::now()->subHours(3)->startOfHour()->format('H:i'));
+            }
+        });
+    }
 }

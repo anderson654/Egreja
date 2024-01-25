@@ -11,6 +11,7 @@ use App\Models\Time;
 use App\Models\User;
 use App\Models\UsersTest;
 use App\Utils\Utils;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -101,5 +102,20 @@ class Teste extends Command
         }
 
         dd('final');
+    }
+
+
+    public function getVoluntariesNotAttending()
+    {
+        $users = User::where('role_id', 3)
+            ->whereDoesntHave('conversations', function ($query) {
+                $query->whereIn('status_conversation_id', [1, 2]);
+            })
+            ->has('answer_this_time')
+            ->whereNotNull('phone')
+            ->get();
+
+        dd($users->count());
+        return $users;
     }
 }
