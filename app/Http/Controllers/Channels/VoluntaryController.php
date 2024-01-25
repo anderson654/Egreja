@@ -68,7 +68,7 @@ class VoluntaryController extends Controller
     {
         $voluntaries = User::getVoluntariesNotAttending();
 
-        if ($voluntaries->count() > 10) {
+        if ($voluntaries->count() > 2) {
             $testPhones = Utils::getNumbersTest();
 
             if ($test) {
