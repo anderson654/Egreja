@@ -3,9 +3,15 @@
 namespace App\Http\Controllers\UserVoluntary;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\ZApiController;
+use App\Models\Daysofweek;
+use App\Models\Notification;
+use App\Models\SelectDaysHour;
+use App\Models\Time;
 use App\Models\User;
 use App\Models\VolunteerRegistration;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class VolunteerRegistrationController extends Controller
 {
@@ -83,7 +89,7 @@ class VolunteerRegistrationController extends Controller
             $data = [
                 "username" => $voluntary->name . " " .  $voluntary->surname,
                 "email" => $voluntary->email,
-                "password" => str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT),
+                "password" => '123456789',
                 "phone" => "55" . $voluntary->getRawOriginal('phone'),
                 "role_id" => 3,
                 "is_active" => 1
@@ -93,6 +99,16 @@ class VolunteerRegistrationController extends Controller
             //salvar o id que foi gerado do user no voluntario
             $voluntary->user_id = $user->id;
             $voluntary->save();
+
+            $notification = new Notification();
+            $notification->user_id = $user->id;
+            $notification->type_notifications_id = 5;
+            $notification->status_notifications_id = 1;
+            $notification->save();
+
+            //enviar link de cadastro
+            $zApiController = new ZApiController();
+            $zApiController->sendMessage($user->getRawOriginal('phone'), "Você foi aprovado como voluntario, para configurar seus horarios de atendimento acesse:\nhttps://egreja.online/admin/datetime\nEmail: ".$user->email."\nSenha: 123456789");
 
             return response()->json($user);
         }
@@ -110,5 +126,49 @@ class VolunteerRegistrationController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function createDaysVoluntary($voluntary)
+    {
+        $userId = $voluntary->id;
+        $days = Daysofweek::get();
+        $times = Time::get();
+
+        $recordsToInsert = [];
+
+        foreach ($days as $day) {
+            foreach ($times as $time) {
+                $dayExist = SelectDaysHour::where('user_id', $userId)
+                    ->where('daysofweeks_id', $day->id)
+                    ->where('times_id', $time->id)
+                    ->exists();
+
+                if (!$dayExist) {
+                    $recordsToInsert[] = [
+                        'user_id' => $userId,
+                        'daysofweeks_id' => $day->id,
+                        'times_id' => $time->id,
+                        'active' => true,
+                    ];
+                }
+            }
+        }
+
+        if (!empty($recordsToInsert)) {
+            // Use a transação para garantir a consistência
+            DB::beginTransaction();
+
+            try {
+                SelectDaysHour::insert($recordsToInsert);
+
+                // Commit a transação se tudo der certo
+                DB::commit();
+            } catch (\Exception $e) {
+                // Reverta a transação em caso de erro
+                DB::rollback();
+                // Lidar com o erro (registre, notifique, etc.)
+                // throw $e; // Descomente esta linha se desejar propagar a exceção
+            }
+        }
     }
 }
