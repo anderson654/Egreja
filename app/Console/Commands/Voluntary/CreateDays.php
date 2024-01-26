@@ -31,15 +31,16 @@ class CreateDays extends Command
     public function handle()
     {
         //
-        $notification = Notification::where('status_notifications_id', 1)->where('type_notifications_id', 5)->first();
+        $notification = Notification::where('status_notifications_id', 1)->where('type_notifications_id', 5)->has('user')->with('user')->first();
         if($notification){
-            $this->createDaysVoluntary($notification->user_id);
+            $this->createDaysVoluntary($notification->user);
         }
     }
 
 
-    public function createDaysVoluntary($userId)
+    public function createDaysVoluntary($voluntary)
     {
+        $userId = $voluntary->id;
         $days = Daysofweek::get();
         $times = Time::get();
 
