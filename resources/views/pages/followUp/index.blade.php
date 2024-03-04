@@ -30,6 +30,9 @@
                                     <thead>
                                         <tr>
                                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                Id
+                                            </th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                                 Nome
                                             </th>
                                             <th
@@ -52,6 +55,10 @@
                                         @foreach ($sideDidhes as $prayerRequest)
                                             <tr>
                                                 <td>
+                                                    <p class="text-sm font-weight-bold mb-0">
+                                                        {{ $prayerRequest->id ?? 'N/A' }}</p>
+                                                </td>
+                                                <td>
                                                     <div class="d-flex px-3 py-1">
                                                         <div>
                                                             <img src="/img/team-2.jpg" class="avatar me-3" alt="image">
@@ -72,7 +79,7 @@
                                                 </td>
                                                 <td class="align-middle text-center text-sm">
                                                     <p class="text-sm font-weight-bold mb-0">
-                                                        {{ $prayerRequest->user->created_at ?? 'vazio' }}</p>
+                                                        {{ $prayerRequest->created_at ?? 'vazio' }}</p>
                                                 </td>
                                                 <td class="align-middle text-end">
                                                     <div class="d-flex px-3 py-1 justify-content-center align-items-center">
@@ -136,11 +143,9 @@
                 elementNext: '#next',
                 elementPrevious: '#previous',
                 elementFistPage: '#primerItem',
-                elementLastPage: '#ultimateItem',
+                elementLastPage: '#ultimateItem'
                 configDataTables: {
-                    order: [
-                        [3, 'desc']
-                    ]
+                    ordering: false
                 }
             });
         </script>

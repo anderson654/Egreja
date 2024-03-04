@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -27,5 +28,12 @@ class SideDishes extends Model
         $sideDishes->responsible_user_id = $responsableId;
         $sideDishes->conversation_id = $conversationId;
         $sideDishes->save();
+    }
+
+    public function getCreatedAtAttribute()
+    {
+        $newDataCarbom = Carbon::parse($this->attributes['created_at']);
+        $dataFormat = $newDataCarbom->format('d/m/Y');
+        return $dataFormat;
     }
 }

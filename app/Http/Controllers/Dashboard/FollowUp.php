@@ -14,7 +14,7 @@ class FollowUp extends Controller
     public function index()
     {
         //
-        $sideDidhes = SideDishes::has('user')->get();
+        $sideDidhes = SideDishes::latest()->has('user')->orderBy('created_at','asc')->get();
         return view('pages.followUp.index',compact('sideDidhes'));
     }
 
