@@ -26,6 +26,7 @@ use App\Http\Controllers\ResetPassword;
 use App\Http\Controllers\ChangePassword;
 use App\Http\Controllers\Dashboard\FollowUp;
 use App\Http\Controllers\PrayerRequests\PrayerRequestController;
+use App\Http\Controllers\SelectDaysHoursController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\UserVoluntary\VolunteerRegistrationController;
 use App\Http\Controllers\Voluntary\DateTimeController;
@@ -92,7 +93,8 @@ Route::group(['prefix' => 'admin'], function () {
 			'group-responses' => GroupsResponsesController::class,
 			'responses' => ResponsesToGroupsController::class,
 			'group-to-questions' => GroupQuestionsResponsesController::class,
-			'acompanhamentos' => FollowUp::class
+			'acompanhamentos' => FollowUp::class,
+			'voluntary-times' => SelectDaysHoursController::class
 		]);
 		Route::get('aprove-voluntary-index', [VolunteerRegistrationController::class, 'index'])->name('register.voluntary.index');
 		Route::get('aprove-voluntary-show/{id}', [VolunteerRegistrationController::class, 'show'])->name('register.voluntary.show');

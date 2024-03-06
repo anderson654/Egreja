@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Time extends Model
 {
     use HasFactory;
+
+    public function select_days_hours()
+    {
+        return $this->hasMany(SelectDaysHour::class, 'times_id', 'id');
+    }
 }
