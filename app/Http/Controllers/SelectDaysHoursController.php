@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Daysofweek;
 use App\Models\Time;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class SelectDaysHoursController extends Controller
@@ -61,14 +62,22 @@ class SelectDaysHoursController extends Controller
     public function store(Request $request)
     {
         //
+
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Request $request, string $id)
     {
-        //
+        //vai receber o dia e o horario como parametro de filtro
+        $time_start = $request->query('time_start') ?? 1;
+        
+        $users = User::whereHas('select_days_hours', function ($query) use ($id, $time_start) {
+            $query->where('daysofweeks_id', $id)->whereIn('times_id', [$time_start])->where('active', 1);
+        })->get();
+
+        return view('pages.SelectDaysHours.show', compact('users'));
     }
 
     /**

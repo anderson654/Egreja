@@ -11,6 +11,6 @@ class Time extends Model
 
     public function select_days_hours()
     {
-        return $this->hasMany(SelectDaysHour::class, 'times_id', 'id');
+        return $this->hasMany(SelectDaysHour::class, 'times_id', 'id')->has('user');
     }
 }

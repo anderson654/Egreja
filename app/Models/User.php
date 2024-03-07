@@ -181,4 +181,9 @@ class User extends Authenticatable
             }
         });
     }
+
+    public function select_days_hours()
+    {
+        return $this->hasMany(SelectDaysHour::class, 'user_id', 'id');
+    }
 }

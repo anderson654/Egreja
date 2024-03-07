@@ -52,6 +52,10 @@ class DateTimeController extends Controller
     public function edit(string $id)
     {
         //
+        $days = Daysofweek::get();
+        $hours = SelectDaysHour::with('time')->where('user_id', $id)->get();
+        $voluntary = Auth::user();
+        return view('pages.voluntary.datetime.index', compact('days', 'hours', 'voluntary'));
     }
 
     /**

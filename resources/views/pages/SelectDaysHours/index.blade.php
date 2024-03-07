@@ -23,7 +23,6 @@
                                 <div class="tab-pane fade @if ($key === 0) show active @endif"
                                     id="nav-home-{{ $key }}" role="tabpanel"
                                     aria-labelledby="nav-home-tab-{{ $key }}">
-                                    {{-- <h1>{{ $key }}</h1> --}}
                                     <canvas id="meuGrafico-{{ $key }}"
                                         data-dayofweekid={{ $dado->id }}></canvas>
                                 </div>
@@ -75,7 +74,7 @@
                     }
                 },
                 onClick: function(e, element) {
-                    console.log(element);
+                    redirectToLink(`/admin/voluntary-times/1?time_start=1`);
                 },
                 onHover: function(e, elementos) {
                     // Mudar o estilo do cursor para 'pointer' quando o mouse passa sobre as barras
@@ -94,6 +93,10 @@
                 data: data,
                 options: opcoes
             });
+        }
+
+        function redirectToLink(link){
+            window.location.href = link;
         }
     </script>
 @endsection

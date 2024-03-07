@@ -18,4 +18,9 @@ class SelectDaysHour extends Model
     {
         return $this->hasOne(Time::class, 'id', 'times_id');
     }
+
+    public function user()
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
+    }
 }
