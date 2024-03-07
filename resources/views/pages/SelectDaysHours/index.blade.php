@@ -74,7 +74,11 @@
                     }
                 },
                 onClick: function(e, element) {
-                    redirectToLink(`/admin/voluntary-times/1?time_start=1`);
+                    if (!!element[0]) {
+                        redirectToLink(
+                            `/admin/voluntary-times/${$(e.chart.canvas).data('dayofweekid')}?time_start=${(element[0]?.index+1)}`
+                            );
+                    }
                 },
                 onHover: function(e, elementos) {
                     // Mudar o estilo do cursor para 'pointer' quando o mouse passa sobre as barras
@@ -95,7 +99,7 @@
             });
         }
 
-        function redirectToLink(link){
+        function redirectToLink(link) {
             window.location.href = link;
         }
     </script>
