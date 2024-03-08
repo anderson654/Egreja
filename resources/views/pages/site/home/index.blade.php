@@ -114,7 +114,7 @@
                 <p class="fs-4 mb-0 text-uppercase" style="font-weight: 800;color: #fff">conta: <span
                         style="font-weight: 600">18983-9</span></p>
                 <p class="fs-4 mb-0 text-uppercase" style="font-weight: 800;color: #fff">Razão social: <span
-                        style="font-weight: 600">cidade belive</span></p>
+                        style="font-weight: 600">cidade believe</span></p>
             </div>
 
             <div class="col-md-6">
