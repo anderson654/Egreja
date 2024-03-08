@@ -91,6 +91,11 @@
                                                         href="{{ url('admin/prayerRequests', ['id' => $prayerRequest->id]) }}">
                                                         <p class="text-sm font-weight-bold mb-0">Detalhes</p>
                                                     </a>
+                                                    |
+                                                    <a
+                                                        href="{{ route('prayerRequests.edit', ['prayerRequest' => $prayerRequest->id]) }}">
+                                                        <p class="text-sm font-weight-bold mb-0">Editar</p>
+                                                    </a>
                                                 </div>
                                             </td>
                                         </tr>

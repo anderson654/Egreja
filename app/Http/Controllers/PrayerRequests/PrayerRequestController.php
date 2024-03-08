@@ -4,6 +4,7 @@ namespace App\Http\Controllers\PrayerRequests;
 
 use App\Http\Controllers\Controller;
 use App\Models\PrayerRequest;
+use App\Models\PrayerStatuse;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -61,7 +62,12 @@ class PrayerRequestController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $data = (object)[
+            'prayerRequests' => PrayerRequest::with('user')->find($id),
+            'prayerStatus' => PrayerStatuse::get()
+        ];
+
+        return view('pages.prayerRequests.edit',compact('data'));
     }
 
     /**
@@ -69,7 +75,8 @@ class PrayerRequestController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        PrayerRequest::find($id)->update($request->all());
+        return redirect()->back();
     }
 
     /**

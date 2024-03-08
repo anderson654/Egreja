@@ -14,6 +14,10 @@ class PrayerRequest extends Model
     use HasFactory;
     use SoftDeletes;
 
+    protected $fillable = [
+        'status_id'
+    ];
+
     public function user()
     {
         return $this->hasOne(User::class, 'id', 'user_id');
