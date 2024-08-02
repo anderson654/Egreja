@@ -5,14 +5,10 @@ namespace App\Http\Controllers\Channels;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ZApiController;
 use App\Models\Conversation;
-use App\Models\DialogsQuestion;
 use App\Models\DialogsTemplate;
-use App\Models\GroupQuestionsResponse;
 use App\Models\Message;
 use App\Models\PrayerRequest;
-use App\Models\ResponsesToGroup;
 use App\Models\WhatsApp\HistoricalConversation;
-use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -27,8 +23,6 @@ class UserController extends Controller
         $this->zApiController = new ZApiController();
         $this->user = $user;
     }
-
-
 
     //controla as chamadas do voluntario.
     /**
@@ -48,26 +42,9 @@ class UserController extends Controller
         }
         //Pendente
         if ($this->getConversationToStatus(2)) {
-            // $this->openRequest($date);
             return;
         }
-
         $this->openRequest($date);
-
-
-
-
-
-
-        // $this->date = $date;
-        // //salva a mensagem no historico.
-        // HistoricalConversation::saveMessage($this->conversations->id, $this->question->id, $this->date['text']['message']);
-
-        // //inicias as funçoes padrão
-        // $defaultFunctionsController = new DefaultFunctionsController($this->user, $date, $this->prayerRequests, $this->question);
-        // $defaultFunctionsController->nextDialogQuestion();
-
-        // //ajustar para as outras verificaçoes agora
     }
 
     /**

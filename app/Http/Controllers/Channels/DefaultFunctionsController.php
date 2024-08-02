@@ -15,8 +15,6 @@ use App\Models\SideDishes;
 use App\Models\User;
 use App\Models\WhatsApp\HistoricalConversation;
 use App\Utils\Utils;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class DefaultFunctionsController extends Controller

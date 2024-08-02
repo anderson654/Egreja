@@ -25,6 +25,12 @@ Route::prefix('webhook/zapi')->middleware('blockMessageGroup')->group(function (
     // Outras rotas do webhook, se necessário
 });
 
+Route::prefix('webhook/zapi/v2')->middleware('blockMessageGroup')->group(function () {
+    return response()->json('Hello', 200);
+    Route::post('aoreceber', [ZApiWebHookController::class, 'getStatusMessage']);
+    // Outras rotas do webhook, se necessário
+});
+
 
 //rotas de teste
 Route::prefix('sandbox')->group(function () {

@@ -31,8 +31,8 @@ class ZApiWebHookController extends Controller
         $this->phone = $request->phone;
     }
 
-
-    public function getStatusMessage(Request $request)
+    //qual canal deve ser redirecionado o user;
+    public function getStatusMessage()
     {
         Log::info("-------WebhoockLaravel: mensagen recebida---------");
         //se não existir criar um usuario role id = 4;
