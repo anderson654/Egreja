@@ -37,7 +37,7 @@ class NotifyPrayerRequest extends Command
             $query->where('messages_id', 2)->where('status_conversation_id', 1)->whereNull('user_accepted');
         })->first();
 
-        Log::info(json_encode($prayerRequest));
+        Log::info("Ativando a notificação.".json_encode($prayerRequest));
 
         if (!isset($prayerRequest)) {
             return;
