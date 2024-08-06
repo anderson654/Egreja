@@ -31,9 +31,12 @@ class CreateDays extends Command
     public function handle()
     {
         //
-        $notification = Notification::where('status_notifications_id', 1)->where('type_notifications_id', 5)->has('user')->with('user')->first();
-        if($notification){
-            $this->createDaysVoluntary($notification->user);
+        $notifications = Notification::where('status_notifications_id', 1)->where('type_notifications_id', 5)->has('user')->with('user')->get();
+        if ($notifications) {
+            foreach ($notifications as $key => $notification) {
+                # code...
+                $this->createDaysVoluntary($notification->user);
+            }
         }
     }
 
