@@ -15,7 +15,11 @@ class ZApiController extends Controller
     public function __construct()
     {
         $this->zapiClient = new Client([
-            'verify' => false, // Desativa a verificação do certificado temporariamente
+            'verify' => false,
+            'headers' => [
+                'Client-Token' => env('ZAPI_CLIENT_TOKEN')
+            ],
+            // Desativa a verificação do certificado temporariamente
         ]); // Crie um cliente Guzzle para as solicitações HTTP
     }
 
