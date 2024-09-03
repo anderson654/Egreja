@@ -17,6 +17,7 @@ class ZApiController extends Controller
         $this->zapiClient = new Client([
             'verify' => false,
             'headers' => [
+                'Content-Type' => 'application/json',
                 'Client-Token' => env('ZAPI_CLIENT_TOKEN')
             ],
             // Desativa a verificação do certificado temporariamente
@@ -40,9 +41,6 @@ class ZApiController extends Controller
         try {
             $response = $this->zapiClient->post("https://api.z-api.io/instances/$ZAPI_API_KEY/token/$ZAPI_SECRET_KEY/send-text", [
                 'json' => $body,
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                ],
             ]);
 
             $data = json_decode($response->getBody());
@@ -88,9 +86,6 @@ class ZApiController extends Controller
         try {
             $response = $this->zapiClient->post("https://api.z-api.io/instances/$ZAPI_API_KEY/token/$ZAPI_SECRET_KEY/send-button-list", [
                 'json' => $body,
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                ],
             ]);
 
             $data = json_decode($response->getBody());
